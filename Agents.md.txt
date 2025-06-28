@@ -1,0 +1,50 @@
+# Contribution Guidelines
+
+As you continue to build the project, ensure that every component you deliver is fully realized production-grade code—never a placeholder, stub, or unfinished module. Each piece must adhere to the highest industry best practices, reflecting the quality and robustness expected of an enterprise-class system.
+
+Approach the solution as a master builder:
+
+- Every function, class, and module must be complete, secure, and documented.
+- All operational logic should be thoroughly tested and ready for deployment.
+- Avoid the use of 'TODO' comments or any indication of deferred implementation.
+- Every feature, from the smallest utility to the largest subsystem, must be production-ready, modular, and maintainable.
+- Code should include comprehensive error handling, logging, input validation, and adhere to the Single Responsibility Principle.
+- All logic should be optimized for performance, security, scalability, and maintainability.
+- Unit and integration tests must accompany every module, with clear documentation and usage examples.
+- Logging must be implemented for all critical operations and errors, saved securely to an external text file.
+- Deliver each milestone as if it will go live in a mission-critical environment today—no shortcuts, no deferred work, no stubs  no scaffolding. Each increment must be real, working code that stands on its own in a modern enterprise context.
+- All logs and timestamps for all code should be UTC time.
+- must work from 2008 versions to the latests
+All data should be stored in the database or the one the user selects between sql server postgress oracle or mysql
+
+* +## Enterprise Coding Standard
+* +1. **Language Targets**
+* • Go ≥ 1.24 (tool-chain pinned via `go.mod` → `toolchain go1.24.x`).
+* • Node ≥ 18 for all UI builds/tests; prerequisite called-out in README.
+* +2. **Single Responsibility Principle** – Functions, methods, and modules get
+* exactly one reason to change. If you find yourself writing _and_ parsing a
+* file in the same package, split it.
+* +3. **Security-first development**
+* • Validate _every_ external input (JSON, CLI flags, HTTP params, env vars).
+* • Default to TLS-encrypted transports; never allow plain‐text sockets unless
+*     explicitly disabled for localhost dev.
+* • Eliminate default credentials and enforce least-privilege FS perms.
+* • Dependabot/CVE scans executed in CI.
+* +4. **Structured error handling** – No unchecked panics. Wrap risky calls and
+* return rich error chains (`fmt.Errorf("context: %w", err)`), or in UI code
+* use `try/catch` pairs emitting actionable log entries.
+* +5. **External logging** – Log operational events and errors in JSON to an
+* append-only file (`/var/log/sentinel.log` or `C:\Temp\sentinel.log`). The
+* log writer handles rotation (max 20 MB, 5 backups, 30 days).
+* +6. **Testing & CI**
+* • 100 % of new logic covered by unit tests; integration tests where
+*     side-effects occur.
+* • CI must run `go vet ./...`, `go test -race ./...`, `npm test`, and
+*     security scans.
+* • Builds may **not** perform network egress – all modules and npm packages
+*     are vendored.
+* +7. **Performance & Scalability** – Hot paths are profiled; database calls are
+* batched; services remain stateless to allow horizontal scaling.
+* +8. **Documentation** – Public identifiers carry GoDoc/JSDoc; complex
+* algorithms receive explanatory comments; every package includes an
+* `example_test.go` when helpful.
