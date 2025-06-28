@@ -19,6 +19,21 @@ func DetectCLITool() (string, error) {
 	return "", fmt.Errorf("no supported CLI tool found")
 }
 
+// DetectCLITools returns all available CLI tools.
+func DetectCLITools() ([]string, error) {
+	tools := []string{}
+	if _, err := exec.LookPath("openai"); err == nil {
+		tools = append(tools, "openai")
+	}
+	if _, err := exec.LookPath("gemini"); err == nil {
+		tools = append(tools, "gemini")
+	}
+	if len(tools) == 0 {
+		return nil, fmt.Errorf("no supported CLI tool found")
+	}
+	return tools, nil
+}
+
 // InvokeTool runs the given CLI with args and logs the invocation.
 func InvokeTool(tool string, args []string, baseDir string) error {
 	logPath := filepath.Join(baseDir, "logs", "logs.txt")
