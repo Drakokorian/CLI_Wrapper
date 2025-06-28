@@ -44,3 +44,10 @@ wails build -platform darwin/universal
 wails build -platform linux/amd64
 ```
 
+## Session Manager
+
+The `internal/app` package now provides a `SessionManager` which limits concurrent
+CLI sessions. The limit is stored in `config.json` under the application's config
+directory. A default limit of one is used if no configuration exists. Sessions
+receive unique UUIDs and can be terminated programmatically.
+
