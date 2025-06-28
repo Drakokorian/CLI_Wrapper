@@ -133,6 +133,15 @@ func New() (*Logger, error) {
 	return &Logger{writer: rw}, nil
 }
 
+// NewWithPath creates a logger that writes to the specified file path.
+func NewWithPath(path string) (*Logger, error) {
+	rw, err := newRotateWriter(path, 20*1024*1024, 5, 30*24*time.Hour)
+	if err != nil {
+		return nil, err
+	}
+	return &Logger{writer: rw}, nil
+}
+
 func (l *Logger) log(level, msg string) error {
 	entry := logEntry{
 		Timestamp: time.Now().UTC().Format(time.RFC3339),

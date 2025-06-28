@@ -32,3 +32,15 @@ go vet ./...
 go test -race ./...
 ```
 
+## Wails Application
+
+The repository also contains a minimal Wails v2 application located in the
+`frontend` directory with a Go backend. Building requires Node.js 18 and the
+Wails CLI:
+
+```
+wails build -platform windows/amd64
+wails build -platform darwin/universal
+wails build -platform linux/amd64
+```
+
