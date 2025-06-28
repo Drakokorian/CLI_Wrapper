@@ -7,3 +7,9 @@ func TestDetectCLIToolNone(t *testing.T) {
 		t.Fatal("expected error")
 	}
 }
+
+func TestDetectCLIToolsNone(t *testing.T) {
+	if _, err := DetectCLITools(); err == nil {
+		t.Fatal("expected error")
+	}
+}
