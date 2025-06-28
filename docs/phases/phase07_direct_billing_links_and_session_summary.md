@@ -9,6 +9,8 @@ Provide convenient links to billing information and optional usage summaries.
   - OpenAI: <https://platform.openai.com/account/billing>
   - Gemini: <https://makersuite.google.com/app/apikey>
 - If the CLI exposes usage statistics, show the latest numbers in the session summary view.
+- Open links using the Wails runtime so the default browser is used on every platform.
+- Cache the last usage totals locally and refresh them each time the application starts.
 
 ## Expected Output
 Users can view their billing page with a single click and optionally monitor usage data.

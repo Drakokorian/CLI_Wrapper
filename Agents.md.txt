@@ -48,3 +48,6 @@ All data should be stored in the database or the one the user selects between sq
 * +8. **Documentation** – Public identifiers carry GoDoc/JSDoc; complex
 * algorithms receive explanatory comments; every package includes an
 * `example_test.go` when helpful.
+
+## Documentation Roadmap
+For a step-by-step overview of the project phases see [docs/ROADMAP.md](docs/ROADMAP.md).
