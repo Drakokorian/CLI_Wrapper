@@ -8,6 +8,9 @@ Monitor system usage and prevent the application from consuming excessive resour
 - Alert the user if consumption exceeds 35% of system memory or CPU.
 - If high usage persists, automatically throttle or cancel the affected session.
 - Record resource alerts and throttling actions in `logs.txt`.
+- Poll resource metrics every two seconds to remain lightweight.
+- Throttle by reducing process priority with platform-specific system calls.
+- Allow thresholds and polling interval to be configured in `config.json`.
 
 ## Expected Output
 The application adapts to system load, keeps resource usage under control, and logs significant events for review.

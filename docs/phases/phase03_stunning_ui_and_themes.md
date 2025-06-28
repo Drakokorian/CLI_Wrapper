@@ -12,6 +12,8 @@ Give the application an engaging look with responsive layouts and theme support.
   - A model selector that highlights when changed
   - A resource meter showing CPU and RAM usage
 - Ensure all components resize gracefully on different screens.
+- Configure Tailwind through the Wails asset pipeline with PostCSS.
+- Include high DPI font faces and verify color contrast for accessibility.
 
 ## Expected Output
 The interface feels modern and interactive. Theme preference is remembered, and components respond well to window resizing.
