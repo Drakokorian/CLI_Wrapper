@@ -1,0 +1,21 @@
+{
+  "name": "ai-cli-ui",
+  "description": "Cross-platform wrapper for AI CLI tools",
+  "author": "cli-wrapper",
+  "frontend": {
+    "dir": "frontend",
+    "install": "npm install",
+    "build": "npm run build"
+  },
+  "platform": {
+    "windows": {
+      "arch": ["amd64"]
+    },
+    "darwin": {
+      "arch": ["universal"]
+    },
+    "linux": {
+      "arch": ["amd64"]
+    }
+  }
+}
