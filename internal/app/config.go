@@ -8,9 +8,18 @@ import (
 )
 
 // Config holds persistent application settings.
+// Config struct includes both runtime and UI preferences.
 type Config struct {
-	Concurrency int `json:"concurrency"`
+	Concurrency int    `json:"concurrency"`
+	Theme       string `json:"theme"`
 }
+
+// ValidTheme reports whether the provided theme value is supported.
+func ValidTheme(t string) bool {
+	return t == "light" || t == "dark"
+}
+
+const defaultTheme = "light"
 
 // LoadConfig reads configuration from the config directory.
 func LoadConfig(baseDir string) (Config, error) {
@@ -18,7 +27,7 @@ func LoadConfig(baseDir string) (Config, error) {
 	f, err := os.Open(path)
 	if err != nil {
 		if os.IsNotExist(err) {
-			return Config{Concurrency: 1}, nil
+			return Config{Concurrency: 1, Theme: defaultTheme}, nil
 		}
 		return Config{}, fmt.Errorf("open config: %w", err)
 	}
@@ -30,6 +39,9 @@ func LoadConfig(baseDir string) (Config, error) {
 	if cfg.Concurrency < 1 || cfg.Concurrency > 5 {
 		cfg.Concurrency = 1
 	}
+	if !ValidTheme(cfg.Theme) {
+		cfg.Theme = defaultTheme
+	}
 	return cfg, nil
 }
 
@@ -37,6 +49,9 @@ func LoadConfig(baseDir string) (Config, error) {
 func SaveConfig(baseDir string, cfg Config) error {
 	if cfg.Concurrency < 1 || cfg.Concurrency > 5 {
 		return fmt.Errorf("invalid concurrency %d", cfg.Concurrency)
+	}
+	if !ValidTheme(cfg.Theme) {
+		return fmt.Errorf("invalid theme %q", cfg.Theme)
 	}
 	path := filepath.Join(baseDir, "config", "config.json")
 	if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {

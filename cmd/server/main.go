@@ -27,7 +27,7 @@ func main() {
 	mgr := app.NewSessionManager(base, logger, cfg.Concurrency)
 	defer mgr.Close()
 
-	srv := server.New(mgr, logger)
+	srv := server.New(mgr, logger, base, &cfg)
 	if err := srv.Start(":8080"); err != nil {
 		log.Fatal(err)
 	}

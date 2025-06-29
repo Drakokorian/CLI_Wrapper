@@ -3,6 +3,7 @@ import "./App.css";
 import SessionList from "./components/SessionList";
 import ModelSelector from "./components/ModelSelector";
 import ResourceMeter from "./components/ResourceMeter";
+import ThemeToggle from "./components/ThemeToggle";
 
 function App() {
   const [prompt, setPrompt] = useState("");
@@ -22,7 +23,10 @@ function App() {
       <main className="flex-1 p-4 flex flex-col space-y-4">
         <div className="flex justify-between items-center">
           <ModelSelector selected={model} onChange={setModel} />
-          <ResourceMeter />
+          <div className="flex items-center space-x-2">
+            <ResourceMeter />
+            <ThemeToggle />
+          </div>
         </div>
         <textarea
           className="border rounded p-2 flex-1"
