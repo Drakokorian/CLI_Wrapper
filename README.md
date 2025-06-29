@@ -2,6 +2,9 @@
 
 This repository contains helper utilities for the CLI Wrapper project.
 
+See [docs/ROADMAP.md](docs/ROADMAP.md) for the full project plan and
+[docs/DASHBOARD.md](docs/DASHBOARD.md) for current sprint status.
+
 ## `phasefirst` Command
 
 The `phasefirst` command extracts the first bullet from the **Detailed Steps**

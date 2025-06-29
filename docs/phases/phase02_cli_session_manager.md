@@ -17,3 +17,11 @@ Users can queue or run several prompts at once, manage sessions from the UI, and
 
 ## Dependencies
 Requires the core application foundation from Phase 01.
+
+## Status
+Completed in **Sprint 2**.
+
+## Sprint Plan
+- [x] Add concurrency control to manage running sessions
+- [x] Provide safe termination of processes
+- [x] Persist the session limit in configuration

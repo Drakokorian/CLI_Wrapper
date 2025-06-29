@@ -17,3 +17,11 @@ Users can easily identify which model was used for any prompt, both in the inter
 
 ## Dependencies
 Requires theme and layout groundwork from Phase 03.
+
+## Status
+Completed in **Sprint 4**.
+
+## Sprint Plan
+- [x] Persist model selections per session
+- [x] Emit alerts and log model switches
+- [x] Rotate logs automatically
