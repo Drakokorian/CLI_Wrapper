@@ -2,8 +2,12 @@ module cli-wrapper
 
 go 1.24
 
+toolchain go1.24
+
 require github.com/shirou/gopsutil/v3 v3.23.3
+
 require github.com/wailsapp/wails/v2 v2.6.0
+
 require modernc.org/sqlite v1.38.0
 
 require (
