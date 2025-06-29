@@ -2,8 +2,6 @@
 
 This repository contains helper utilities for the CLI Wrapper project.
 
-See [docs/ROADMAP.md](docs/ROADMAP.md) for the full project plan and
-[docs/DASHBOARD.md](docs/DASHBOARD.md) for current sprint status.
 
 ## `phasefirst` Command
 
@@ -39,14 +37,29 @@ npm test --prefix frontend
 ## Wails Application
 
 The repository also contains a minimal Wails v2 application located in the
-`frontend` directory with a Go backend. Building requires Node.js 18 and the
-Wails CLI:
+`frontend` directory with a Go backend.
+
+### Building the desktop app
+
+Use the Wails CLI to compile for your platform:
 
 ```
 wails build -platform windows/amd64
 wails build -platform darwin/universal
 wails build -platform linux/amd64
 ```
+
+Binaries are written to `build/bin`.
+
+### Launching
+
+Run the generated binary on your platform:
+
+- **Windows**: `build\bin\ai-cli-ui.exe`
+- **macOS**: `open build/bin/ai-cli-ui.app`
+- **Linux**: `./build/bin/ai-cli-ui`
+
+During development you can start a hot reload server with `wails dev`.
 
 ## Session Manager
 
