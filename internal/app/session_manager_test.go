@@ -11,7 +11,8 @@ import (
 func TestSessionManagerQueue(t *testing.T) {
 	logger, _ := logging.NewWithPath(filepath.Join(t.TempDir(), "log.txt"))
 	defer logger.Close()
-	m := NewSessionManager(t.TempDir(), logger, 1)
+	cfg := &Config{Concurrency: 1, CPUThreshold: 50, MemoryThreshold: 50, PollInterval: 1}
+	m := NewSessionManager(t.TempDir(), logger, 1, cfg)
 	defer m.Close()
 
 	start := time.Now()
@@ -37,7 +38,8 @@ func TestSessionManagerQueue(t *testing.T) {
 func TestSessionTerminate(t *testing.T) {
 	logger, _ := logging.NewWithPath(filepath.Join(t.TempDir(), "log.txt"))
 	defer logger.Close()
-	m := NewSessionManager(t.TempDir(), logger, 1)
+	cfg := &Config{Concurrency: 1, CPUThreshold: 50, MemoryThreshold: 50, PollInterval: 1}
+	m := NewSessionManager(t.TempDir(), logger, 1, cfg)
 	defer m.Close()
 
 	id, err := m.AddSession("sh", []string{"-c", "sleep 2"})

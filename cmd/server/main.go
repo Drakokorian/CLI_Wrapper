@@ -24,7 +24,7 @@ func main() {
 	}
 	defer logger.Close()
 
-	mgr := app.NewSessionManager(base, logger, cfg.Concurrency)
+	mgr := app.NewSessionManager(base, logger, cfg.Concurrency, &cfg)
 	defer mgr.Close()
 
 	srv := server.New(mgr, logger, base, &cfg)

@@ -51,6 +51,19 @@ CLI sessions. The limit is stored in `config.json` under the application's confi
 directory. A default limit of one is used if no configuration exists. Sessions
 receive unique UUIDs and can be terminated programmatically.
 
+Resource throttling parameters are also configurable via `config.json`:
+
+```
+{
+  "cpuThreshold": 35,
+  "memoryThreshold": 35,
+  "pollInterval": 2
+}
+```
+If a running session exceeds these CPU or memory limits it is first throttled by
+reducing process priority. Persistent overages cause the session to be
+terminated. All alerts are recorded in `logs.txt`.
+
 ## Model Switch Alerts
 
 The Wails backend tracks the last-used model. When a new prompt specifies a different

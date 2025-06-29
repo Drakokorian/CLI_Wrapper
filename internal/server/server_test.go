@@ -15,8 +15,8 @@ import (
 func TestEndpoints(t *testing.T) {
 	dir := t.TempDir()
 	logger, _ := logging.NewWithPath(filepath.Join(dir, "log.txt"))
-	cfg := &app.Config{Concurrency: 1, Theme: "light"}
-	mgr := app.NewSessionManager(dir, logger, 1)
+	cfg := &app.Config{Concurrency: 1, Theme: "light", CPUThreshold: 50, MemoryThreshold: 50, PollInterval: 2}
+	mgr := app.NewSessionManager(dir, logger, 1, cfg)
 	defer mgr.Close()
 
 	srv := New(mgr, logger, dir, cfg)
