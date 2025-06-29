@@ -24,7 +24,7 @@ func main() {
 		log.Fatal(err)
 	}
 	defer logger.Close()
-	mgr := app.NewSessionManager(base, logger, cfg.Concurrency)
+	mgr := app.NewSessionManager(base, logger, cfg.Concurrency, &cfg)
 	defer mgr.Close()
 	backend := app.NewBackend(mgr, logger, &cfg)
 	err = wails.Run(&wails.Options{Bind: []interface{}{backend}, OnStartup: backend.Startup})

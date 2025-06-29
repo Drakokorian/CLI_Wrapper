@@ -9,10 +9,14 @@ import (
 
 // Config holds persistent application settings.
 // Config struct includes both runtime and UI preferences.
+// Config holds persistent application settings including resource thresholds.
 type Config struct {
-	Concurrency int    `json:"concurrency"`
-	Theme       string `json:"theme"`
-	ModelAlerts bool   `json:"modelAlerts"`
+	Concurrency     int     `json:"concurrency"`
+	Theme           string  `json:"theme"`
+	ModelAlerts     bool    `json:"modelAlerts"`
+	CPUThreshold    float64 `json:"cpuThreshold"`
+	MemoryThreshold float64 `json:"memoryThreshold"`
+	PollInterval    int     `json:"pollInterval"`
 }
 
 // ValidTheme reports whether the provided theme value is supported.
@@ -21,6 +25,9 @@ func ValidTheme(t string) bool {
 }
 
 const defaultTheme = "light"
+const defaultCPUThreshold = 35.0
+const defaultMemoryThreshold = 35.0
+const defaultPollInterval = 2
 
 // LoadConfig reads configuration from the config directory.
 func LoadConfig(baseDir string) (Config, error) {
@@ -28,7 +35,14 @@ func LoadConfig(baseDir string) (Config, error) {
 	f, err := os.Open(path)
 	if err != nil {
 		if os.IsNotExist(err) {
-			return Config{Concurrency: 1, Theme: defaultTheme, ModelAlerts: true}, nil
+			return Config{
+				Concurrency:     1,
+				Theme:           defaultTheme,
+				ModelAlerts:     true,
+				CPUThreshold:    defaultCPUThreshold,
+				MemoryThreshold: defaultMemoryThreshold,
+				PollInterval:    defaultPollInterval,
+			}, nil
 		}
 		return Config{}, fmt.Errorf("open config: %w", err)
 	}
@@ -43,8 +57,16 @@ func LoadConfig(baseDir string) (Config, error) {
 	if !ValidTheme(cfg.Theme) {
 		cfg.Theme = defaultTheme
 	}
+	if cfg.CPUThreshold <= 0 || cfg.CPUThreshold > 100 {
+		cfg.CPUThreshold = defaultCPUThreshold
+	}
+	if cfg.MemoryThreshold <= 0 || cfg.MemoryThreshold > 100 {
+		cfg.MemoryThreshold = defaultMemoryThreshold
+	}
+	if cfg.PollInterval <= 0 {
+		cfg.PollInterval = defaultPollInterval
+	}
 	if !cfg.ModelAlerts {
-		// missing field defaults to true when false and file existed
 		cfg.ModelAlerts = true
 	}
 	return cfg, nil
@@ -57,6 +79,15 @@ func SaveConfig(baseDir string, cfg Config) error {
 	}
 	if !ValidTheme(cfg.Theme) {
 		return fmt.Errorf("invalid theme %q", cfg.Theme)
+	}
+	if cfg.CPUThreshold <= 0 || cfg.CPUThreshold > 100 {
+		return fmt.Errorf("invalid CPU threshold %f", cfg.CPUThreshold)
+	}
+	if cfg.MemoryThreshold <= 0 || cfg.MemoryThreshold > 100 {
+		return fmt.Errorf("invalid memory threshold %f", cfg.MemoryThreshold)
+	}
+	if cfg.PollInterval <= 0 {
+		return fmt.Errorf("invalid poll interval %d", cfg.PollInterval)
 	}
 	if !cfg.ModelAlerts {
 		// allow both true and false; no validation necessary

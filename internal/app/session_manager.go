@@ -13,6 +13,8 @@ import (
 	"time"
 
 	"cli-wrapper/internal/logging"
+	"cli-wrapper/internal/telemetry"
+	"github.com/shirou/gopsutil/v3/process"
 )
 
 // newUUID returns a random UUID string.
@@ -26,11 +28,13 @@ func newUUID() (string, error) {
 
 // Session represents a running CLI invocation.
 type Session struct {
-	ID     string
-	Model  string
-	Cmd    *exec.Cmd
-	cancel context.CancelFunc
-	done   chan error
+	ID        string
+	Model     string
+	Cmd       *exec.Cmd
+	cancel    context.CancelFunc
+	done      chan error
+	proc      *process.Process
+	throttled bool
 }
 
 // SessionManager schedules CLI sessions with a concurrency limit.
@@ -43,6 +47,7 @@ type SessionManager struct {
 	sem     chan struct{}
 	ctx     context.Context
 	cancel  context.CancelFunc
+	cfg     *Config
 }
 
 type sessionRequest struct {
@@ -53,7 +58,7 @@ type sessionRequest struct {
 }
 
 // NewSessionManager creates a manager with the given concurrency limit.
-func NewSessionManager(baseDir string, logger *logging.Logger, concurrency int) *SessionManager {
+func NewSessionManager(baseDir string, logger *logging.Logger, concurrency int, cfg *Config) *SessionManager {
 	ctx, cancel := context.WithCancel(context.Background())
 	m := &SessionManager{
 		baseDir: baseDir,
@@ -63,6 +68,7 @@ func NewSessionManager(baseDir string, logger *logging.Logger, concurrency int) 
 		sem:     make(chan struct{}, concurrency),
 		ctx:     ctx,
 		cancel:  cancel,
+		cfg:     cfg,
 	}
 	go m.dispatch()
 	return m
@@ -97,6 +103,13 @@ func (m *SessionManager) run(req sessionRequest) {
 		<-m.sem
 		return
 	}
+	proc, err := process.NewProcess(int32(cmd.Process.Pid))
+	if err == nil {
+		sess.proc = proc
+		go m.monitor(sess)
+	} else {
+		m.logger.Error(fmt.Sprintf("session %s monitor: %v", req.id, err))
+	}
 	go func() {
 		err := cmd.Wait()
 		sess.done <- err
@@ -105,6 +118,41 @@ func (m *SessionManager) run(req sessionRequest) {
 		<-m.sem
 	}()
 	req.res <- nil
+}
+
+func (m *SessionManager) monitor(s *Session) {
+	ticker := time.NewTicker(time.Duration(m.cfg.PollInterval) * time.Second)
+	defer ticker.Stop()
+	for {
+		select {
+		case <-s.done:
+			return
+		case <-ticker.C:
+			if s.proc == nil {
+				continue
+			}
+			usage, err := telemetry.ReadProcess(s.proc.Pid)
+			if err != nil {
+				m.logger.Error(fmt.Sprintf("metrics %s: %v", s.ID, err))
+				continue
+			}
+			if usage.CPU > m.cfg.CPUThreshold || usage.Memory > m.cfg.MemoryThreshold {
+				m.logger.Info(fmt.Sprintf("session %s high usage cpu %.1f mem %.1f", s.ID, usage.CPU, usage.Memory))
+				if !s.throttled {
+					if err := throttleProcess(s.Cmd); err != nil {
+						m.logger.Error("throttle " + s.ID + ": " + err.Error())
+					} else {
+						s.throttled = true
+						m.logger.Info("session " + s.ID + " throttled")
+					}
+				} else {
+					_ = m.Terminate(s.ID)
+					m.logger.Info("session " + s.ID + " cancelled")
+					return
+				}
+			}
+		}
+	}
 }
 
 func (m *SessionManager) remove(id string) {
