@@ -1,6 +1,7 @@
 package server
 
 import (
+	"bytes"
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
@@ -12,11 +13,13 @@ import (
 )
 
 func TestEndpoints(t *testing.T) {
-	logger, _ := logging.NewWithPath(filepath.Join(t.TempDir(), "log.txt"))
-	mgr := app.NewSessionManager(t.TempDir(), logger, 1)
+	dir := t.TempDir()
+	logger, _ := logging.NewWithPath(filepath.Join(dir, "log.txt"))
+	cfg := &app.Config{Concurrency: 1, Theme: "light"}
+	mgr := app.NewSessionManager(dir, logger, 1)
 	defer mgr.Close()
 
-	srv := New(mgr, logger)
+	srv := New(mgr, logger, dir, cfg)
 	ts := httptest.NewServer(srv.mux)
 	defer ts.Close()
 
@@ -42,5 +45,32 @@ func TestEndpoints(t *testing.T) {
 	}
 	if usage["cpu"] < 0 || usage["memory"] < 0 {
 		t.Fatalf("unexpected usage: %v", usage)
+	}
+
+	resp, err = http.Get(ts.URL + "/theme")
+	if err != nil {
+		t.Fatalf("theme: %v", err)
+	}
+	var themeResp map[string]string
+	if err := json.NewDecoder(resp.Body).Decode(&themeResp); err != nil {
+		t.Fatalf("decode theme: %v", err)
+	}
+	if themeResp["theme"] != "light" {
+		t.Fatalf("got %s want light", themeResp["theme"])
+	}
+
+	buf := bytes.NewBufferString(`{"theme":"dark"}`)
+	resp, err = http.Post(ts.URL+"/theme", "application/json", buf)
+	if err != nil {
+		t.Fatalf("post theme: %v", err)
+	}
+	if resp.StatusCode != http.StatusOK {
+		t.Fatalf("unexpected status %d", resp.StatusCode)
+	}
+	if err := json.NewDecoder(resp.Body).Decode(&themeResp); err != nil {
+		t.Fatalf("decode post theme: %v", err)
+	}
+	if themeResp["theme"] != "dark" {
+		t.Fatalf("got %s want dark", themeResp["theme"])
 	}
 }
