@@ -1,4 +1,5 @@
 import { useEffect, useState, ChangeEvent } from "react";
+import { maskSecrets } from "../utils";
 
 interface Record {
   id: string;
@@ -61,8 +62,8 @@ export default function HistoryViewer() {
       <ul className="space-y-1 overflow-y-auto" style={{ maxHeight: "200px" }}>
         {records.map((r) => (
           <li key={r.id} className="text-sm">
-            <div className="font-mono">{r.prompt}</div>
-            <div className="text-gray-500 truncate">{r.response}</div>
+            <div className="font-mono">{maskSecrets(r.prompt)}</div>
+            <div className="text-gray-500 truncate">{maskSecrets(r.response)}</div>
           </li>
         ))}
       </ul>

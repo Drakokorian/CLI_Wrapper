@@ -32,6 +32,12 @@ func (b *Backend) RunPrompt(model, prompt string) (string, error) {
 	if model == "" {
 		return "", fmt.Errorf("model required")
 	}
+	var err error
+	model, err = SanitizeModel(model)
+	if err != nil {
+		return "", err
+	}
+	prompt = SanitizePrompt(prompt)
 	if b.lastModel != "" && model != b.lastModel {
 		if b.cfg.ModelAlerts {
 			runtime.EventsEmit(b.ctx, "model:switched", map[string]string{"from": b.lastModel, "to": model})
@@ -39,7 +45,7 @@ func (b *Backend) RunPrompt(model, prompt string) (string, error) {
 		_ = b.logger.ModelSwitch(b.lastModel, model, prompt)
 	}
 	b.lastModel = model
-        id, err := b.mgr.AddSession(model, prompt, []string{prompt})
+	id, err := b.mgr.AddSession(model, prompt, []string{prompt})
 	if err != nil {
 		return "", err
 	}

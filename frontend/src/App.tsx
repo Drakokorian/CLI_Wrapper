@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { EventsOn } from "@wailsio/runtime";
+import { maskSecrets } from "./utils";
 
 declare global {
   interface Window {
@@ -35,7 +36,7 @@ function App() {
 
   const send = async () => {
     const res = await window.backend.RunPrompt(model, prompt);
-    setResponse(res);
+    setResponse(maskSecrets(res));
   };
 
   return (
