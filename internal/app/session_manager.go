@@ -27,6 +27,7 @@ func newUUID() (string, error) {
 // Session represents a running CLI invocation.
 type Session struct {
 	ID     string
+	Model  string
 	Cmd    *exec.Cmd
 	cancel context.CancelFunc
 	done   chan error
@@ -45,10 +46,10 @@ type SessionManager struct {
 }
 
 type sessionRequest struct {
-	id   string
-	tool string
-	args []string
-	res  chan error
+	id    string
+	model string
+	args  []string
+	res   chan error
 }
 
 // NewSessionManager creates a manager with the given concurrency limit.
@@ -82,8 +83,9 @@ func (m *SessionManager) dispatch() {
 // run executes a session and tracks it until completion.
 func (m *SessionManager) run(req sessionRequest) {
 	ctx, cancel := context.WithCancel(m.ctx)
-	cmd := exec.CommandContext(ctx, req.tool, req.args...)
-	sess := &Session{ID: req.id, Cmd: cmd, cancel: cancel, done: make(chan error, 1)}
+	cmd := exec.CommandContext(ctx, req.model, req.args...)
+	sess := &Session{ID: req.id, Model: req.model, Cmd: cmd, cancel: cancel, done: make(chan error, 1)}
+	m.logger.Info(fmt.Sprintf("session %s running model %s", req.id, req.model))
 	m.mu.Lock()
 	m.active[req.id] = sess
 	m.mu.Unlock()
@@ -112,13 +114,13 @@ func (m *SessionManager) remove(id string) {
 }
 
 // AddSession queues a CLI invocation and returns its ID when scheduled.
-func (m *SessionManager) AddSession(tool string, args []string) (string, error) {
+func (m *SessionManager) AddSession(model string, args []string) (string, error) {
 	id, err := newUUID()
 	if err != nil {
 		return "", err
 	}
 	res := make(chan error, 1)
-	req := sessionRequest{id: id, tool: tool, args: args, res: res}
+	req := sessionRequest{id: id, model: model, args: args, res: res}
 	select {
 	case m.queue <- req:
 	case <-time.After(5 * time.Second):

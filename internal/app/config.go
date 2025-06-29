@@ -12,6 +12,7 @@ import (
 type Config struct {
 	Concurrency int    `json:"concurrency"`
 	Theme       string `json:"theme"`
+	ModelAlerts bool   `json:"modelAlerts"`
 }
 
 // ValidTheme reports whether the provided theme value is supported.
@@ -27,7 +28,7 @@ func LoadConfig(baseDir string) (Config, error) {
 	f, err := os.Open(path)
 	if err != nil {
 		if os.IsNotExist(err) {
-			return Config{Concurrency: 1, Theme: defaultTheme}, nil
+			return Config{Concurrency: 1, Theme: defaultTheme, ModelAlerts: true}, nil
 		}
 		return Config{}, fmt.Errorf("open config: %w", err)
 	}
@@ -42,6 +43,10 @@ func LoadConfig(baseDir string) (Config, error) {
 	if !ValidTheme(cfg.Theme) {
 		cfg.Theme = defaultTheme
 	}
+	if !cfg.ModelAlerts {
+		// missing field defaults to true when false and file existed
+		cfg.ModelAlerts = true
+	}
 	return cfg, nil
 }
 
@@ -52,6 +57,9 @@ func SaveConfig(baseDir string, cfg Config) error {
 	}
 	if !ValidTheme(cfg.Theme) {
 		return fmt.Errorf("invalid theme %q", cfg.Theme)
+	}
+	if !cfg.ModelAlerts {
+		// allow both true and false; no validation necessary
 	}
 	path := filepath.Join(baseDir, "config", "config.json")
 	if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
