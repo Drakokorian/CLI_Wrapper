@@ -13,6 +13,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: '18'
+      - run: bash scripts/install.sh
       - run: npm ci
         working-directory: frontend
       - run: npm test --if-present
