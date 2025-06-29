@@ -13,6 +13,7 @@ import SessionList from "./components/SessionList";
 import ModelSelector from "./components/ModelSelector";
 import ResourceMeter from "./components/ResourceMeter";
 import ThemeToggle from "./components/ThemeToggle";
+import HistoryViewer from "./components/HistoryViewer";
 
 function App() {
   const [prompt, setPrompt] = useState("");
@@ -41,6 +42,7 @@ function App() {
     <div className="flex h-screen">
       <aside className="w-48 bg-gray-100 dark:bg-gray-800 overflow-y-auto">
         <SessionList />
+        <HistoryViewer />
       </aside>
       <main className="flex-1 p-4 flex flex-col space-y-4">
         <div className="flex justify-between items-center">

@@ -1,25 +1,28 @@
 package server
 
 import (
-	"bytes"
-	"encoding/json"
-	"net/http"
-	"net/http/httptest"
-	"path/filepath"
-	"testing"
+        "bytes"
+        "encoding/json"
+        "net/http"
+        "net/http/httptest"
+        "path/filepath"
+        "testing"
 
-	"cli-wrapper/internal/app"
-	"cli-wrapper/internal/logging"
+        "cli-wrapper/internal/app"
+        "cli-wrapper/internal/history"
+        "cli-wrapper/internal/logging"
 )
 
 func TestEndpoints(t *testing.T) {
 	dir := t.TempDir()
-	logger, _ := logging.NewWithPath(filepath.Join(dir, "log.txt"))
-	cfg := &app.Config{Concurrency: 1, Theme: "light", CPUThreshold: 50, MemoryThreshold: 50, PollInterval: 2}
-	mgr := app.NewSessionManager(dir, logger, 1, cfg)
-	defer mgr.Close()
+        logger, _ := logging.NewWithPath(filepath.Join(dir, "log.txt"))
+        cfg := &app.Config{Concurrency: 1, Theme: "light", CPUThreshold: 50, MemoryThreshold: 50, PollInterval: 2}
+        hist, _ := history.New(dir)
+        defer hist.Close()
+        mgr := app.NewSessionManager(dir, logger, 1, cfg, hist)
+        defer mgr.Close()
 
-	srv := New(mgr, logger, dir, cfg)
+        srv := New(mgr, logger, dir, cfg, hist)
 	ts := httptest.NewServer(srv.mux)
 	defer ts.Close()
 
@@ -70,7 +73,41 @@ func TestEndpoints(t *testing.T) {
 	if err := json.NewDecoder(resp.Body).Decode(&themeResp); err != nil {
 		t.Fatalf("decode post theme: %v", err)
 	}
-	if themeResp["theme"] != "dark" {
-		t.Fatalf("got %s want dark", themeResp["theme"])
-	}
+        if themeResp["theme"] != "dark" {
+                t.Fatalf("got %s want dark", themeResp["theme"])
+        }
+
+        // history endpoints
+        data := `[{"id":"1","prompt":"hi","response":"hello","model":"openai","success":true}]`
+        resp, err = http.Post(ts.URL+"/history", "application/json", bytes.NewBufferString(data))
+        if err != nil || resp.StatusCode != http.StatusOK {
+                t.Fatalf("import history: %v status %d", err, resp.StatusCode)
+        }
+
+        resp, err = http.Get(ts.URL + "/history")
+        if err != nil {
+                t.Fatalf("get history: %v", err)
+        }
+        var recs []history.Record
+        if err := json.NewDecoder(resp.Body).Decode(&recs); err != nil || len(recs) != 1 {
+                t.Fatalf("decode history: %v len=%d", err, len(recs))
+        }
+
+        resp, err = http.Get(ts.URL + "/history/search?q=hello")
+        if err != nil {
+                t.Fatalf("search history: %v", err)
+        }
+        var recs2 []history.Record
+        if err := json.NewDecoder(resp.Body).Decode(&recs2); err != nil || len(recs2) == 0 {
+                t.Fatalf("search decode: %v len=%d", err, len(recs2))
+        }
+
+        resp, err = http.Get(ts.URL + "/history/export")
+        if err != nil {
+                t.Fatalf("export history: %v", err)
+        }
+        var exp []history.Record
+        if err := json.NewDecoder(resp.Body).Decode(&exp); err != nil || len(exp) != 1 {
+                t.Fatalf("export decode: %v len=%d", err, len(exp))
+        }
 }

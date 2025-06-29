@@ -1,20 +1,22 @@
 package app
 
 import (
-	"context"
-	"crypto/rand"
-	"errors"
-	"fmt"
-	"os"
-	"os/exec"
-	"runtime"
-	"sync"
-	"syscall"
-	"time"
+        "bytes"
+        "context"
+        "crypto/rand"
+        "errors"
+        "fmt"
+        "os"
+        "os/exec"
+        "runtime"
+        "sync"
+        "syscall"
+        "time"
 
-	"cli-wrapper/internal/logging"
-	"cli-wrapper/internal/telemetry"
-	"github.com/shirou/gopsutil/v3/process"
+        "cli-wrapper/internal/history"
+        "cli-wrapper/internal/logging"
+        "cli-wrapper/internal/telemetry"
+        "github.com/shirou/gopsutil/v3/process"
 )
 
 // newUUID returns a random UUID string.
@@ -28,48 +30,52 @@ func newUUID() (string, error) {
 
 // Session represents a running CLI invocation.
 type Session struct {
-	ID        string
-	Model     string
-	Cmd       *exec.Cmd
-	cancel    context.CancelFunc
-	done      chan error
-	proc      *process.Process
-	throttled bool
+        ID        string
+        Model     string
+        Prompt    string
+        Cmd       *exec.Cmd
+        cancel    context.CancelFunc
+        done      chan error
+        proc      *process.Process
+        throttled bool
 }
 
 // SessionManager schedules CLI sessions with a concurrency limit.
 type SessionManager struct {
-	baseDir string
-	logger  *logging.Logger
-	queue   chan sessionRequest
-	active  map[string]*Session
-	mu      sync.Mutex
-	sem     chan struct{}
-	ctx     context.Context
-	cancel  context.CancelFunc
-	cfg     *Config
+        baseDir string
+        logger  *logging.Logger
+        queue   chan sessionRequest
+        active  map[string]*Session
+        mu      sync.Mutex
+        sem     chan struct{}
+        ctx     context.Context
+        cancel  context.CancelFunc
+        cfg     *Config
+        hist    *history.Store
 }
 
 type sessionRequest struct {
-	id    string
-	model string
-	args  []string
-	res   chan error
+        id    string
+        model string
+        prompt string
+        args  []string
+        res   chan error
 }
 
 // NewSessionManager creates a manager with the given concurrency limit.
-func NewSessionManager(baseDir string, logger *logging.Logger, concurrency int, cfg *Config) *SessionManager {
-	ctx, cancel := context.WithCancel(context.Background())
-	m := &SessionManager{
-		baseDir: baseDir,
-		logger:  logger,
-		queue:   make(chan sessionRequest, 100),
-		active:  make(map[string]*Session),
-		sem:     make(chan struct{}, concurrency),
-		ctx:     ctx,
-		cancel:  cancel,
-		cfg:     cfg,
-	}
+func NewSessionManager(baseDir string, logger *logging.Logger, concurrency int, cfg *Config, hist *history.Store) *SessionManager {
+        ctx, cancel := context.WithCancel(context.Background())
+        m := &SessionManager{
+                baseDir: baseDir,
+                logger:  logger,
+                queue:   make(chan sessionRequest, 100),
+                active:  make(map[string]*Session),
+                sem:     make(chan struct{}, concurrency),
+                ctx:     ctx,
+                cancel:  cancel,
+                cfg:     cfg,
+                hist:    hist,
+        }
 	go m.dispatch()
 	return m
 }
@@ -88,13 +94,16 @@ func (m *SessionManager) dispatch() {
 
 // run executes a session and tracks it until completion.
 func (m *SessionManager) run(req sessionRequest) {
-	ctx, cancel := context.WithCancel(m.ctx)
-	cmd := exec.CommandContext(ctx, req.model, req.args...)
-	sess := &Session{ID: req.id, Model: req.model, Cmd: cmd, cancel: cancel, done: make(chan error, 1)}
-	m.logger.Info(fmt.Sprintf("session %s running model %s", req.id, req.model))
-	m.mu.Lock()
-	m.active[req.id] = sess
-	m.mu.Unlock()
+        ctx, cancel := context.WithCancel(m.ctx)
+        cmd := exec.CommandContext(ctx, req.model, req.args...)
+        var buf bytes.Buffer
+        cmd.Stdout = &buf
+        cmd.Stderr = &buf
+        sess := &Session{ID: req.id, Model: req.model, Prompt: req.prompt, Cmd: cmd, cancel: cancel, done: make(chan error, 1)}
+        m.logger.Info(fmt.Sprintf("session %s running model %s", req.id, req.model))
+        m.mu.Lock()
+        m.active[req.id] = sess
+        m.mu.Unlock()
 
 	if err := cmd.Start(); err != nil {
 		m.logger.Error(fmt.Sprintf("start %s: %v", req.id, err))
@@ -110,14 +119,26 @@ func (m *SessionManager) run(req sessionRequest) {
 	} else {
 		m.logger.Error(fmt.Sprintf("session %s monitor: %v", req.id, err))
 	}
-	go func() {
-		err := cmd.Wait()
-		sess.done <- err
-		m.logger.Info(fmt.Sprintf("session %s finished", req.id))
-		m.remove(req.id)
-		<-m.sem
-	}()
-	req.res <- nil
+        go func() {
+                err := cmd.Wait()
+                sess.done <- err
+                m.logger.Info(fmt.Sprintf("session %s finished", req.id))
+                if m.hist != nil {
+                        rec := history.Record{
+                                ID:        req.id,
+                                Prompt:    req.prompt,
+                                Response:  buf.String(),
+                                Model:     req.model,
+                                Success:   err == nil,
+                        }
+                        if err := m.hist.Add(rec); err != nil {
+                                m.logger.Error("history add " + err.Error())
+                        }
+                }
+                m.remove(req.id)
+                <-m.sem
+        }()
+        req.res <- nil
 }
 
 func (m *SessionManager) monitor(s *Session) {
@@ -162,13 +183,13 @@ func (m *SessionManager) remove(id string) {
 }
 
 // AddSession queues a CLI invocation and returns its ID when scheduled.
-func (m *SessionManager) AddSession(model string, args []string) (string, error) {
+func (m *SessionManager) AddSession(model, prompt string, args []string) (string, error) {
 	id, err := newUUID()
 	if err != nil {
 		return "", err
 	}
-	res := make(chan error, 1)
-	req := sessionRequest{id: id, model: model, args: args, res: res}
+        res := make(chan error, 1)
+        req := sessionRequest{id: id, model: model, prompt: prompt, args: args, res: res}
 	select {
 	case m.queue <- req:
 	case <-time.After(5 * time.Second):
