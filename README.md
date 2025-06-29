@@ -30,6 +30,7 @@ Run unit tests with:
 ```
 go vet ./...
 go test -race ./...
+npm test --prefix frontend
 ```
 
 ## Wails Application
