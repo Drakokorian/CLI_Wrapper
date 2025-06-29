@@ -1,26 +1,29 @@
 package app
 
 import (
-	"path/filepath"
-	"testing"
-	"time"
+        "path/filepath"
+        "testing"
+        "time"
 
-	"cli-wrapper/internal/logging"
+        "cli-wrapper/internal/history"
+        "cli-wrapper/internal/logging"
 )
 
 func TestSessionManagerQueue(t *testing.T) {
 	logger, _ := logging.NewWithPath(filepath.Join(t.TempDir(), "log.txt"))
 	defer logger.Close()
-	cfg := &Config{Concurrency: 1, CPUThreshold: 50, MemoryThreshold: 50, PollInterval: 1}
-	m := NewSessionManager(t.TempDir(), logger, 1, cfg)
+        cfg := &Config{Concurrency: 1, CPUThreshold: 50, MemoryThreshold: 50, PollInterval: 1}
+        hist, _ := history.New(t.TempDir())
+        defer hist.Close()
+        m := NewSessionManager(t.TempDir(), logger, 1, cfg, hist)
 	defer m.Close()
 
 	start := time.Now()
-	id1, err := m.AddSession("sh", []string{"-c", "sleep 0.1"})
+        id1, err := m.AddSession("sh", "", []string{"-c", "sleep 0.1"})
 	if err != nil {
 		t.Fatalf("add1: %v", err)
 	}
-	id2, err := m.AddSession("sh", []string{"-c", "sleep 0.1"})
+        id2, err := m.AddSession("sh", "", []string{"-c", "sleep 0.1"})
 	if err != nil {
 		t.Fatalf("add2: %v", err)
 	}
@@ -38,11 +41,13 @@ func TestSessionManagerQueue(t *testing.T) {
 func TestSessionTerminate(t *testing.T) {
 	logger, _ := logging.NewWithPath(filepath.Join(t.TempDir(), "log.txt"))
 	defer logger.Close()
-	cfg := &Config{Concurrency: 1, CPUThreshold: 50, MemoryThreshold: 50, PollInterval: 1}
-	m := NewSessionManager(t.TempDir(), logger, 1, cfg)
+        cfg := &Config{Concurrency: 1, CPUThreshold: 50, MemoryThreshold: 50, PollInterval: 1}
+        hist, _ := history.New(t.TempDir())
+        defer hist.Close()
+        m := NewSessionManager(t.TempDir(), logger, 1, cfg, hist)
 	defer m.Close()
 
-	id, err := m.AddSession("sh", []string{"-c", "sleep 2"})
+        id, err := m.AddSession("sh", "", []string{"-c", "sleep 2"})
 	if err != nil {
 		t.Fatalf("add: %v", err)
 	}

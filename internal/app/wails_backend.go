@@ -39,7 +39,7 @@ func (b *Backend) RunPrompt(model, prompt string) (string, error) {
 		_ = b.logger.ModelSwitch(b.lastModel, model, prompt)
 	}
 	b.lastModel = model
-	id, err := b.mgr.AddSession(model, []string{prompt})
+        id, err := b.mgr.AddSession(model, prompt, []string{prompt})
 	if err != nil {
 		return "", err
 	}
