@@ -2,6 +2,10 @@
 
 This repository contains helper utilities for the CLI Wrapper project.
 
+## Installing prerequisites
+
+Run `scripts/install.sh` to automatically install Go 1.24+, Node.js 18+, and the Wails CLI for your platform.
+
 
 ## `phasefirst` Command
 
