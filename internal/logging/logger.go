@@ -158,6 +158,35 @@ func (l *Logger) log(level, msg string) error {
 	return nil
 }
 
+type modelSwitchEntry struct {
+	Timestamp string `json:"timestamp"`
+	Level     string `json:"level"`
+	Event     string `json:"event"`
+	From      string `json:"from"`
+	To        string `json:"to"`
+	Prompt    string `json:"prompt"`
+}
+
+// ModelSwitch logs a model change event with prompt text.
+func (l *Logger) ModelSwitch(from, to, prompt string) error {
+	entry := modelSwitchEntry{
+		Timestamp: time.Now().UTC().Format(time.RFC3339),
+		Level:     "INFO",
+		Event:     "model_switch",
+		From:      from,
+		To:        to,
+		Prompt:    prompt,
+	}
+	data, err := json.Marshal(entry)
+	if err != nil {
+		return fmt.Errorf("marshal log: %w", err)
+	}
+	if _, err := l.writer.Write(append(data, '\n')); err != nil {
+		return fmt.Errorf("write log: %w", err)
+	}
+	return nil
+}
+
 func (l *Logger) Info(msg string) error {
 	return l.log("INFO", msg)
 }

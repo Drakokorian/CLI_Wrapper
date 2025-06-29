@@ -51,3 +51,9 @@ CLI sessions. The limit is stored in `config.json` under the application's confi
 directory. A default limit of one is used if no configuration exists. Sessions
 receive unique UUIDs and can be terminated programmatically.
 
+## Model Switch Alerts
+
+The Wails backend tracks the last-used model. When a new prompt specifies a different
+model, the backend emits a `model:switched` event via the Wails event bus and logs the
+change in JSON Lines format. Log files automatically rotate after reaching 20 MB.
+
