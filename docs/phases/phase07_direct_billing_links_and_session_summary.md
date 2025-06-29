@@ -17,3 +17,11 @@ Users can view their billing page with a single click and optionally monitor usa
 
 ## Dependencies
 Builds on previous phases to identify the CLI and store history data from Phase 06.
+
+## Status
+Completed in **Sprint 7**.
+
+## Sprint Plan
+- [x] Link to provider billing portals
+- [x] Show usage statistics when available
+- [x] Cache latest totals on startup

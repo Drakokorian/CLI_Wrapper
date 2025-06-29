@@ -17,3 +17,11 @@ The application adapts to system load, keeps resource usage under control, and l
 
 ## Dependencies
 Builds on the session management from Phase 02 and logging from Phase 04.
+
+## Status
+Completed in **Sprint 5**.
+
+## Sprint Plan
+- [x] Read CPU and memory metrics with gopsutil
+- [x] Throttle or cancel overused sessions
+- [x] Persist thresholds in configuration

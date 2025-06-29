@@ -12,3 +12,18 @@ This project is delivered in eight phases. Each phase builds upon the previous o
 8. **Phase 08: Error Security and Polish** – hardens the application and finalizes the user experience. [Read more](phases/phase08_error_security_and_polish.md)
 
 Each document under `docs/phases/` contains detailed steps for implementation. Follow them sequentially to complete the project.
+
+## Phase Status
+
+| Phase | Status |
+|-------|--------|
+| 01 | ✅ Completed |
+| 02 | ✅ Completed |
+| 03 | ✅ Completed |
+| 04 | ✅ Completed |
+| 05 | ✅ Completed |
+| 06 | ✅ Completed |
+| 07 | ✅ Completed |
+| 08 | 🚧 In Progress |
+
+See [DASHBOARD.md](DASHBOARD.md) for sprint breakdowns.

@@ -17,3 +17,12 @@ The app operates safely in production environments with robust error handling an
 
 ## Dependencies
 Completion of all prior phases.
+
+## Status
+In Progress – current sprint focuses on signing and release preparation.
+
+## Sprint Plan
+- [x] Sanitize all input and hide sensitive data
+- [x] Integrate security scanning in CI
+- [ ] Sign binaries for each platform
+- [ ] Document reproducible build steps

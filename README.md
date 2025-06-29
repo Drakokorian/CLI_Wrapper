@@ -2,11 +2,6 @@
 
 This repository contains helper utilities for the CLI Wrapper project.
 
-## Prerequisites
-
-- **Go 1.24 or later** – the toolchain version is pinned in `go.mod`.
-- **Node.js 18** – required to build the frontend assets.
-- **Wails CLI** – install via `go install github.com/wailsapp/wails/v2/cmd/wails@latest` or `npm install -g wails`.
 
 ## `phasefirst` Command
 

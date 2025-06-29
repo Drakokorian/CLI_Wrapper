@@ -20,3 +20,11 @@ The interface feels modern and interactive. Theme preference is remembered, and 
 
 ## Dependencies
 Completion of Phase 02 for session handling.
+
+## Status
+Completed in **Sprint 3**.
+
+## Sprint Plan
+- [x] Add Tailwind styling and responsive layouts
+- [x] Implement dark and light themes
+- [x] Display CPU and memory usage metrics
