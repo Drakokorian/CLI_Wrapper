@@ -144,7 +144,9 @@ func TestRotateOpenError(t *testing.T) {
 }
 
 func TestNewDefault(t *testing.T) {
-	l, err := New()
+	dir := t.TempDir()
+	path := filepath.Join(dir, "sentinel.log")
+	l, err := NewWithPath(path)
 	if err != nil {
 		t.Fatalf("new: %v", err)
 	}

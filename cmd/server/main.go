@@ -2,7 +2,6 @@ package main
 
 import (
 	"log"
-	"path/filepath"
 
 	"cli-wrapper/internal/app"
 	"cli-wrapper/internal/history"
@@ -16,7 +15,7 @@ func main() {
 		log.Printf("app dir: %v", err)
 		return
 	}
-	logger, err := logging.NewWithPath(filepath.Join(base, "logs", "logs.txt"))
+	logger, err := logging.New()
 	if err != nil {
 		log.Printf("init logger: %v", err)
 		return
