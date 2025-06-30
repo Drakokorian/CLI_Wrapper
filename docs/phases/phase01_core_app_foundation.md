@@ -13,7 +13,8 @@ Establish the base Wails application with cross-platform configuration and initi
   - Linux: `~/.config/ai-cli-ui/`
 - Detect whether the `openai` or `gemini` CLI is available in the system path.
 - Implement the initial UI with a prompt input, an output pane, and a model selector.
-- Log each CLI invocation to `logs.txt` in the app directory.
+- Log each CLI invocation to `sentinel.log` in the external log directory
+  (e.g., `/var/log` or `C:\\Temp`).
 - Add `toolchain go1.24.x` to `go.mod` for consistent builds across environments.
 - Document cross-platform build commands such as `wails build -platform windows/amd64`.
 

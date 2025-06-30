@@ -83,7 +83,8 @@ Resource throttling parameters are also configurable via `config.json`:
 ```
 If a running session exceeds these CPU or memory limits it is first throttled by
 reducing process priority. Persistent overages cause the session to be
-terminated. All alerts are recorded in `logs.txt`.
+terminated. All alerts are recorded in `sentinel.log` within `/var/log` on
+Unix or `C:\\Temp` on Windows.
 
 ## Model Switch Alerts
 
