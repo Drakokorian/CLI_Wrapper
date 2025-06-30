@@ -21,6 +21,25 @@ function App() {
   const [response, setResponse] = useState("");
   const [model, setModel] = useState("");
   const [alert, setAlert] = useState("");
+  const [concurrency, setConcurrency] = useState(1);
+  const [workingDir, setWorkingDir] = useState("");
+  const [showSettings, setShowSettings] = useState(false);
+
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const res = await fetch("http://localhost:8080/config");
+        if (res.ok) {
+          const data = await res.json();
+          setConcurrency(data.concurrency);
+          setWorkingDir(data.workingDir);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    load();
+  }, []);
 
   useEffect(() => {
     const unsub = EventsOn("model:switched", (data: any) => {
@@ -39,6 +58,19 @@ function App() {
     setResponse(maskSecrets(res));
   };
 
+  const saveSettings = async () => {
+    try {
+      await fetch("http://localhost:8080/config", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ concurrency, workingDir }),
+      });
+      setShowSettings(false);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
     <div className="flex h-screen">
       <aside className="w-48 bg-gray-100 dark:bg-gray-800 overflow-y-auto">
@@ -51,11 +83,55 @@ function App() {
           <div className="flex items-center space-x-2">
             <ResourceMeter />
             <ThemeToggle />
+            <button
+              className="border rounded px-2 py-1"
+              onClick={() => setShowSettings(true)}
+            >
+              Settings
+            </button>
           </div>
         </div>
         {alert && (
           <div className="text-yellow-600" role="alert">
             {alert}
+          </div>
+        )}
+        {showSettings && (
+          <div className="border p-2 rounded space-y-2" role="dialog">
+            <div>
+              <label className="block mb-1">Concurrent Agents</label>
+              <input
+                type="number"
+                min={1}
+                max={5}
+                value={concurrency}
+                onChange={(e) => setConcurrency(Number(e.target.value))}
+                className="border p-1 rounded w-full"
+              />
+            </div>
+            <div>
+              <label className="block mb-1">Working Directory</label>
+              <input
+                type="text"
+                value={workingDir}
+                onChange={(e) => setWorkingDir(e.target.value)}
+                className="border p-1 rounded w-full"
+              />
+            </div>
+            <div className="flex space-x-2">
+              <button
+                className="bg-blue-500 text-white px-3 py-1 rounded"
+                onClick={saveSettings}
+              >
+                Save
+              </button>
+              <button
+                className="border px-3 py-1 rounded"
+                onClick={() => setShowSettings(false)}
+              >
+                Cancel
+              </button>
+            </div>
           </div>
         )}
         <textarea

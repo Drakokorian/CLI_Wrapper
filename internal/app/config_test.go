@@ -8,7 +8,8 @@ import (
 
 func TestConfigLoadSave(t *testing.T) {
 	dir := t.TempDir()
-	cfg := Config{Concurrency: 3, Theme: "dark", CPUThreshold: 50, MemoryThreshold: 50, PollInterval: 2}
+	wd := t.TempDir()
+	cfg := Config{Concurrency: 3, Theme: "dark", CPUThreshold: 50, MemoryThreshold: 50, PollInterval: 2, WorkingDir: wd}
 	if err := SaveConfig(dir, cfg); err != nil {
 		t.Fatalf("save config: %v", err)
 	}
@@ -22,8 +23,8 @@ func TestConfigLoadSave(t *testing.T) {
 	if loaded.Theme != "dark" {
 		t.Fatalf("got %s want dark", loaded.Theme)
 	}
-	if loaded.CPUThreshold != 50 || loaded.MemoryThreshold != 50 {
-		t.Fatalf("thresholds not saved")
+	if loaded.CPUThreshold != 50 || loaded.MemoryThreshold != 50 || loaded.WorkingDir != wd {
+		t.Fatalf("config not saved")
 	}
 	// corrupt file should default to 1
 	path := filepath.Join(dir, "config", "config.json")
@@ -54,5 +55,10 @@ func TestConfigLoadSave(t *testing.T) {
 	cfg.PollInterval = 0
 	if err := SaveConfig(dir, cfg); err == nil {
 		t.Fatal("expected error for invalid poll interval")
+	}
+	cfg.PollInterval = 2
+	cfg.WorkingDir = filepath.Join(dir, "missing")
+	if err := SaveConfig(dir, cfg); err == nil {
+		t.Fatal("expected error for invalid working dir")
 	}
 }

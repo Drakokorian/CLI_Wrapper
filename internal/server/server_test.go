@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"path/filepath"
 	"testing"
 
@@ -75,6 +76,36 @@ func TestEndpoints(t *testing.T) {
 	}
 	if themeResp["theme"] != "dark" {
 		t.Fatalf("got %s want dark", themeResp["theme"])
+	}
+
+	// config endpoints
+	wd := filepath.Join(dir, "work")
+	if err := os.Mkdir(wd, 0o755); err != nil {
+		t.Fatalf("mkdir: %v", err)
+	}
+	resp, err = http.Get(ts.URL + "/config")
+	if err != nil {
+		t.Fatalf("config get: %v", err)
+	}
+	var cfgResp map[string]any
+	if err := json.NewDecoder(resp.Body).Decode(&cfgResp); err != nil {
+		t.Fatalf("decode config: %v", err)
+	}
+	if cfgResp["concurrency"].(float64) != 1 {
+		t.Fatalf("expected concurrency 1")
+	}
+
+	postBody := map[string]any{"concurrency": 2, "workingDir": wd}
+	body, _ := json.Marshal(postBody)
+	resp, err = http.Post(ts.URL+"/config", "application/json", bytes.NewBuffer(body))
+	if err != nil || resp.StatusCode != http.StatusOK {
+		t.Fatalf("post config: %v status %d", err, resp.StatusCode)
+	}
+	if err := json.NewDecoder(resp.Body).Decode(&cfgResp); err != nil {
+		t.Fatalf("decode post config: %v", err)
+	}
+	if cfgResp["concurrency"].(float64) != 2 {
+		t.Fatalf("expected concurrency 2")
 	}
 
 	// history endpoints

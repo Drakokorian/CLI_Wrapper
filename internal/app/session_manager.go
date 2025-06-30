@@ -96,6 +96,7 @@ func (m *SessionManager) dispatch() {
 func (m *SessionManager) run(req sessionRequest) {
 	ctx, cancel := context.WithCancel(m.ctx)
 	cmd := exec.CommandContext(ctx, req.model, req.args...)
+	cmd.Dir = m.cfg.WorkingDir
 	var buf bytes.Buffer
 	cmd.Stdout = &buf
 	cmd.Stderr = &buf

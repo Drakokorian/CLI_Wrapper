@@ -17,6 +17,7 @@ type Config struct {
 	CPUThreshold    float64 `json:"cpuThreshold"`
 	MemoryThreshold float64 `json:"memoryThreshold"`
 	PollInterval    int     `json:"pollInterval"`
+	WorkingDir      string  `json:"workingDir"`
 }
 
 // ValidTheme reports whether the provided theme value is supported.
@@ -28,6 +29,13 @@ const defaultTheme = "light"
 const defaultCPUThreshold = 35.0
 const defaultMemoryThreshold = 35.0
 const defaultPollInterval = 2
+
+func defaultWorkingDir() string {
+	if dir, err := os.UserHomeDir(); err == nil {
+		return dir
+	}
+	return "."
+}
 
 // LoadConfig reads configuration from the config directory.
 func LoadConfig(baseDir string) (Config, error) {
@@ -42,6 +50,7 @@ func LoadConfig(baseDir string) (Config, error) {
 				CPUThreshold:    defaultCPUThreshold,
 				MemoryThreshold: defaultMemoryThreshold,
 				PollInterval:    defaultPollInterval,
+				WorkingDir:      defaultWorkingDir(),
 			}, nil
 		}
 		return Config{}, fmt.Errorf("open config: %w", err)
@@ -69,6 +78,11 @@ func LoadConfig(baseDir string) (Config, error) {
 	if !cfg.ModelAlerts {
 		cfg.ModelAlerts = true
 	}
+	if cfg.WorkingDir == "" {
+		cfg.WorkingDir = defaultWorkingDir()
+	} else if info, err := os.Stat(cfg.WorkingDir); err != nil || !info.IsDir() {
+		cfg.WorkingDir = defaultWorkingDir()
+	}
 	return cfg, nil
 }
 
@@ -91,6 +105,12 @@ func SaveConfig(baseDir string, cfg Config) error {
 	}
 	if !cfg.ModelAlerts {
 		// allow both true and false; no validation necessary
+	}
+	if cfg.WorkingDir == "" {
+		return fmt.Errorf("working directory required")
+	}
+	if info, err := os.Stat(cfg.WorkingDir); err != nil || !info.IsDir() {
+		return fmt.Errorf("invalid working directory %q", cfg.WorkingDir)
 	}
 	path := filepath.Join(baseDir, "config", "config.json")
 	if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
