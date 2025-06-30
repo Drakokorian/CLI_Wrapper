@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"io"
 	"net/http"
+	"os"
 
 	"cli-wrapper/internal/app"
 	"cli-wrapper/internal/history"
@@ -34,6 +35,7 @@ func (s *Server) routes() {
 	s.mux.HandleFunc("/models", s.handleModels)
 	s.mux.HandleFunc("/billing", s.handleBilling)
 	s.mux.HandleFunc("/theme", s.handleTheme)
+	s.mux.HandleFunc("/config", s.handleConfig)
 	s.mux.HandleFunc("/history", s.handleHistory)
 	s.mux.HandleFunc("/history/search", s.handleHistorySearch)
 	s.mux.HandleFunc("/history/export", s.handleHistoryExport)
@@ -91,6 +93,49 @@ func (s *Server) handleTheme(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		s.respondJSON(w, map[string]string{"theme": s.cfg.Theme})
+	default:
+		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
+	}
+}
+
+func (s *Server) handleConfig(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case http.MethodGet:
+		resp := map[string]any{
+			"concurrency": s.cfg.Concurrency,
+			"workingDir":  s.cfg.WorkingDir,
+		}
+		s.respondJSON(w, resp)
+	case http.MethodPost:
+		var req struct {
+			Concurrency int    `json:"concurrency"`
+			WorkingDir  string `json:"workingDir"`
+		}
+		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+			http.Error(w, "bad request", http.StatusBadRequest)
+			return
+		}
+		if req.Concurrency < 1 || req.Concurrency > 5 {
+			http.Error(w, "invalid concurrency", http.StatusBadRequest)
+			return
+		}
+		if req.WorkingDir == "" {
+			http.Error(w, "working directory required", http.StatusBadRequest)
+			return
+		}
+		if info, err := os.Stat(req.WorkingDir); err != nil || !info.IsDir() {
+			http.Error(w, "invalid working directory", http.StatusBadRequest)
+			return
+		}
+		s.cfg.Concurrency = req.Concurrency
+		s.cfg.WorkingDir = req.WorkingDir
+		if err := app.SaveConfig(s.baseDir, *s.cfg); err != nil {
+			s.logger.Error("save config: " + err.Error())
+			http.Error(w, "internal", http.StatusInternalServerError)
+			return
+		}
+		resp := map[string]any{"concurrency": s.cfg.Concurrency, "workingDir": s.cfg.WorkingDir}
+		s.respondJSON(w, resp)
 	default:
 		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
 	}
