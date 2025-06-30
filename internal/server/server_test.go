@@ -52,6 +52,18 @@ func TestEndpoints(t *testing.T) {
 		t.Fatalf("unexpected usage: %v", usage)
 	}
 
+	if err := hist.AddMetric(history.Metric{ID: "sid", CPU: 1, Memory: 2}); err != nil {
+		t.Fatalf("add metric: %v", err)
+	}
+	resp, err = http.Get(ts.URL + "/resource/session/sid")
+	if err != nil {
+		t.Fatalf("session metrics: %v", err)
+	}
+	var metrics []history.Metric
+	if err := json.NewDecoder(resp.Body).Decode(&metrics); err != nil || len(metrics) != 1 {
+		t.Fatalf("decode metrics: %v len=%d", err, len(metrics))
+	}
+
 	resp, err = http.Get(ts.URL + "/theme")
 	if err != nil {
 		t.Fatalf("theme: %v", err)

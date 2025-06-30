@@ -6,6 +6,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"strings"
 
 	"cli-wrapper/internal/app"
 	"cli-wrapper/internal/history"
@@ -34,6 +35,7 @@ func (s *Server) routes() {
 	s.mux.HandleFunc("/sessions", s.handleSessions)
 	s.mux.Handle("/stream", websocket.Handler(s.handleStream))
 	s.mux.HandleFunc("/resource", s.handleResource)
+	s.mux.HandleFunc("/resource/session/", s.handleSessionResource)
 	s.mux.HandleFunc("/models", s.handleModels)
 	s.mux.HandleFunc("/billing", s.handleBilling)
 	s.mux.HandleFunc("/theme", s.handleTheme)
@@ -78,6 +80,21 @@ func (s *Server) handleResource(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	s.respondJSON(w, u)
+}
+
+func (s *Server) handleSessionResource(w http.ResponseWriter, r *http.Request) {
+	id := strings.TrimPrefix(r.URL.Path, "/resource/session/")
+	if id == "" {
+		http.Error(w, "not found", http.StatusNotFound)
+		return
+	}
+	metrics, err := s.hist.Metrics(id)
+	if err != nil {
+		s.logger.Error("metrics fetch: " + err.Error())
+		http.Error(w, "internal", http.StatusInternalServerError)
+		return
+	}
+	s.respondJSON(w, metrics)
 }
 
 func (s *Server) handleModels(w http.ResponseWriter, r *http.Request) {
