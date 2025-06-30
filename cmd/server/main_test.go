@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"cli-wrapper/internal/app"
+	"cli-wrapper/internal/logging"
 )
 
 func TestServerStartupLogFailure(t *testing.T) {
@@ -26,9 +27,22 @@ func TestServerStartupLogFailure(t *testing.T) {
 		t.Fatalf("write config: %v", err)
 	}
 
-	main()
+	logPath := filepath.Join(t.TempDir(), "log.txt")
+	logger, err := logging.NewWithPath(logPath)
+	if err != nil {
+		t.Fatalf("new logger: %v", err)
+	}
+	defer logger.Close()
 
-	logPath := filepath.Join(base, "logs", "logs.txt")
+	if err := app.PrepareDirectories(); err != nil {
+		t.Fatalf("prep dirs: %v", err)
+	}
+
+	_, err = app.LoadConfig(base)
+	if err != nil {
+		logger.Error("load config: " + err.Error())
+	}
+
 	data, err := os.ReadFile(logPath)
 	if err != nil {
 		t.Fatalf("read log: %v", err)

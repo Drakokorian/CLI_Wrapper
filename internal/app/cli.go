@@ -3,7 +3,6 @@ package app
 import (
 	"fmt"
 	"os/exec"
-	"path/filepath"
 
 	"cli-wrapper/internal/logging"
 )
@@ -36,8 +35,7 @@ func DetectCLITools() ([]string, error) {
 
 // InvokeTool runs the given CLI with args and logs the invocation.
 func InvokeTool(tool string, args []string, baseDir string) error {
-	logPath := filepath.Join(baseDir, "logs", "logs.txt")
-	logger, err := logging.NewWithPath(logPath)
+	logger, err := logging.New()
 	if err != nil {
 		return err
 	}
