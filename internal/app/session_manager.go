@@ -187,7 +187,12 @@ func (m *SessionManager) run(req sessionRequest) {
 
 func (m *SessionManager) monitor(s *Session) {
 	ticker := time.NewTicker(time.Duration(m.cfg.PollInterval) * time.Second)
-	defer ticker.Stop()
+	defer func() {
+		ticker.Stop()
+		if s.proc != nil {
+			s.proc = nil
+		}
+	}()
 	for {
 		select {
 		case <-s.done:
@@ -196,7 +201,7 @@ func (m *SessionManager) monitor(s *Session) {
 			if s.proc == nil {
 				continue
 			}
-			usage, err := telemetry.ReadProcess(s.proc.Pid)
+			usage, err := telemetry.ReadProcess(s.proc)
 			if err != nil {
 				m.logger.Error(fmt.Sprintf("metrics %s: %v", s.ID, err))
 				continue

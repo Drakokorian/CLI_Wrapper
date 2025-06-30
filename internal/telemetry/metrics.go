@@ -33,11 +33,11 @@ func Read() (Usage, error) {
 	return Usage{CPU: cpuVal, Memory: vm.UsedPercent}, nil
 }
 
-// ReadProcess returns CPU and memory usage for the given process ID.
-func ReadProcess(pid int32) (Usage, error) {
-	p, err := process.NewProcess(pid)
-	if err != nil {
-		return Usage{}, fmt.Errorf("new process: %w", err)
+// ReadProcess returns CPU and memory usage for the provided process.
+// It expects a valid gopsutil process handle.
+func ReadProcess(p *process.Process) (Usage, error) {
+	if p == nil {
+		return Usage{}, fmt.Errorf("nil process")
 	}
 	cpuPercent, err := p.CPUPercent()
 	if err != nil {
