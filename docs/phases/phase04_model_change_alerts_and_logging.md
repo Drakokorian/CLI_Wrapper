@@ -6,7 +6,9 @@ Track model selections per session and make changes visible through the UI and l
 ## Detailed Steps
 - Persist the last-used model for each session.
 - When a model switch occurs, highlight the UI with a message like “⚠️ Model switched from gpt-4 to gemini-1.5-pro.”
-- Append the change event, CLI command, prompt, and timestamp to `logs.txt`.
+- Append the change event, CLI command, prompt, and timestamp to
+  `sentinel.log` in the external log directory (e.g., `/var/log` or
+  `C:\\Temp`).
 - Ensure all logged timestamps use UTC.
 - Emit a runtime event to display alerts using the Wails event bus.
 - Write logs in JSON Lines format and rotate files when they exceed 20 MB.
