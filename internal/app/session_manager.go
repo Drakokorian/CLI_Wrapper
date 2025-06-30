@@ -157,6 +157,10 @@ func (m *SessionManager) run(req sessionRequest) {
 	go func() {
 		err := cmd.Wait()
 		sess.done <- err
+		if sess.proc != nil {
+			telemetry.ReleaseProcess(sess.proc)
+			sess.proc = nil
+		}
 		m.logger.Info(fmt.Sprintf("session %s finished", req.id))
 		if m.hist != nil {
 			rec := history.Record{
@@ -190,6 +194,7 @@ func (m *SessionManager) monitor(s *Session) {
 	defer func() {
 		ticker.Stop()
 		if s.proc != nil {
+			telemetry.ReleaseProcess(s.proc)
 			s.proc = nil
 		}
 	}()
@@ -293,6 +298,10 @@ func (m *SessionManager) Terminate(id string) error {
 	}
 	sess.cancel()
 	<-sess.done
+	if sess.proc != nil {
+		telemetry.ReleaseProcess(sess.proc)
+		sess.proc = nil
+	}
 	return nil
 }
 
@@ -327,6 +336,10 @@ func (m *SessionManager) Close() {
 		terminateProcess(s.Cmd)
 		s.cancel()
 		<-s.done
+		if s.proc != nil {
+			telemetry.ReleaseProcess(s.proc)
+			s.proc = nil
+		}
 	}
 	m.active = make(map[string]*Session)
 	m.mu.Unlock()
