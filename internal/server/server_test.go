@@ -7,7 +7,10 @@ import (
 	"net/http/httptest"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
+
+	"golang.org/x/net/websocket"
 
 	"cli-wrapper/internal/app"
 	"cli-wrapper/internal/history"
@@ -179,5 +182,52 @@ func TestEndpoints(t *testing.T) {
 	}
 	if billResp.Tool != "openai" || billResp.URL == "" || billResp.Usage.TotalGranted != 1 {
 		t.Fatalf("unexpected billing response %#v", billResp)
+	}
+}
+
+func TestStreamChars(t *testing.T) {
+	dir := t.TempDir()
+	os.MkdirAll(filepath.Join(dir, "state"), 0o755)
+	logger, _ := logging.NewWithPath("info", filepath.Join(dir, "log.txt"))
+	cfg := &app.Config{Concurrency: 1, Theme: "light", CPUThreshold: 50, MemoryThreshold: 50, PollInterval: 2, LogLevel: "info", LogPath: filepath.Join(dir, "log.txt"), WorkingDir: dir}
+	hist, _ := history.New(dir)
+	defer hist.Close()
+	mgr := app.NewSessionManager(dir, logger, 1, cfg, hist)
+	defer mgr.Close()
+
+	script := filepath.Join(dir, "echoer")
+	if err := os.WriteFile(script, []byte("#!/bin/sh\necho hi"), 0o755); err != nil {
+		t.Fatalf("write script: %v", err)
+	}
+	oldPath := os.Getenv("PATH")
+	os.Setenv("PATH", dir+string(os.PathListSeparator)+oldPath)
+	defer os.Setenv("PATH", oldPath)
+
+	srv := New(mgr, logger, dir, cfg, hist)
+	ts := httptest.NewServer(srv.mux)
+	defer ts.Close()
+
+	id, err := mgr.AddSession("echoer", "", []string{""})
+	if err != nil {
+		t.Fatalf("add session: %v", err)
+	}
+
+	wsURL := "ws" + strings.TrimPrefix(ts.URL, "http") + "/streamchars?id=" + id
+	ws, err := websocket.Dial(wsURL, "", ts.URL)
+	if err != nil {
+		t.Fatalf("dial: %v", err)
+	}
+	defer ws.Close()
+
+	var out bytes.Buffer
+	for i := 0; i < 3; i++ {
+		var msg string
+		if err := websocket.Message.Receive(ws, &msg); err != nil {
+			t.Fatalf("receive: %v", err)
+		}
+		out.WriteString(msg)
+	}
+	if out.String() != "hi\n" {
+		t.Fatalf("got %q", out.String())
 	}
 }
