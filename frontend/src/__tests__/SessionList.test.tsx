@@ -16,6 +16,7 @@ vi.stubGlobal("WebSocket", WS as any);
 describe("SessionList", () => {
   beforeEach(() => {
     (fetch as any).mockReset();
+    (fetch as any).mockResolvedValue({ ok: true, json: async () => [] });
   });
 
   it("displays fetched session IDs", async () => {
@@ -33,11 +34,13 @@ describe("SessionList", () => {
   });
 
   it("appends output from websocket", async () => {
-    (fetch as any).mockResolvedValueOnce({
+    vi.useFakeTimers();
+    (fetch as any).mockResolvedValue({
       ok: true,
       json: async () => ["id1"],
     });
     render(<SessionList />);
+    vi.advanceTimersByTime(0);
     await waitFor(() => {
       expect(screen.getByText("id1")).toBeInTheDocument();
     });
@@ -46,5 +49,6 @@ describe("SessionList", () => {
     await waitFor(() => {
       expect(screen.getByText("hello")).toBeInTheDocument();
     });
+    vi.useRealTimers();
   });
 });

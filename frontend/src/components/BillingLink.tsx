@@ -38,13 +38,13 @@ export default function BillingLink() {
   };
 
   return (
-    <div className="flex items-center space-x-2">
+    <div className="flex items-center space-x-2 font-sans">
       {info.usage && (
         <span className="text-sm" aria-label="usage">
           Used {info.usage.total_used.toFixed(2)} / {info.usage.total_granted.toFixed(2)}
         </span>
       )}
-      <button className="border rounded px-2 py-1" onClick={handleOpen}>
+      <button className="border rounded px-2 py-1 bg-primary-600 text-white" onClick={handleOpen}>
         View Billing
       </button>
     </div>

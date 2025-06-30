@@ -9,7 +9,7 @@
   "dependencies": {
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "@wailsio/runtime": "^2.6.0"
+    "@wailsio/runtime": "^3.0.0-alpha.66"
   },
   "devDependencies": {
     "typescript": "5.2.2",

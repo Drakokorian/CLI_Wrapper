@@ -7,18 +7,20 @@ vi.stubGlobal("fetch", vi.fn());
 describe("ModelSelector", () => {
   beforeEach(() => {
     (fetch as any).mockReset();
+    (fetch as any).mockResolvedValue({ ok: true, json: async () => [] });
   });
 
   it("highlights on selection change", async () => {
-    vi.useFakeTimers();
     (fetch as any).mockResolvedValueOnce({ ok: true, json: async () => ["a", "b"] });
     const { rerender } = render(<ModelSelector selected="a" onChange={() => {}} />);
     await waitFor(() => screen.getByRole("combobox"));
     rerender(<ModelSelector selected="b" onChange={() => {}} />);
     const select = screen.getByRole("combobox");
-    expect(select.className).toMatch(/border-blue-500/);
-    vi.advanceTimersByTime(300);
-    expect(select.className).not.toMatch(/border-blue-500/);
-    vi.useRealTimers();
+    expect(select).toHaveStyle({
+      borderColor: "rgb(37, 99, 235)",
+      backgroundColor: "rgb(239, 246, 255)",
+    });
+    await new Promise((r) => setTimeout(r, 300));
+    expect(select).not.toHaveStyle({ borderColor: "rgb(37, 99, 235)" });
   });
 });

@@ -34,9 +34,14 @@ export default function ModelSelector({ selected, onChange }: Props) {
     }
   }, [selected]);
 
+  const highlightStyle = flash
+    ? { borderColor: '#2563eb', backgroundColor: '#eff6ff' }
+    : {};
+
   return (
     <select
-      className={`border rounded px-2 py-1 transition-colors ${flash ? 'border-blue-500 bg-blue-50' : ''}`}
+      className="border rounded px-2 py-1 font-sans transition-colors"
+      style={highlightStyle}
       value={selected}
       onChange={(e) => onChange(e.target.value)}
     >

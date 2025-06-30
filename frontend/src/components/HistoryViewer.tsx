@@ -47,14 +47,14 @@ export default function HistoryViewer() {
   }, []);
 
   return (
-    <div className="p-2 border-t mt-2">
+    <div className="p-2 border-t mt-2 font-sans">
       <h2 className="text-lg font-semibold mb-2">History</h2>
       <div className="flex mb-2">
         <input className="border p-1 flex-1" value={query} onChange={(e) => setQuery(e.target.value)} />
-        <button className="bg-blue-500 text-white px-2 ml-2" onClick={search}>Search</button>
+        <button className="bg-primary-600 text-white px-2 ml-2" onClick={search}>Search</button>
       </div>
       <div className="flex items-center space-x-2 mb-2">
-        <button className="bg-green-500 text-white px-2" onClick={exportHist}>Export</button>
+        <button className="bg-success-600 text-white px-2" onClick={exportHist}>Export</button>
         <label className="bg-gray-200 p-1 cursor-pointer">
           Import<input type="file" className="hidden" onChange={importHist} />
         </label>
