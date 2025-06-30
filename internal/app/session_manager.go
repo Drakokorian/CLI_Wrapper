@@ -41,6 +41,8 @@ type Session struct {
 	proc      *process.Process
 	throttled bool
 	output    chan string
+	metricsMu sync.Mutex
+	metrics   []history.Metric
 }
 
 // SessionManager schedules CLI sessions with a concurrency limit.
@@ -167,6 +169,14 @@ func (m *SessionManager) run(req sessionRequest) {
 			if err := m.hist.Add(rec); err != nil {
 				m.logger.Error("history add " + err.Error())
 			}
+			sess.metricsMu.Lock()
+			metrics := append([]history.Metric(nil), sess.metrics...)
+			sess.metricsMu.Unlock()
+			for _, mtr := range metrics {
+				if err := m.hist.AddMetric(mtr); err != nil {
+					m.logger.Error("metric add " + err.Error())
+				}
+			}
 		}
 		m.remove(req.id)
 		close(sess.output)
@@ -191,6 +201,14 @@ func (m *SessionManager) monitor(s *Session) {
 				m.logger.Error(fmt.Sprintf("metrics %s: %v", s.ID, err))
 				continue
 			}
+			s.metricsMu.Lock()
+			s.metrics = append(s.metrics, history.Metric{
+				ID:        s.ID,
+				Timestamp: time.Now().UTC().Format(time.RFC3339),
+				CPU:       usage.CPU,
+				Memory:    usage.Memory,
+			})
+			s.metricsMu.Unlock()
 			if usage.CPU > m.cfg.CPUThreshold || usage.Memory > m.cfg.MemoryThreshold {
 				m.logger.Info(fmt.Sprintf("session %s high usage cpu %.1f mem %.1f", s.ID, usage.CPU, usage.Memory))
 				if !s.throttled {

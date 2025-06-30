@@ -1,7 +1,9 @@
 package telemetry
 
 import (
+	"context"
 	"fmt"
+	"time"
 
 	"github.com/shirou/gopsutil/v3/cpu"
 	"github.com/shirou/gopsutil/v3/mem"
@@ -46,4 +48,39 @@ func ReadProcess(pid int32) (Usage, error) {
 		return Usage{}, fmt.Errorf("memory percent: %w", err)
 	}
 	return Usage{CPU: cpuPercent, Memory: float64(memPercent)}, nil
+}
+
+// PollProcess periodically emits Usage metrics for the specified process ID.
+// The returned channel is closed when ctx is done.
+func PollProcess(ctx context.Context, pid int32, interval time.Duration) (<-chan Usage, error) {
+	if interval <= 0 {
+		return nil, fmt.Errorf("invalid interval")
+	}
+	p, err := process.NewProcess(pid)
+	if err != nil {
+		return nil, fmt.Errorf("new process: %w", err)
+	}
+	ch := make(chan Usage)
+	go func() {
+		ticker := time.NewTicker(interval)
+		defer ticker.Stop()
+		for {
+			select {
+			case <-ctx.Done():
+				close(ch)
+				return
+			case <-ticker.C:
+				cpuPercent, err := p.CPUPercent()
+				if err != nil {
+					continue
+				}
+				memPercent, err := p.MemoryPercent()
+				if err != nil {
+					continue
+				}
+				ch <- Usage{CPU: cpuPercent, Memory: float64(memPercent)}
+			}
+		}
+	}()
+	return ch, nil
 }

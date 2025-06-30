@@ -24,6 +24,14 @@ type Store struct {
 	db *sql.DB
 }
 
+// Metric represents CPU and memory usage for a session at a point in time.
+type Metric struct {
+	ID        string  `json:"id"`
+	Timestamp string  `json:"timestamp"`
+	CPU       float64 `json:"cpu"`
+	Memory    float64 `json:"memory"`
+}
+
 func New(baseDir string) (*Store, error) {
 	path := filepath.Join(baseDir, "state", "history.db")
 	if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
@@ -60,7 +68,14 @@ END;
 CREATE TRIGGER IF NOT EXISTS history_au AFTER UPDATE ON history BEGIN
     INSERT INTO history_fts(history_fts,rowid,prompt,response) VALUES('delete',old.rowid,old.prompt,old.response);
     INSERT INTO history_fts(rowid,prompt,response) VALUES(new.rowid,new.prompt,new.response);
-END;`
+END;
+CREATE TABLE IF NOT EXISTS metrics(
+    id TEXT NOT NULL,
+    timestamp TEXT NOT NULL,
+    cpu REAL NOT NULL,
+    memory REAL NOT NULL
+);
+`
 	if _, err := db.Exec(schema); err != nil {
 		return fmt.Errorf("init schema: %w", err)
 	}
@@ -172,4 +187,38 @@ func (s *Store) Import(data []byte) error {
 		return fmt.Errorf("commit: %w", err)
 	}
 	return nil
+}
+
+// AddMetric stores a usage metric for a session.
+func (s *Store) AddMetric(m Metric) error {
+	if m.ID == "" {
+		return fmt.Errorf("id required")
+	}
+	if m.Timestamp == "" {
+		m.Timestamp = time.Now().UTC().Format(time.RFC3339)
+	}
+	_, err := s.db.Exec(`INSERT INTO metrics(id,timestamp,cpu,memory) VALUES(?,?,?,?)`,
+		m.ID, m.Timestamp, m.CPU, m.Memory)
+	if err != nil {
+		return fmt.Errorf("insert metric: %w", err)
+	}
+	return nil
+}
+
+// Metrics returns recorded metrics for the given session ID ordered by timestamp.
+func (s *Store) Metrics(id string) ([]Metric, error) {
+	rows, err := s.db.Query(`SELECT id,timestamp,cpu,memory FROM metrics WHERE id=? ORDER BY timestamp`, id)
+	if err != nil {
+		return nil, fmt.Errorf("query metrics: %w", err)
+	}
+	defer rows.Close()
+	var ms []Metric
+	for rows.Next() {
+		var m Metric
+		if err := rows.Scan(&m.ID, &m.Timestamp, &m.CPU, &m.Memory); err != nil {
+			return nil, fmt.Errorf("scan: %w", err)
+		}
+		ms = append(ms, m)
+	}
+	return ms, nil
 }
