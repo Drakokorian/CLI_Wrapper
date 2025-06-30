@@ -15,6 +15,7 @@ import ModelSelector from "./components/ModelSelector";
 import ResourceMeter from "./components/ResourceMeter";
 import ThemeToggle from "./components/ThemeToggle";
 import HistoryViewer from "./components/HistoryViewer";
+import BillingLink from "./components/BillingLink";
 
 function App() {
   const [prompt, setPrompt] = useState("");
@@ -107,6 +108,7 @@ function App() {
           <ModelSelector selected={model} onChange={setModel} />
           <div className="flex items-center space-x-2">
             <ResourceMeter />
+            <BillingLink />
             <ThemeToggle />
             <button
               className="border rounded px-2 py-1"
