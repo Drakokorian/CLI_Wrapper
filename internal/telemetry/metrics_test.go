@@ -5,6 +5,8 @@ import (
 	"os"
 	"testing"
 	"time"
+
+	"github.com/shirou/gopsutil/v3/process"
 )
 
 func TestRead(t *testing.T) {
@@ -21,7 +23,11 @@ func TestRead(t *testing.T) {
 }
 
 func TestReadProcess(t *testing.T) {
-	u, err := ReadProcess(int32(os.Getpid()))
+	p, err := process.NewProcess(int32(os.Getpid()))
+	if err != nil {
+		t.Fatalf("new process: %v", err)
+	}
+	u, err := ReadProcess(p)
 	if err != nil {
 		t.Fatalf("read process: %v", err)
 	}
