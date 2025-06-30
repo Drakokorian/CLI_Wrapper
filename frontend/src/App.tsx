@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { EventsOn } from "@wailsio/runtime";
 import { maskSecrets } from "./utils";
 
@@ -19,6 +19,7 @@ import HistoryViewer from "./components/HistoryViewer";
 function App() {
   const [prompt, setPrompt] = useState("");
   const [response, setResponse] = useState("");
+  const queueRef = useRef<string[]>([]);
   const [model, setModel] = useState("");
   const [alert, setAlert] = useState("");
   const [concurrency, setConcurrency] = useState(1);
@@ -53,12 +54,32 @@ function App() {
     };
   }, []);
 
+  useEffect(() => {
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const interval = setInterval(() => {
+      if (queueRef.current.length === 0) {
+        return;
+      }
+      if (reduce) {
+        setResponse((p) => p + queueRef.current.join(""));
+        queueRef.current = [];
+        return;
+      }
+      const char = queueRef.current.shift();
+      if (char) {
+        setResponse((p) => p + char);
+      }
+    }, 30);
+    return () => clearInterval(interval);
+  }, []);
+
   const send = async () => {
     const id = await window.backend.RunPrompt(model, prompt);
     setResponse("");
-    const ws = new WebSocket(`ws://localhost:8080/stream?id=${id}`);
+    queueRef.current = [];
+    const ws = new WebSocket(`ws://localhost:8080/streamchars?id=${id}`);
     ws.onmessage = (e) => {
-      setResponse((p) => p + maskSecrets(e.data) + "\n");
+      queueRef.current.push(...(maskSecrets(e.data)));
     };
   };
 
@@ -149,7 +170,10 @@ function App() {
         >
           Send
         </button>
-        <pre className="whitespace-pre-wrap bg-gray-50 p-2 rounded flex-1 overflow-y-auto">
+        <pre
+          className="whitespace-pre-wrap bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 p-2 rounded flex-1 overflow-y-auto"
+          aria-live="polite"
+        >
           {response}
         </pre>
       </main>

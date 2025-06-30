@@ -34,6 +34,7 @@ func New(mgr *app.SessionManager, logger *logging.Logger, baseDir string, cfg *a
 func (s *Server) routes() {
 	s.mux.HandleFunc("/sessions", s.handleSessions)
 	s.mux.Handle("/stream", websocket.Handler(s.handleStream))
+	s.mux.Handle("/streamchars", websocket.Handler(s.handleStreamChars))
 	s.mux.HandleFunc("/resource", s.handleResource)
 	s.mux.HandleFunc("/resource/session/", s.handleSessionResource)
 	s.mux.HandleFunc("/models", s.handleModels)
@@ -68,6 +69,26 @@ func (s *Server) handleStream(ws *websocket.Conn) {
 	for line := range ch {
 		if err := websocket.Message.Send(ws, line); err != nil {
 			break
+		}
+	}
+}
+
+func (s *Server) handleStreamChars(ws *websocket.Conn) {
+	id := ws.Request().URL.Query().Get("id")
+	if id == "" {
+		ws.Close()
+		return
+	}
+	ch, err := s.mgr.OutputChannel(id)
+	if err != nil {
+		ws.Close()
+		return
+	}
+	for line := range ch {
+		for _, r := range line + "\n" {
+			if err := websocket.Message.Send(ws, string(r)); err != nil {
+				return
+			}
 		}
 	}
 }
