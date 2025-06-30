@@ -29,7 +29,7 @@ func run(logger *logging.Logger, name string, args ...string) error {
 }
 
 func main() {
-	logger, err := logging.New()
+	logger, err := logging.New("info", "")
 	if err != nil {
 		log.Fatalf("init logger: %v", err)
 	}

@@ -18,17 +18,21 @@ func main() {
 		log.Printf("prepare dirs: %v", err)
 		return
 	}
-	logger, err := logging.NewWithPath(filepath.Join(base, "logs", "logs.txt"))
+	cfg, cfgErr := app.LoadConfig(base)
+	if cfg.LogLevel == "" {
+		cfg.LogLevel = "info"
+	}
+	if cfg.LogPath == "" {
+		cfg.LogPath = filepath.Join(base, "logs", "logs.txt")
+	}
+	logger, err := logging.New(cfg.LogLevel, cfg.LogPath)
 	if err != nil {
 		log.Printf("init logger: %v", err)
 		return
 	}
 	defer logger.Close()
-
-	cfg, err := app.LoadConfig(base)
-	if err != nil {
-		logger.Error("load config: " + err.Error())
-		return
+	if cfgErr != nil {
+		logger.Error("load config: " + cfgErr.Error())
 	}
 	hist, err := history.New(base)
 	if err != nil {

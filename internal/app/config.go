@@ -18,6 +18,8 @@ type Config struct {
 	MemoryThreshold float64 `json:"memoryThreshold"`
 	PollInterval    int     `json:"pollInterval"`
 	WorkingDir      string  `json:"workingDir"`
+	LogLevel        string  `json:"logLevel"`
+	LogPath         string  `json:"logPath"`
 }
 
 // ValidTheme reports whether the provided theme value is supported.
@@ -29,6 +31,11 @@ const defaultTheme = "light"
 const defaultCPUThreshold = 35.0
 const defaultMemoryThreshold = 35.0
 const defaultPollInterval = 2
+const defaultLogLevel = "info"
+
+func defaultLogPath(baseDir string) string {
+	return filepath.Join(baseDir, "logs", "logs.txt")
+}
 
 func defaultWorkingDir() string {
 	if dir, err := os.UserHomeDir(); err == nil {
@@ -51,6 +58,8 @@ func LoadConfig(baseDir string) (Config, error) {
 				MemoryThreshold: defaultMemoryThreshold,
 				PollInterval:    defaultPollInterval,
 				WorkingDir:      defaultWorkingDir(),
+				LogLevel:        defaultLogLevel,
+				LogPath:         defaultLogPath(baseDir),
 			}, nil
 		}
 		return Config{}, fmt.Errorf("open config: %w", err)
@@ -77,6 +86,14 @@ func LoadConfig(baseDir string) (Config, error) {
 	}
 	if !cfg.ModelAlerts {
 		cfg.ModelAlerts = true
+	}
+	switch cfg.LogLevel {
+	case "error", "info", "debug":
+	default:
+		cfg.LogLevel = defaultLogLevel
+	}
+	if cfg.LogPath == "" {
+		cfg.LogPath = defaultLogPath(baseDir)
 	}
 	if cfg.WorkingDir == "" {
 		cfg.WorkingDir = defaultWorkingDir()
@@ -105,6 +122,14 @@ func SaveConfig(baseDir string, cfg Config) error {
 	}
 	if !cfg.ModelAlerts {
 		// allow both true and false; no validation necessary
+	}
+	switch cfg.LogLevel {
+	case "error", "info", "debug":
+	default:
+		return fmt.Errorf("invalid log level %q", cfg.LogLevel)
+	}
+	if cfg.LogPath == "" {
+		return fmt.Errorf("log path required")
 	}
 	if cfg.WorkingDir == "" {
 		return fmt.Errorf("working directory required")

@@ -28,7 +28,7 @@ func TestServerStartupLogFailure(t *testing.T) {
 	}
 
 	logPath := filepath.Join(t.TempDir(), "log.txt")
-	logger, err := logging.NewWithPath(logPath)
+	logger, err := logging.NewWithPath("info", logPath)
 	if err != nil {
 		t.Fatalf("new logger: %v", err)
 	}

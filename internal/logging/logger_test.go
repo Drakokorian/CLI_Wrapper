@@ -14,7 +14,7 @@ func TestLoggerWrite(t *testing.T) {
 	if err != nil {
 		t.Fatalf("newRotateWriter: %v", err)
 	}
-	logger := &Logger{writer: rw}
+	logger := &Logger{writer: rw, level: LevelDebug}
 	defer logger.Close()
 	if err := logger.Info("test"); err != nil {
 		t.Fatalf("info: %v", err)

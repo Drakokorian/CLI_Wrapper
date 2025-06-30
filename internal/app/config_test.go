@@ -9,7 +9,7 @@ import (
 func TestConfigLoadSave(t *testing.T) {
 	dir := t.TempDir()
 	wd := t.TempDir()
-	cfg := Config{Concurrency: 3, Theme: "dark", CPUThreshold: 50, MemoryThreshold: 50, PollInterval: 2, WorkingDir: wd}
+	cfg := Config{Concurrency: 3, Theme: "dark", CPUThreshold: 50, MemoryThreshold: 50, PollInterval: 2, WorkingDir: wd, LogLevel: "debug", LogPath: filepath.Join(dir, "log.txt")}
 	if err := SaveConfig(dir, cfg); err != nil {
 		t.Fatalf("save config: %v", err)
 	}
@@ -23,7 +23,7 @@ func TestConfigLoadSave(t *testing.T) {
 	if loaded.Theme != "dark" {
 		t.Fatalf("got %s want dark", loaded.Theme)
 	}
-	if loaded.CPUThreshold != 50 || loaded.MemoryThreshold != 50 || loaded.WorkingDir != wd {
+	if loaded.CPUThreshold != 50 || loaded.MemoryThreshold != 50 || loaded.WorkingDir != wd || loaded.LogLevel != "debug" || loaded.LogPath == "" {
 		t.Fatalf("config not saved")
 	}
 	// corrupt file should default to 1
@@ -60,5 +60,16 @@ func TestConfigLoadSave(t *testing.T) {
 	cfg.WorkingDir = filepath.Join(dir, "missing")
 	if err := SaveConfig(dir, cfg); err == nil {
 		t.Fatal("expected error for invalid working dir")
+	}
+
+	cfg.WorkingDir = wd
+	cfg.LogLevel = "unknown"
+	if err := SaveConfig(dir, cfg); err == nil {
+		t.Fatal("expected error for invalid log level")
+	}
+	cfg.LogLevel = "info"
+	cfg.LogPath = ""
+	if err := SaveConfig(dir, cfg); err == nil {
+		t.Fatal("expected error for empty log path")
 	}
 }

@@ -26,7 +26,8 @@ go build ./cmd/phasefirst
 ```
 
 The command writes operational logs to `sentinel.log` in `/var/log` on Unix or
-`C:\Temp` on Windows. Logs are stored in JSON with automatic rotation.
+`C:\Temp` on Windows. Logs are stored in JSON with automatic rotation. Both the
+log file path and verbosity level are configurable via `config.json`.
 
 ### Testing
 
@@ -80,7 +81,9 @@ Resource throttling parameters are also configurable via `config.json`:
 {
   "cpuThreshold": 35,
   "memoryThreshold": 35,
-  "pollInterval": 2
+  "pollInterval": 2,
+  "logLevel": "info",
+  "logPath": "<path>"
 }
 ```
 If a running session exceeds these CPU or memory limits it is first throttled by

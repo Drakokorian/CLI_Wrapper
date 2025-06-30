@@ -9,6 +9,7 @@ import (
 	"path/filepath"
 	"runtime"
 	"sort"
+	"strings"
 	"time"
 )
 
@@ -111,8 +112,28 @@ func (w *rotateWriter) Close() error {
 	return w.file.Close()
 }
 
+type Level int
+
+const (
+	LevelError Level = iota
+	LevelInfo
+	LevelDebug
+)
+
 type Logger struct {
 	writer io.WriteCloser
+	level  Level
+}
+
+func parseLevel(lvl string) Level {
+	switch strings.ToLower(lvl) {
+	case "error":
+		return LevelError
+	case "debug":
+		return LevelDebug
+	default:
+		return LevelInfo
+	}
 }
 
 type logEntry struct {
@@ -121,25 +142,23 @@ type logEntry struct {
 	Message   string `json:"message"`
 }
 
-func New() (*Logger, error) {
-	path := "/var/log/sentinel.log"
-	if runtime.GOOS == "windows" {
-		path = filepath.Join(os.Getenv("SystemDrive"), "Temp", "sentinel.log")
+func New(level, path string) (*Logger, error) {
+	if path == "" {
+		path = "/var/log/sentinel.log"
+		if runtime.GOOS == "windows" {
+			path = filepath.Join(os.Getenv("SystemDrive"), "Temp", "sentinel.log")
+		}
 	}
 	rw, err := newRotateWriter(path, 20*1024*1024, 5, 30*24*time.Hour)
 	if err != nil {
 		return nil, err
 	}
-	return &Logger{writer: rw}, nil
+	return &Logger{writer: rw, level: parseLevel(level)}, nil
 }
 
 // NewWithPath creates a logger that writes to the specified file path.
-func NewWithPath(path string) (*Logger, error) {
-	rw, err := newRotateWriter(path, 20*1024*1024, 5, 30*24*time.Hour)
-	if err != nil {
-		return nil, err
-	}
-	return &Logger{writer: rw}, nil
+func NewWithPath(level, path string) (*Logger, error) {
+	return New(level, path)
 }
 
 func (l *Logger) log(level, msg string) error {
@@ -188,11 +207,24 @@ func (l *Logger) ModelSwitch(from, to, prompt string) error {
 }
 
 func (l *Logger) Info(msg string) error {
+	if l.level < LevelInfo {
+		return nil
+	}
 	return l.log("INFO", msg)
 }
 
 func (l *Logger) Error(msg string) error {
+	if l.level < LevelError {
+		return nil
+	}
 	return l.log("ERROR", msg)
+}
+
+func (l *Logger) Debug(msg string) error {
+	if l.level < LevelDebug {
+		return nil
+	}
+	return l.log("DEBUG", msg)
 }
 
 func (l *Logger) Close() error {
