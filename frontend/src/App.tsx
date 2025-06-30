@@ -98,7 +98,7 @@ function App() {
   };
 
   return (
-    <div className="flex h-screen transition-colors duration-300">
+    <div className="flex h-screen transition-colors duration-300 font-sans">
       <aside className="w-48 bg-gray-100 dark:bg-gray-800 overflow-y-auto">
         <SessionList />
         <HistoryViewer />
@@ -147,7 +147,7 @@ function App() {
             </div>
             <div className="flex space-x-2">
               <button
-                className="bg-blue-500 text-white px-3 py-1 rounded"
+                className="bg-primary-600 text-white px-3 py-1 rounded"
                 onClick={saveSettings}
               >
                 Save
@@ -167,7 +167,7 @@ function App() {
           onChange={(e) => setPrompt(e.target.value)}
         />
         <button
-          className="bg-blue-500 text-white px-4 py-2 rounded"
+          className="bg-primary-600 text-white px-4 py-2 rounded"
           onClick={send}
         >
           Send

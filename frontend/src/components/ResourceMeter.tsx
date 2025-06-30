@@ -28,7 +28,7 @@ export default function ResourceMeter() {
         <span className="text-sm">CPU {cpu.toFixed(1)}%</span>
         <div className="w-full bg-gray-200 h-2 rounded">
           <div
-            className="bg-blue-500 h-2 rounded"
+            className="bg-primary-600 h-2 rounded"
             style={{ width: `${cpu}%` }}
           />
         </div>
@@ -37,7 +37,7 @@ export default function ResourceMeter() {
         <span className="text-sm">RAM {mem.toFixed(1)}%</span>
         <div className="w-full bg-gray-200 h-2 rounded">
           <div
-            className="bg-green-500 h-2 rounded"
+            className="bg-success-600 h-2 rounded"
             style={{ width: `${mem}%` }}
           />
         </div>

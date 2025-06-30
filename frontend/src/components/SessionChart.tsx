@@ -37,13 +37,13 @@ export default function SessionChart({ id }: { id: string }) {
         <>
           <polyline
             fill="none"
-            stroke="blue"
+            stroke="rgb(29, 78, 216)"
             strokeWidth="2"
             points={points("cpu")}
           />
           <polyline
             fill="none"
-            stroke="green"
+            stroke="rgb(4, 120, 87)"
             strokeWidth="2"
             points={points("memory")}
           />

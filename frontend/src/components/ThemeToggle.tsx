@@ -39,7 +39,7 @@ export default function ThemeToggle() {
   };
 
   return (
-    <button className="border rounded px-2 py-1 transition-colors" onClick={toggle} aria-label="Toggle theme">
+    <button className="border rounded px-2 py-1 font-sans transition-colors" onClick={toggle} aria-label="Toggle theme">
       {theme === "light" ? "Dark Mode" : "Light Mode"}
     </button>
   );

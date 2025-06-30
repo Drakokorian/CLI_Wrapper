@@ -36,7 +36,7 @@ export default function SessionList() {
   }, []);
 
   return (
-    <div className="p-2">
+    <div className="p-2 font-sans">
       <h2 className="text-lg font-semibold mb-2">Sessions</h2>
       <ul className="space-y-1">
         {sessions.map((id) => (

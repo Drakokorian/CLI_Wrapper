@@ -14,6 +14,11 @@ vi.mock('@wailsio/runtime', () => ({
 beforeAll(() => {
   vi.stubGlobal('fetch', vi.fn());
   (global as any).window.backend = { RunPrompt: vi.fn() };
+  (global as any).window.matchMedia = vi.fn().mockReturnValue({
+    matches: false,
+    addListener: vi.fn(),
+    removeListener: vi.fn(),
+  });
   class WS {
     static instances: WS[] = [];
     onmessage: ((e: MessageEvent) => void) | null = null;
@@ -28,6 +33,16 @@ beforeAll(() => {
 
 beforeEach(() => {
   (fetch as any).mockReset();
+  (fetch as any).mockImplementation(async (url: string) => {
+    if (url.includes('sessions')) return { ok: true, json: async () => [] };
+    if (url.includes('models')) return { ok: true, json: async () => [] };
+    if (url.includes('resource')) return { ok: true, json: async () => ({ cpu: 0, memory: 0 }) };
+    if (url.includes('billing')) return { ok: true, json: async () => ({ tool: '', url: '', usage: { total_granted: 0, total_used: 0, total_available: 0 } }) };
+    if (url.includes('theme')) return { ok: true, json: async () => ({ theme: 'light' }) };
+    if (url.includes('config')) return { ok: true, json: async () => ({ concurrency: 1, workingDir: '' }) };
+    if (url.includes('history')) return { ok: true, json: async () => [] };
+    return { ok: true, json: async () => ({}) };
+  });
   (window.backend.RunPrompt as any).mockReset();
 });
 

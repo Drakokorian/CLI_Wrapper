@@ -4,10 +4,13 @@ import BillingLink from "../components/BillingLink";
 
 vi.stubGlobal("fetch", vi.fn());
 const openURL = vi.fn();
-vi.mock("@wailsio/runtime", () => ({ OpenURL: openURL }));
+vi.mock("@wailsio/runtime", () => ({
+  OpenURL: (...args: any[]) => openURL(...args),
+}));
 
 beforeEach(() => {
   (fetch as any).mockReset();
+  (fetch as any).mockResolvedValue({ ok: true, json: async () => ({}) });
   openURL.mockReset();
 });
 
