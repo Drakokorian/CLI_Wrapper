@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	logger, err := logging.New()
+	logger, err := logging.New("info", "")
 	if err != nil {
 		log.Fatalf("failed to init logger: %v", err)
 	}

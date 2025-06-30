@@ -65,11 +65,14 @@ func TestRotateAndCleanup(t *testing.T) {
 func TestLoggerLevels(t *testing.T) {
 	dir := t.TempDir()
 	path := filepath.Join(dir, "sentinel.log")
-	logger, err := NewWithPath(path)
+	logger, err := NewWithPath("debug", path)
 	if err != nil {
 		t.Fatalf("new logger: %v", err)
 	}
 	defer logger.Close()
+	if err := logger.Debug("dbg"); err != nil {
+		t.Fatalf("debug: %v", err)
+	}
 	if err := logger.Info("hello"); err != nil {
 		t.Fatalf("info: %v", err)
 	}
@@ -84,8 +87,8 @@ func TestLoggerLevels(t *testing.T) {
 		t.Fatalf("read log: %v", err)
 	}
 	lines := strings.Split(strings.TrimSpace(string(data)), "\n")
-	if len(lines) != 3 {
-		t.Fatalf("expected 3 lines got %d", len(lines))
+	if len(lines) != 4 {
+		t.Fatalf("expected 4 lines got %d", len(lines))
 	}
 	for _, l := range lines {
 		var obj map[string]any
@@ -101,14 +104,14 @@ func (errWriter) Write([]byte) (int, error) { return 0, fmt.Errorf("write fail")
 func (errWriter) Close() error              { return nil }
 
 func TestLogWriteError(t *testing.T) {
-	l := &Logger{writer: errWriter{}}
+	l := &Logger{writer: errWriter{}, level: LevelInfo}
 	if err := l.Info("bad"); err == nil {
 		t.Fatal("expected error")
 	}
 }
 
 func TestModelSwitchWriteError(t *testing.T) {
-	l := &Logger{writer: errWriter{}}
+	l := &Logger{writer: errWriter{}, level: LevelInfo}
 	if err := l.ModelSwitch("a", "b", "p"); err == nil {
 		t.Fatal("expected error")
 	}
@@ -146,7 +149,7 @@ func TestRotateOpenError(t *testing.T) {
 func TestNewDefault(t *testing.T) {
 	dir := t.TempDir()
 	path := filepath.Join(dir, "sentinel.log")
-	l, err := NewWithPath(path)
+	l, err := NewWithPath("info", path)
 	if err != nil {
 		t.Fatalf("new: %v", err)
 	}

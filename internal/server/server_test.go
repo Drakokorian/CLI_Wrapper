@@ -16,8 +16,9 @@ import (
 
 func TestEndpoints(t *testing.T) {
 	dir := t.TempDir()
-	logger, _ := logging.NewWithPath(filepath.Join(dir, "log.txt"))
-	cfg := &app.Config{Concurrency: 1, Theme: "light", CPUThreshold: 50, MemoryThreshold: 50, PollInterval: 2}
+	os.MkdirAll(filepath.Join(dir, "state"), 0o755)
+	logger, _ := logging.NewWithPath("info", filepath.Join(dir, "log.txt"))
+	cfg := &app.Config{Concurrency: 1, Theme: "light", CPUThreshold: 50, MemoryThreshold: 50, PollInterval: 2, LogLevel: "info", LogPath: filepath.Join(dir, "log.txt"), WorkingDir: dir}
 	hist, _ := history.New(dir)
 	defer hist.Close()
 	mgr := app.NewSessionManager(dir, logger, 1, cfg, hist)
@@ -91,11 +92,11 @@ func TestEndpoints(t *testing.T) {
 	if err := json.NewDecoder(resp.Body).Decode(&cfgResp); err != nil {
 		t.Fatalf("decode config: %v", err)
 	}
-	if cfgResp["concurrency"].(float64) != 1 {
+	if cfgResp["concurrency"].(float64) != 1 || cfgResp["logLevel"].(string) == "" {
 		t.Fatalf("expected concurrency 1")
 	}
 
-	postBody := map[string]any{"concurrency": 2, "workingDir": wd}
+	postBody := map[string]any{"concurrency": 2, "workingDir": wd, "logLevel": "debug", "logPath": filepath.Join(dir, "new.log")}
 	body, _ := json.Marshal(postBody)
 	resp, err = http.Post(ts.URL+"/config", "application/json", bytes.NewBuffer(body))
 	if err != nil || resp.StatusCode != http.StatusOK {
@@ -104,7 +105,7 @@ func TestEndpoints(t *testing.T) {
 	if err := json.NewDecoder(resp.Body).Decode(&cfgResp); err != nil {
 		t.Fatalf("decode post config: %v", err)
 	}
-	if cfgResp["concurrency"].(float64) != 2 {
+	if cfgResp["concurrency"].(float64) != 2 || cfgResp["logLevel"].(string) != "debug" {
 		t.Fatalf("expected concurrency 2")
 	}
 

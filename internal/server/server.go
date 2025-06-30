@@ -104,12 +104,16 @@ func (s *Server) handleConfig(w http.ResponseWriter, r *http.Request) {
 		resp := map[string]any{
 			"concurrency": s.cfg.Concurrency,
 			"workingDir":  s.cfg.WorkingDir,
+			"logLevel":    s.cfg.LogLevel,
+			"logPath":     s.cfg.LogPath,
 		}
 		s.respondJSON(w, resp)
 	case http.MethodPost:
 		var req struct {
 			Concurrency int    `json:"concurrency"`
 			WorkingDir  string `json:"workingDir"`
+			LogLevel    string `json:"logLevel"`
+			LogPath     string `json:"logPath"`
 		}
 		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 			http.Error(w, "bad request", http.StatusBadRequest)
@@ -127,14 +131,26 @@ func (s *Server) handleConfig(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "invalid working directory", http.StatusBadRequest)
 			return
 		}
+		switch req.LogLevel {
+		case "error", "info", "debug":
+		default:
+			http.Error(w, "invalid log level", http.StatusBadRequest)
+			return
+		}
+		if req.LogPath == "" {
+			http.Error(w, "log path required", http.StatusBadRequest)
+			return
+		}
 		s.cfg.Concurrency = req.Concurrency
 		s.cfg.WorkingDir = req.WorkingDir
+		s.cfg.LogLevel = req.LogLevel
+		s.cfg.LogPath = req.LogPath
 		if err := app.SaveConfig(s.baseDir, *s.cfg); err != nil {
 			s.logger.Error("save config: " + err.Error())
 			http.Error(w, "internal", http.StatusInternalServerError)
 			return
 		}
-		resp := map[string]any{"concurrency": s.cfg.Concurrency, "workingDir": s.cfg.WorkingDir}
+		resp := map[string]any{"concurrency": s.cfg.Concurrency, "workingDir": s.cfg.WorkingDir, "logLevel": s.cfg.LogLevel, "logPath": s.cfg.LogPath}
 		s.respondJSON(w, resp)
 	default:
 		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)

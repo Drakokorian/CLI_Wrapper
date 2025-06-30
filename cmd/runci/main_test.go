@@ -12,7 +12,7 @@ import (
 func TestRunSuccess(t *testing.T) {
 	dir := t.TempDir()
 	logPath := filepath.Join(dir, "log.txt")
-	logger, err := logging.NewWithPath(logPath)
+	logger, err := logging.NewWithPath("info", logPath)
 	if err != nil {
 		t.Fatalf("new logger: %v", err)
 	}
@@ -33,7 +33,7 @@ func TestRunSuccess(t *testing.T) {
 func TestRunFailure(t *testing.T) {
 	dir := t.TempDir()
 	logPath := filepath.Join(dir, "log.txt")
-	logger, err := logging.NewWithPath(logPath)
+	logger, err := logging.NewWithPath("info", logPath)
 	if err != nil {
 		t.Fatalf("new logger: %v", err)
 	}
