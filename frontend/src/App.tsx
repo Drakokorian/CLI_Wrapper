@@ -98,7 +98,7 @@ function App() {
   };
 
   return (
-    <div className="flex h-screen">
+    <div className="flex h-screen transition-colors duration-300">
       <aside className="w-48 bg-gray-100 dark:bg-gray-800 overflow-y-auto">
         <SessionList />
         <HistoryViewer />
@@ -119,12 +119,12 @@ function App() {
           </div>
         </div>
         {alert && (
-          <div className="text-yellow-600" role="alert">
+          <div className="text-yellow-600 transition-opacity duration-300" role="alert">
             {alert}
           </div>
         )}
         {showSettings && (
-          <div className="border p-2 rounded space-y-2" role="dialog">
+          <div className="border p-2 rounded space-y-2 transition-all duration-300" role="dialog">
             <div>
               <label className="block mb-1">Concurrent Agents</label>
               <input
