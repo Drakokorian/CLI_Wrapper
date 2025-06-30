@@ -107,3 +107,34 @@ append lines dynamically so results appear incrementally.
 ## CLI Plugins
 
 The application supports extensible CLI integrations via a plugin mechanism. Each plugin must implement the `plugins.Plugin` interface and register itself during initialization using `plugins.Register`. Registered plugins are automatically detected at runtime. See `internal/plugins/openai.go` and `internal/plugins/gemini.go` for reference implementations.
+
+## `cliwrap` Command
+
+The `cliwrap` tool provides a minimal terminal interface for running a model and managing history.
+
+### Examples
+
+Run a prompt and wait for the result:
+
+```bash
+cliwrap run -model sh -prompt "echo hello"
+```
+
+Export previous runs to a file:
+
+```bash
+cliwrap history export > history.json
+```
+
+Import history from standard input:
+
+```bash
+cat history.json | cliwrap history import
+```
+
+Global flags `-concurrency` and `-workdir` update the same `config.json` used by the desktop app:
+
+```bash
+cliwrap -concurrency 2 -workdir /tmp run -model sh -prompt "echo hi"
+```
+
