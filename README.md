@@ -94,3 +94,8 @@ The Wails backend tracks the last-used model. When a new prompt specifies a diff
 model, the backend emits a `model:switched` event via the Wails event bus and logs the
 change in JSON Lines format. Log files automatically rotate after reaching 20 MB.
 
+
+## CLI Plugins
+
+The application supports extensible CLI integrations via a plugin mechanism. Each plugin must implement the `plugins.Plugin` interface and register itself during initialization using `plugins.Register`. Registered plugins are automatically detected at runtime. See `internal/plugins/openai.go` and `internal/plugins/gemini.go` for reference implementations.
+
