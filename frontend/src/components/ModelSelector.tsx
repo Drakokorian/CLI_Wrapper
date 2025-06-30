@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 interface Props {
   selected: string;
@@ -7,6 +7,8 @@ interface Props {
 
 export default function ModelSelector({ selected, onChange }: Props) {
   const [models, setModels] = useState<string[]>([]);
+  const prev = useRef<string>(selected);
+  const [flash, setFlash] = useState(false);
 
   useEffect(() => {
     const fetchModels = async () => {
@@ -23,9 +25,18 @@ export default function ModelSelector({ selected, onChange }: Props) {
     fetchModels();
   }, []);
 
+  useEffect(() => {
+    if (prev.current !== selected) {
+      setFlash(true);
+      const id = setTimeout(() => setFlash(false), 300);
+      prev.current = selected;
+      return () => clearTimeout(id);
+    }
+  }, [selected]);
+
   return (
     <select
-      className="border rounded px-2 py-1"
+      className={`border rounded px-2 py-1 transition-colors ${flash ? 'border-blue-500 bg-blue-50' : ''}`}
       value={selected}
       onChange={(e) => onChange(e.target.value)}
     >
