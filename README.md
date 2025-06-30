@@ -38,6 +38,8 @@ go test -race ./...
 npm test --prefix frontend
 ```
 
+You can also run `scripts/run_ci.sh` to execute `go vet`, `go test`, and `go build` with output logged to the sentinel log.
+
 ## Wails Application
 
 The repository also contains a minimal Wails v2 application located in the
