@@ -2,18 +2,17 @@ package app
 
 import (
 	"fmt"
-	"os/exec"
 
 	"cli-wrapper/internal/logging"
+	"cli-wrapper/internal/plugins"
 )
 
 // DetectCLITool returns the first available CLI tool.
 func DetectCLITool() (string, error) {
-	if _, err := exec.LookPath("openai"); err == nil {
-		return "openai", nil
-	}
-	if _, err := exec.LookPath("gemini"); err == nil {
-		return "gemini", nil
+	for _, p := range plugins.All() {
+		if p.Detect() {
+			return p.Name(), nil
+		}
 	}
 	return "", fmt.Errorf("no supported CLI tool found")
 }
@@ -21,11 +20,10 @@ func DetectCLITool() (string, error) {
 // DetectCLITools returns all available CLI tools.
 func DetectCLITools() ([]string, error) {
 	tools := []string{}
-	if _, err := exec.LookPath("openai"); err == nil {
-		tools = append(tools, "openai")
-	}
-	if _, err := exec.LookPath("gemini"); err == nil {
-		tools = append(tools, "gemini")
+	for _, p := range plugins.All() {
+		if p.Detect() {
+			tools = append(tools, p.Name())
+		}
 	}
 	if len(tools) == 0 {
 		return nil, fmt.Errorf("no supported CLI tool found")
@@ -41,13 +39,16 @@ func InvokeTool(tool string, args []string, baseDir string) error {
 	}
 	defer logger.Close()
 
-	cmd := exec.Command(tool, args...)
+	p, ok := plugins.Get(tool)
+	if !ok {
+		return fmt.Errorf("unknown tool %q", tool)
+	}
+
 	logger.Info(fmt.Sprintf("running %s %v", tool, args))
-	out, err := cmd.CombinedOutput()
-	if err != nil {
+	if err := p.Invoke(args); err != nil {
 		logger.Error(fmt.Sprintf("%s failed: %v", tool, err))
 		return fmt.Errorf("run %s: %w", tool, err)
 	}
-	logger.Info(fmt.Sprintf("%s output: %s", tool, string(out)))
+	logger.Info(fmt.Sprintf("%s completed", tool))
 	return nil
 }
