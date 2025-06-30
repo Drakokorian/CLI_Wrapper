@@ -14,9 +14,9 @@ func TestAppStartupLogFailure(t *testing.T) {
 	os.Setenv("HOME", home)
 	defer os.Unsetenv("HOME")
 
-	base, err := app.AppDir()
+	base, err := app.PrepareDirectories()
 	if err != nil {
-		t.Fatalf("app dir: %v", err)
+		t.Fatalf("prep dirs: %v", err)
 	}
 	cfgDir := filepath.Join(base, "config")
 	if err := os.MkdirAll(cfgDir, 0o755); err != nil {

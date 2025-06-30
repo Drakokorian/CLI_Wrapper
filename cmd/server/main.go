@@ -11,6 +11,7 @@ import (
 )
 
 func main() {
+	// base is the root path containing config, logs and state directories.
 	base, err := app.PrepareDirectories()
 	if err != nil {
 		log.Printf("prepare dirs: %v", err)
