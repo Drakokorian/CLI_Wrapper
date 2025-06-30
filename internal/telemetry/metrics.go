@@ -10,6 +10,23 @@ import (
 	"github.com/shirou/gopsutil/v3/process"
 )
 
+// processHandle defines the subset of github.com/shirou/gopsutil/v3/process.Process
+// methods used by this package. It allows tests to provide mocks while keeping
+// the production code simple.
+type processHandle interface {
+	CPUPercent() (float64, error)
+	MemoryPercent() (float32, error)
+}
+
+// ReleaseProcess attempts to release any underlying OS handles held by the
+// provided process. It silently ignores types that do not implement a Release
+// method.
+func ReleaseProcess(p any) {
+	if r, ok := p.(interface{ Release() error }); ok {
+		_ = r.Release()
+	}
+}
+
 // Usage represents CPU and memory usage percentages.
 type Usage struct {
 	CPU    float64 `json:"cpu"`
@@ -35,7 +52,7 @@ func Read() (Usage, error) {
 
 // ReadProcess returns CPU and memory usage for the provided process.
 // It expects a valid gopsutil process handle.
-func ReadProcess(p *process.Process) (Usage, error) {
+func ReadProcess(p processHandle) (Usage, error) {
 	if p == nil {
 		return Usage{}, fmt.Errorf("nil process")
 	}
@@ -63,7 +80,10 @@ func PollProcess(ctx context.Context, pid int32, interval time.Duration) (<-chan
 	ch := make(chan Usage)
 	go func() {
 		ticker := time.NewTicker(interval)
-		defer ticker.Stop()
+		defer func() {
+			ticker.Stop()
+			ReleaseProcess(p)
+		}()
 		for {
 			select {
 			case <-ctx.Done():
