@@ -54,8 +54,12 @@ function App() {
   }, []);
 
   const send = async () => {
-    const res = await window.backend.RunPrompt(model, prompt);
-    setResponse(maskSecrets(res));
+    const id = await window.backend.RunPrompt(model, prompt);
+    setResponse("");
+    const ws = new WebSocket(`ws://localhost:8080/stream?id=${id}`);
+    ws.onmessage = (e) => {
+      setResponse((p) => p + maskSecrets(e.data) + "\n");
+    };
   };
 
   const saveSettings = async () => {

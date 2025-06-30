@@ -1,5 +1,20 @@
 import { useEffect, useState } from "react";
 
+function SessionItem({ id }: { id: string }) {
+  const [lines, setLines] = useState<string[]>([]);
+  useEffect(() => {
+    const ws = new WebSocket(`ws://localhost:8080/stream?id=${id}`);
+    ws.onmessage = (e) => setLines((p) => [...p, e.data as string]);
+    return () => ws.close();
+  }, [id]);
+  return (
+    <li className="text-sm">
+      <div className="truncate font-mono">{id}</div>
+      <pre className="text-xs whitespace-pre-wrap">{lines.join("\n")}</pre>
+    </li>
+  );
+}
+
 export default function SessionList() {
   const [sessions, setSessions] = useState<string[]>([]);
 
@@ -25,9 +40,7 @@ export default function SessionList() {
       <h2 className="text-lg font-semibold mb-2">Sessions</h2>
       <ul className="space-y-1">
         {sessions.map((id) => (
-          <li key={id} className="text-sm truncate">
-            {id}
-          </li>
+          <SessionItem key={id} id={id} />
         ))}
       </ul>
     </div>

@@ -2,6 +2,7 @@ package server
 
 import (
 	"encoding/json"
+	"golang.org/x/net/websocket"
 	"io"
 	"net/http"
 	"os"
@@ -31,6 +32,7 @@ func New(mgr *app.SessionManager, logger *logging.Logger, baseDir string, cfg *a
 
 func (s *Server) routes() {
 	s.mux.HandleFunc("/sessions", s.handleSessions)
+	s.mux.Handle("/stream", websocket.Handler(s.handleStream))
 	s.mux.HandleFunc("/resource", s.handleResource)
 	s.mux.HandleFunc("/models", s.handleModels)
 	s.mux.HandleFunc("/billing", s.handleBilling)
@@ -48,6 +50,24 @@ func (s *Server) respondJSON(w http.ResponseWriter, v any) {
 
 func (s *Server) handleSessions(w http.ResponseWriter, r *http.Request) {
 	s.respondJSON(w, s.mgr.Sessions())
+}
+
+func (s *Server) handleStream(ws *websocket.Conn) {
+	id := ws.Request().URL.Query().Get("id")
+	if id == "" {
+		ws.Close()
+		return
+	}
+	ch, err := s.mgr.OutputChannel(id)
+	if err != nil {
+		ws.Close()
+		return
+	}
+	for line := range ch {
+		if err := websocket.Message.Send(ws, line); err != nil {
+			break
+		}
+	}
 }
 
 func (s *Server) handleResource(w http.ResponseWriter, r *http.Request) {

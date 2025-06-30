@@ -6,7 +6,6 @@ This repository contains helper utilities for the CLI Wrapper project.
 
 Run `scripts/install.sh` to install Go 1.24+, Node.js 18+, and the Wails CLI automatically for your platform.
 
-
 ## `phasefirst` Command
 
 The `phasefirst` command extracts the first bullet from the **Detailed Steps**
@@ -86,6 +85,7 @@ Resource throttling parameters are also configurable via `config.json`:
   "logPath": "<path>"
 }
 ```
+
 If a running session exceeds these CPU or memory limits it is first throttled by
 reducing process priority. Persistent overages cause the session to be
 terminated. All alerts are recorded in `sentinel.log` within `/var/log` on
@@ -97,8 +97,13 @@ The Wails backend tracks the last-used model. When a new prompt specifies a diff
 model, the backend emits a `model:switched` event via the Wails event bus and logs the
 change in JSON Lines format. Log files automatically rotate after reaching 20 MB.
 
+## Streaming Session Output
+
+Sessions now stream stdout and stderr lines in real time. The backend exposes a
+`/stream` WebSocket endpoint that accepts a session ID and forwards output
+chunks as they are produced. React components subscribe to these streams and
+append lines dynamically so results appear incrementally.
 
 ## CLI Plugins
 
 The application supports extensible CLI integrations via a plugin mechanism. Each plugin must implement the `plugins.Plugin` interface and register itself during initialization using `plugins.Register`. Registered plugins are automatically detected at runtime. See `internal/plugins/openai.go` and `internal/plugins/gemini.go` for reference implementations.
-

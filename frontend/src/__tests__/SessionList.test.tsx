@@ -1,25 +1,50 @@
-import { render, screen, waitFor } from '@testing-library/react';
-import SessionList from '../components/SessionList';
-import { vi } from 'vitest';
+import { render, screen, waitFor } from "@testing-library/react";
+import SessionList from "../components/SessionList";
+import { vi } from "vitest";
 
-vi.stubGlobal('fetch', vi.fn());
+vi.stubGlobal("fetch", vi.fn());
+class WS {
+  static instances: WS[] = [];
+  onmessage: ((e: MessageEvent) => void) | null = null;
+  constructor(url: string) {
+    WS.instances.push(this);
+  }
+  close() {}
+}
+vi.stubGlobal("WebSocket", WS as any);
 
-describe('SessionList', () => {
+describe("SessionList", () => {
   beforeEach(() => {
-    ;(fetch as any).mockReset();
+    (fetch as any).mockReset();
   });
 
-  it('displays fetched session IDs', async () => {
+  it("displays fetched session IDs", async () => {
     (fetch as any).mockResolvedValueOnce({
       ok: true,
-      json: async () => ['abc123', 'xyz789'],
+      json: async () => ["abc123", "xyz789"],
     });
 
     render(<SessionList />);
 
     await waitFor(() => {
-      expect(screen.getByText('abc123')).toBeInTheDocument();
-      expect(screen.getByText('xyz789')).toBeInTheDocument();
+      expect(screen.getByText("abc123")).toBeInTheDocument();
+      expect(screen.getByText("xyz789")).toBeInTheDocument();
+    });
+  });
+
+  it("appends output from websocket", async () => {
+    (fetch as any).mockResolvedValueOnce({
+      ok: true,
+      json: async () => ["id1"],
+    });
+    render(<SessionList />);
+    await waitFor(() => {
+      expect(screen.getByText("id1")).toBeInTheDocument();
+    });
+    const ws = (WebSocket as any).instances[0] as any;
+    ws.onmessage?.({ data: "hello" });
+    await waitFor(() => {
+      expect(screen.getByText("hello")).toBeInTheDocument();
     });
   });
 });
