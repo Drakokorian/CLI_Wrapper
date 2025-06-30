@@ -1,11 +1,13 @@
 package app
 
 import (
+	"bufio"
 	"bytes"
 	"context"
 	"crypto/rand"
 	"errors"
 	"fmt"
+	"io"
 	"os"
 	"os/exec"
 	"runtime"
@@ -38,6 +40,7 @@ type Session struct {
 	done      chan error
 	proc      *process.Process
 	throttled bool
+	output    chan string
 }
 
 // SessionManager schedules CLI sessions with a concurrency limit.
@@ -92,15 +95,41 @@ func (m *SessionManager) dispatch() {
 	}
 }
 
+func (m *SessionManager) streamOutput(r io.ReadCloser, buf *bytes.Buffer, ch chan<- string) {
+	defer r.Close()
+	scanner := bufio.NewScanner(r)
+	for scanner.Scan() {
+		line := scanner.Text()
+		buf.WriteString(line + "\n")
+		select {
+		case ch <- line:
+		case <-m.ctx.Done():
+			return
+		}
+	}
+}
+
 // run executes a session and tracks it until completion.
 func (m *SessionManager) run(req sessionRequest) {
 	ctx, cancel := context.WithCancel(m.ctx)
 	cmd := exec.CommandContext(ctx, req.model, req.args...)
 	cmd.Dir = m.cfg.WorkingDir
+
+	stdout, err := cmd.StdoutPipe()
+	if err != nil {
+		cancel()
+		req.res <- fmt.Errorf("stdout pipe: %w", err)
+		return
+	}
+	stderr, err := cmd.StderrPipe()
+	if err != nil {
+		cancel()
+		req.res <- fmt.Errorf("stderr pipe: %w", err)
+		return
+	}
+
 	var buf bytes.Buffer
-	cmd.Stdout = &buf
-	cmd.Stderr = &buf
-	sess := &Session{ID: req.id, Model: req.model, Prompt: req.prompt, Cmd: cmd, cancel: cancel, done: make(chan error, 1)}
+	sess := &Session{ID: req.id, Model: req.model, Prompt: req.prompt, Cmd: cmd, cancel: cancel, done: make(chan error, 1), output: make(chan string, 32)}
 	m.logger.Info(fmt.Sprintf("session %s running model %s", req.id, req.model))
 	m.mu.Lock()
 	m.active[req.id] = sess
@@ -108,11 +137,14 @@ func (m *SessionManager) run(req sessionRequest) {
 
 	if err := cmd.Start(); err != nil {
 		m.logger.Error(fmt.Sprintf("start %s: %v", req.id, err))
+		cancel()
 		req.res <- fmt.Errorf("start: %w", err)
 		m.remove(req.id)
 		<-m.sem
 		return
 	}
+	go m.streamOutput(stdout, &buf, sess.output)
+	go m.streamOutput(stderr, &buf, sess.output)
 	proc, err := process.NewProcess(int32(cmd.Process.Pid))
 	if err == nil {
 		sess.proc = proc
@@ -137,6 +169,7 @@ func (m *SessionManager) run(req sessionRequest) {
 			}
 		}
 		m.remove(req.id)
+		close(sess.output)
 		<-m.sem
 	}()
 	req.res <- nil
@@ -181,6 +214,17 @@ func (m *SessionManager) remove(id string) {
 	m.mu.Lock()
 	delete(m.active, id)
 	m.mu.Unlock()
+}
+
+// OutputChannel returns a channel of output lines for the given session.
+func (m *SessionManager) OutputChannel(id string) (<-chan string, error) {
+	m.mu.Lock()
+	defer m.mu.Unlock()
+	sess, ok := m.active[id]
+	if !ok {
+		return nil, fmt.Errorf("unknown session %s", id)
+	}
+	return sess.output, nil
 }
 
 // AddSession queues a CLI invocation and returns its ID when scheduled.
