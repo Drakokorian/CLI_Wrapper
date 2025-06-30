@@ -5,6 +5,7 @@ import (
 	"path/filepath"
 
 	"github.com/wailsapp/wails/v2"
+	"github.com/wailsapp/wails/v2/pkg/options"
 
 	"cli-wrapper/internal/app"
 	"cli-wrapper/internal/history"
@@ -12,9 +13,9 @@ import (
 )
 
 func main() {
-	base, err := app.AppDir()
+	base, err := app.PrepareDirectories()
 	if err != nil {
-		log.Printf("app dir: %v", err)
+		log.Printf("prepare dirs: %v", err)
 		return
 	}
 	logger, err := logging.NewWithPath(filepath.Join(base, "logs", "logs.txt"))
@@ -23,11 +24,6 @@ func main() {
 		return
 	}
 	defer logger.Close()
-
-	if err := app.PrepareDirectories(); err != nil {
-		logger.Error("prepare dirs: " + err.Error())
-		return
-	}
 
 	cfg, err := app.LoadConfig(base)
 	if err != nil {
@@ -44,7 +40,8 @@ func main() {
 	mgr := app.NewSessionManager(base, logger, cfg.Concurrency, &cfg, hist)
 	defer mgr.Close()
 	backend := app.NewBackend(mgr, logger, &cfg)
-	if err := wails.Run(&wails.Options{Bind: []interface{}{backend}, OnStartup: backend.Startup}); err != nil {
+	opts := &options.App{Bind: []interface{}{backend}, OnStartup: backend.Startup}
+	if err := wails.Run(opts); err != nil {
 		logger.Error(err.Error())
 	}
 }

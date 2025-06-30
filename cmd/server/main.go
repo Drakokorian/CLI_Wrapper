@@ -10,9 +10,9 @@ import (
 )
 
 func main() {
-	base, err := app.AppDir()
+	base, err := app.PrepareDirectories()
 	if err != nil {
-		log.Printf("app dir: %v", err)
+		log.Printf("prepare dirs: %v", err)
 		return
 	}
 	logger, err := logging.New()
@@ -21,11 +21,6 @@ func main() {
 		return
 	}
 	defer logger.Close()
-
-	if err := app.PrepareDirectories(); err != nil {
-		logger.Error("prepare dirs: " + err.Error())
-		return
-	}
 
 	cfg, err := app.LoadConfig(base)
 	if err != nil {

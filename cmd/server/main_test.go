@@ -15,9 +15,9 @@ func TestServerStartupLogFailure(t *testing.T) {
 	os.Setenv("HOME", home)
 	defer os.Unsetenv("HOME")
 
-	base, err := app.AppDir()
+	base, err := app.PrepareDirectories()
 	if err != nil {
-		t.Fatalf("app dir: %v", err)
+		t.Fatalf("prep dirs: %v", err)
 	}
 	cfgDir := filepath.Join(base, "config")
 	if err := os.MkdirAll(cfgDir, 0o755); err != nil {
@@ -33,10 +33,6 @@ func TestServerStartupLogFailure(t *testing.T) {
 		t.Fatalf("new logger: %v", err)
 	}
 	defer logger.Close()
-
-	if err := app.PrepareDirectories(); err != nil {
-		t.Fatalf("prep dirs: %v", err)
-	}
 
 	_, err = app.LoadConfig(base)
 	if err != nil {
