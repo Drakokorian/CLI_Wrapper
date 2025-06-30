@@ -6,12 +6,15 @@ REQUIRED_GO=1.24
 REQUIRED_NODE=18
 
 # Detect operating system
-case "$(uname -s)" in
-    Linux*) OS="linux" ;;
-    Darwin*) OS="darwin" ;;
-    CYGWIN*|MINGW*|MSYS*) OS="windows" ;;
-    *) echo "Unsupported platform: $(uname -s)" >&2; exit 1 ;;
-esac
+if command -v cmd.exe >/dev/null 2>&1; then
+    OS="windows"
+else
+    case "$(uname -s)" in
+        Linux*) OS="linux" ;;
+        Darwin*) OS="darwin" ;;
+        *) echo "Unsupported platform: $(uname -s)" >&2; exit 1 ;;
+    esac
+fi
 ARCH=$(uname -m)
 
 version_ge() {
