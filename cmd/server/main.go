@@ -41,7 +41,7 @@ func main() {
 	}
 	defer hist.Close()
 
-	mgr := app.NewSessionManager(base, logger, cfg.Concurrency, &cfg, hist)
+	mgr := app.NewSessionManager(logger, cfg.Concurrency, &cfg, hist)
 	defer mgr.Close()
 
 	srv := server.New(mgr, logger, base, &cfg, hist)

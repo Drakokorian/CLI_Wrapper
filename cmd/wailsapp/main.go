@@ -42,7 +42,7 @@ func main() {
 	}
 	defer hist.Close()
 
-	mgr := app.NewSessionManager(base, logger, cfg.Concurrency, &cfg, hist)
+	mgr := app.NewSessionManager(logger, cfg.Concurrency, &cfg, hist)
 	defer mgr.Close()
 	backend := app.NewBackend(mgr, logger, &cfg)
 	opts := &options.App{Bind: []interface{}{backend}, OnStartup: backend.Startup}

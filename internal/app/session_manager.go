@@ -38,7 +38,9 @@ type Session struct {
 	Cmd       *exec.Cmd
 	cancel    context.CancelFunc
 	done      chan error
+	procMu    sync.Mutex
 	proc      *process.Process
+	bufMu     sync.Mutex
 	throttled bool
 	output    chan string
 	metricsMu sync.Mutex
@@ -47,16 +49,15 @@ type Session struct {
 
 // SessionManager schedules CLI sessions with a concurrency limit.
 type SessionManager struct {
-	baseDir string
-	logger  *logging.Logger
-	queue   chan sessionRequest
-	active  map[string]*Session
-	mu      sync.Mutex
-	sem     chan struct{}
-	ctx     context.Context
-	cancel  context.CancelFunc
-	cfg     *Config
-	hist    *history.Store
+	logger *logging.Logger
+	queue  chan sessionRequest
+	active map[string]*Session
+	mu     sync.Mutex
+	sem    chan struct{}
+	ctx    context.Context
+	cancel context.CancelFunc
+	cfg    *Config
+	hist   *history.Store
 }
 
 type sessionRequest struct {
@@ -68,18 +69,17 @@ type sessionRequest struct {
 }
 
 // NewSessionManager creates a manager with the given concurrency limit.
-func NewSessionManager(baseDir string, logger *logging.Logger, concurrency int, cfg *Config, hist *history.Store) *SessionManager {
+func NewSessionManager(logger *logging.Logger, concurrency int, cfg *Config, hist *history.Store) *SessionManager {
 	ctx, cancel := context.WithCancel(context.Background())
 	m := &SessionManager{
-		baseDir: baseDir,
-		logger:  logger,
-		queue:   make(chan sessionRequest, 100),
-		active:  make(map[string]*Session),
-		sem:     make(chan struct{}, concurrency),
-		ctx:     ctx,
-		cancel:  cancel,
-		cfg:     cfg,
-		hist:    hist,
+		logger: logger,
+		queue:  make(chan sessionRequest, 100),
+		active: make(map[string]*Session),
+		sem:    make(chan struct{}, concurrency),
+		ctx:    ctx,
+		cancel: cancel,
+		cfg:    cfg,
+		hist:   hist,
 	}
 	go m.dispatch()
 	return m
@@ -97,12 +97,14 @@ func (m *SessionManager) dispatch() {
 	}
 }
 
-func (m *SessionManager) streamOutput(r io.ReadCloser, buf *bytes.Buffer, ch chan<- string) {
+func (m *SessionManager) streamOutput(sess *Session, r io.ReadCloser, buf *bytes.Buffer, ch chan<- string) {
 	defer r.Close()
 	scanner := bufio.NewScanner(r)
 	for scanner.Scan() {
 		line := scanner.Text()
+		sess.bufMu.Lock()
 		buf.WriteString(line + "\n")
+		sess.bufMu.Unlock()
 		select {
 		case ch <- line:
 		case <-m.ctx.Done():
@@ -145,11 +147,13 @@ func (m *SessionManager) run(req sessionRequest) {
 		<-m.sem
 		return
 	}
-	go m.streamOutput(stdout, &buf, sess.output)
-	go m.streamOutput(stderr, &buf, sess.output)
+	go m.streamOutput(sess, stdout, &buf, sess.output)
+	go m.streamOutput(sess, stderr, &buf, sess.output)
 	proc, err := process.NewProcess(int32(cmd.Process.Pid))
 	if err == nil {
+		sess.procMu.Lock()
 		sess.proc = proc
+		sess.procMu.Unlock()
 		go m.monitor(sess)
 	} else {
 		m.logger.Error(fmt.Sprintf("session %s monitor: %v", req.id, err))
@@ -157,16 +161,21 @@ func (m *SessionManager) run(req sessionRequest) {
 	go func() {
 		err := cmd.Wait()
 		sess.done <- err
+		sess.procMu.Lock()
 		if sess.proc != nil {
 			telemetry.ReleaseProcess(sess.proc)
 			sess.proc = nil
 		}
+		sess.procMu.Unlock()
 		m.logger.Info(fmt.Sprintf("session %s finished", req.id))
 		if m.hist != nil {
+			sess.bufMu.Lock()
+			resp := buf.String()
+			sess.bufMu.Unlock()
 			rec := history.Record{
 				ID:       req.id,
 				Prompt:   req.prompt,
-				Response: buf.String(),
+				Response: resp,
 				Model:    req.model,
 				Success:  err == nil,
 			}
@@ -193,20 +202,27 @@ func (m *SessionManager) monitor(s *Session) {
 	ticker := time.NewTicker(time.Duration(m.cfg.PollInterval) * time.Second)
 	defer func() {
 		ticker.Stop()
+		s.procMu.Lock()
+		s.procMu.Lock()
 		if s.proc != nil {
 			telemetry.ReleaseProcess(s.proc)
 			s.proc = nil
 		}
+		s.procMu.Unlock()
+		s.procMu.Unlock()
 	}()
 	for {
 		select {
 		case <-s.done:
 			return
 		case <-ticker.C:
-			if s.proc == nil {
+			s.procMu.Lock()
+			proc := s.proc
+			s.procMu.Unlock()
+			if proc == nil {
 				continue
 			}
-			usage, err := telemetry.ReadProcess(s.proc)
+			usage, err := telemetry.ReadProcess(proc)
 			if err != nil {
 				m.logger.Error(fmt.Sprintf("metrics %s: %v", s.ID, err))
 				continue
@@ -298,10 +314,12 @@ func (m *SessionManager) Terminate(id string) error {
 	}
 	sess.cancel()
 	<-sess.done
+	sess.procMu.Lock()
 	if sess.proc != nil {
 		telemetry.ReleaseProcess(sess.proc)
 		sess.proc = nil
 	}
+	sess.procMu.Unlock()
 	return nil
 }
 
