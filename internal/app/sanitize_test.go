@@ -20,7 +20,17 @@ func TestSanitizeModel(t *testing.T) {
 	if _, err := SanitizeModel("../bad"); err == nil {
 		t.Error("expected error")
 	}
-	if m, err := SanitizeModel("good-model_1"); err != nil || m != "good-model_1" {
-		t.Errorf("unexpected result %v %v", m, err)
+	if _, err := SanitizeModel("bad model"); err == nil {
+		t.Error("expected error")
+	}
+	cases := []string{
+		"good-model_1",
+		"gpt-3.5-turbo",
+		"model.version_2",
+	}
+	for _, c := range cases {
+		if m, err := SanitizeModel(c); err != nil || m != c {
+			t.Errorf("unexpected result %v %v", m, err)
+		}
 	}
 }
