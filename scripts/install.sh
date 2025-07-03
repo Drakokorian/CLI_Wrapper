@@ -68,7 +68,7 @@ install_node() {
     echo "Installing Node.js"
     case "$OS" in
         linux)
-            curl -fsSL https://nodejs.org/dist/latest-v18.x/node-v18.20.3-linux-x64.tar.gz -o node.tgz
+            curl -fsSL https://nodejs.org/dist/v18.20.8/node-v18.20.8-linux-x64.tar.gz -o node.tgz
             sudo tar -C /usr/local --strip-components=1 -xzf node.tgz
             rm node.tgz
             ;;
@@ -77,7 +77,7 @@ install_node() {
                 brew install node@18
                 brew link --force --overwrite node@18
             else
-                curl -fsSL https://nodejs.org/dist/latest-v18.x/node-v18.20.3-darwin-x64.tar.gz -o node.tgz
+                curl -fsSL https://nodejs.org/dist/v18.20.8/node-v18.20.8-darwin-x64.tar.gz -o node.tgz
                 sudo tar -C /usr/local --strip-components=1 -xzf node.tgz
                 rm node.tgz
             fi
