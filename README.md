@@ -108,6 +108,8 @@ append lines dynamically so results appear incrementally.
 
 The application supports extensible CLI integrations via a plugin mechanism. Each plugin must implement the `plugins.Plugin` interface and register itself during initialization using `plugins.Register`. Registered plugins are automatically detected at runtime. See `internal/plugins/openai.go` and `internal/plugins/gemini.go` for reference implementations.
 
+To force the application to use a specific CLI, set the `CLIWRAP_TOOL` environment variable to the plugin name before launching. When set and the selected tool is available, `DetectCLITool` returns that tool instead of auto-detecting.
+
 ## `cliwrap` Command
 
 The `cliwrap` tool provides a minimal terminal interface for running a model and managing history.
@@ -137,4 +139,6 @@ Global flags `-concurrency` and `-workdir` update the same `config.json` used by
 ```bash
 cliwrap -concurrency 2 -workdir /tmp run -model sh -prompt "echo hi"
 ```
+
+You can override automatic CLI detection by exporting `CLIWRAP_TOOL` with the desired plugin name before running commands.
 
