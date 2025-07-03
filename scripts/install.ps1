@@ -1,9 +1,10 @@
 $ErrorActionPreference = 'Stop'
+$isWindows = $env:OS -eq 'Windows_NT'
 Set-StrictMode -Version Latest
 
 $LogPath = $env:SENTINEL_LOG_PATH
 if (-not $LogPath) {
-    if ($IsWindows) {
+    if ($isWindows) {
         $LogPath = Join-Path $env:SystemDrive 'Temp\sentinel.log'
     } else {
         $LogPath = '/var/log/sentinel.log'
