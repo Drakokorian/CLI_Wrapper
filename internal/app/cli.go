@@ -2,6 +2,7 @@ package app
 
 import (
 	"fmt"
+	"os"
 
 	"cli-wrapper/internal/logging"
 	"cli-wrapper/internal/plugins"
@@ -9,6 +10,13 @@ import (
 
 // DetectCLITool returns the first available CLI tool.
 func DetectCLITool() (string, error) {
+	if pref := os.Getenv("CLIWRAP_TOOL"); pref != "" {
+		if p, ok := plugins.Get(pref); ok {
+			if p.Detect() {
+				return p.Name(), nil
+			}
+		}
+	}
 	for _, p := range plugins.All() {
 		if p.Detect() {
 			return p.Name(), nil
