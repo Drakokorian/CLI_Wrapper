@@ -32,7 +32,7 @@ function App() {
   useEffect(() => {
     const load = async () => {
       try {
-        const res = await fetch("http://localhost:8080/config");
+        const res = await fetch("/config");
         if (res.ok) {
           const data = await res.json();
           setConcurrency(data.concurrency);
@@ -82,7 +82,8 @@ function App() {
     const id = await window.backend.RunPrompt(model, prompt);
     setResponse("");
     queueRef.current = [];
-    const ws = new WebSocket(`ws://localhost:8080/streamchars?id=${id}`);
+    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    const ws = new WebSocket(`${protocol}//${window.location.host}/streamchars?id=${id}`);
     ws.onmessage = (e) => {
       queueRef.current.push(...(maskSecrets(e.data)));
     };
@@ -90,7 +91,7 @@ function App() {
 
   const saveSettings = async () => {
     try {
-      await fetch("http://localhost:8080/config", {
+      await fetch("/config", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

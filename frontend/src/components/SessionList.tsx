@@ -3,7 +3,8 @@ import { useEffect, useState } from "react";
 function SessionItem({ id }: { id: string }) {
   const [lines, setLines] = useState<string[]>([]);
   useEffect(() => {
-    const ws = new WebSocket(`ws://localhost:8080/stream?id=${id}`);
+    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    const ws = new WebSocket(`${protocol}//${window.location.host}/stream?id=${id}`);
     ws.onmessage = (e) => setLines((p) => [...p, e.data as string]);
     return () => ws.close();
   }, [id]);
@@ -21,7 +22,7 @@ export default function SessionList() {
   useEffect(() => {
     const fetchSessions = async () => {
       try {
-        const res = await fetch("http://localhost:8080/sessions");
+        const res = await fetch("/sessions");
         if (res.ok) {
           const data = await res.json();
           setSessions(data);

@@ -13,7 +13,7 @@ export default function ModelSelector({ selected, onChange }: Props) {
   useEffect(() => {
     const fetchModels = async () => {
       try {
-        const res = await fetch("http://localhost:8080/models");
+        const res = await fetch("/models");
         if (res.ok) {
           const data = await res.json();
           setModels(data);
