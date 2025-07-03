@@ -39,7 +39,7 @@ beforeEach(() => {
     if (url.includes('resource')) return { ok: true, json: async () => ({ cpu: 0, memory: 0 }) };
     if (url.includes('billing')) return { ok: true, json: async () => ({ tool: '', url: '', usage: { total_granted: 0, total_used: 0, total_available: 0 } }) };
     if (url.includes('theme')) return { ok: true, json: async () => ({ theme: 'light' }) };
-    if (url.includes('config')) return { ok: true, json: async () => ({ concurrency: 1, workingDir: '' }) };
+    if (url.includes('config')) return { ok: true, json: async () => ({ concurrency: 1, workingDir: '', logLevel: 'info', logPath: '/tmp/log' }) };
     if (url.includes('history')) return { ok: true, json: async () => [] };
     return { ok: true, json: async () => ({}) };
   });
@@ -59,12 +59,12 @@ describe('App logging', () => {
 
   it('animates streamed characters', async () => {
     vi.useFakeTimers();
-    (fetch as any).mockResolvedValueOnce({ ok: true, json: async () => ({ concurrency: 1, workingDir: '' }) });
     render(<App />);
-    const input = screen.getByRole('textbox');
+    const input = screen.getAllByRole('textbox')[1];
     fireEvent.change(input, { target: { value: 'hi' } });
     (window.backend.RunPrompt as any).mockResolvedValueOnce('id1');
     fireEvent.click(screen.getByText('Send'));
+    await waitFor(() => (global as any).WebSocket.instances.length > 0);
     const ws = (global as any).WebSocket.instances[0] as any;
     ws.onmessage?.({ data: 'h' });
     ws.onmessage?.({ data: 'i' });
@@ -74,5 +74,21 @@ describe('App logging', () => {
       expect(screen.getByText(/hi/)).toBeInTheDocument();
     });
     vi.useRealTimers();
+  });
+
+  it('posts settings including log config', async () => {
+    render(<App />);
+    await waitFor(() => screen.getByText('Settings'));
+    fireEvent.click(screen.getByText('Settings'));
+    fireEvent.change(screen.getByLabelText('Log Level'), { target: { value: 'debug' } });
+    fireEvent.change(screen.getByLabelText('Log Path'), { target: { value: '/tmp/out.log' } });
+    (fetch as any).mockResolvedValueOnce({ ok: true, json: async () => ({}) });
+    fireEvent.click(screen.getByText('Save'));
+    await waitFor(() => expect((fetch as any).mock.calls.length).toBeGreaterThan(1));
+    const call = (fetch as any).mock.calls.pop();
+    expect(call[0]).toContain('/config');
+    const opts = call[1];
+    const body = JSON.parse(opts.body);
+    expect(body).toEqual({ concurrency: 1, workingDir: '', logLevel: 'debug', logPath: '/tmp/out.log' });
   });
 });

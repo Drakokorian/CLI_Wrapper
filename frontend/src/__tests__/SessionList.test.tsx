@@ -17,6 +17,7 @@ describe("SessionList", () => {
   beforeEach(() => {
     (fetch as any).mockReset();
     (fetch as any).mockResolvedValue({ ok: true, json: async () => [] });
+    (WebSocket as any).instances.length = 0;
   });
 
   it("displays fetched session IDs", async () => {
@@ -44,6 +45,7 @@ describe("SessionList", () => {
     await waitFor(() => {
       expect(screen.getByText("id1")).toBeInTheDocument();
     });
+    await waitFor(() => (WebSocket as any).instances.length > 0);
     const ws = (WebSocket as any).instances[0] as any;
     ws.onmessage?.({ data: "hello" });
     await waitFor(() => {

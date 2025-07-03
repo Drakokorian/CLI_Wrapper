@@ -25,6 +25,8 @@ function App() {
   const [alert, setAlert] = useState("");
   const [concurrency, setConcurrency] = useState(1);
   const [workingDir, setWorkingDir] = useState("");
+  const [logLevel, setLogLevel] = useState("info");
+  const [logPath, setLogPath] = useState("");
   const [showSettings, setShowSettings] = useState(false);
 
   useEffect(() => {
@@ -35,6 +37,8 @@ function App() {
           const data = await res.json();
           setConcurrency(data.concurrency);
           setWorkingDir(data.workingDir);
+          if (data.logLevel) setLogLevel(data.logLevel);
+          if (data.logPath) setLogPath(data.logPath);
         }
       } catch (err) {
         console.error(err);
@@ -89,7 +93,12 @@ function App() {
       await fetch("http://localhost:8080/config", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ concurrency, workingDir }),
+        body: JSON.stringify({
+          concurrency,
+          workingDir,
+          logLevel,
+          logPath,
+        }),
       });
       setShowSettings(false);
     } catch (err) {
@@ -142,6 +151,27 @@ function App() {
                 type="text"
                 value={workingDir}
                 onChange={(e) => setWorkingDir(e.target.value)}
+                className="border p-1 rounded w-full"
+              />
+            </div>
+            <div>
+              <label className="block mb-1">Log Level</label>
+              <select
+                value={logLevel}
+                onChange={(e) => setLogLevel(e.target.value)}
+                className="border p-1 rounded w-full"
+              >
+                <option value="error">error</option>
+                <option value="info">info</option>
+                <option value="debug">debug</option>
+              </select>
+            </div>
+            <div>
+              <label className="block mb-1">Log Path</label>
+              <input
+                type="text"
+                value={logPath}
+                onChange={(e) => setLogPath(e.target.value)}
                 className="border p-1 rounded w-full"
               />
             </div>

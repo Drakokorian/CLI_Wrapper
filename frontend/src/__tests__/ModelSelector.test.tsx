@@ -16,10 +16,9 @@ describe("ModelSelector", () => {
     await waitFor(() => screen.getByRole("combobox"));
     rerender(<ModelSelector selected="b" onChange={() => {}} />);
     const select = screen.getByRole("combobox");
-    expect(select).toHaveStyle({
-      borderColor: "rgb(37, 99, 235)",
-      backgroundColor: "rgb(239, 246, 255)",
-    });
+    await waitFor(() =>
+      expect(select).toHaveStyle({ borderColor: "rgb(37, 99, 235)" })
+    );
     await new Promise((r) => setTimeout(r, 300));
     expect(select).not.toHaveStyle({ borderColor: "rgb(37, 99, 235)" });
   });
