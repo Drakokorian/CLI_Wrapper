@@ -32,7 +32,7 @@ func DetectCLITools() ([]string, error) {
 }
 
 // InvokeTool runs the given CLI with args and logs the invocation.
-func InvokeTool(tool string, args []string, baseDir string) error {
+func InvokeTool(tool string, args []string) error {
 	logger, err := logging.New("info", "")
 	if err != nil {
 		return err

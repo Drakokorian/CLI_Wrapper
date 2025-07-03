@@ -24,7 +24,7 @@ func TestEndpoints(t *testing.T) {
 	cfg := &app.Config{Concurrency: 1, Theme: "light", CPUThreshold: 50, MemoryThreshold: 50, PollInterval: 2, LogLevel: "info", LogPath: filepath.Join(dir, "log.txt"), WorkingDir: dir}
 	hist, _ := history.New(dir)
 	defer hist.Close()
-	mgr := app.NewSessionManager(dir, logger, 1, cfg, hist)
+	mgr := app.NewSessionManager(logger, 1, cfg, hist)
 	defer mgr.Close()
 
 	srv := New(mgr, logger, dir, cfg, hist)
@@ -192,7 +192,7 @@ func TestStreamChars(t *testing.T) {
 	cfg := &app.Config{Concurrency: 1, Theme: "light", CPUThreshold: 50, MemoryThreshold: 50, PollInterval: 2, LogLevel: "info", LogPath: filepath.Join(dir, "log.txt"), WorkingDir: dir}
 	hist, _ := history.New(dir)
 	defer hist.Close()
-	mgr := app.NewSessionManager(dir, logger, 1, cfg, hist)
+	mgr := app.NewSessionManager(logger, 1, cfg, hist)
 	defer mgr.Close()
 
 	script := filepath.Join(dir, "echoer")

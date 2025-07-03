@@ -18,7 +18,7 @@ func TestSessionManagerQueue(t *testing.T) {
 	os.MkdirAll(filepath.Join(base, "state"), 0o755)
 	hist, _ := history.New(base)
 	defer hist.Close()
-	m := NewSessionManager(t.TempDir(), logger, 1, cfg, hist)
+	m := NewSessionManager(logger, 1, cfg, hist)
 	defer m.Close()
 
 	id1, err := m.AddSession("sh", "", []string{"-c", "sleep 0.1"})
@@ -45,7 +45,7 @@ func TestSessionTerminate(t *testing.T) {
 	os.MkdirAll(filepath.Join(base, "state"), 0o755)
 	hist, _ := history.New(base)
 	defer hist.Close()
-	m := NewSessionManager(t.TempDir(), logger, 1, cfg, hist)
+	m := NewSessionManager(logger, 1, cfg, hist)
 	defer m.Close()
 
 	id, err := m.AddSession("sh", "", []string{"-c", "sleep 2"})
@@ -65,7 +65,7 @@ func TestSessionWorkingDir(t *testing.T) {
 	os.MkdirAll(filepath.Join(base, "state"), 0o755)
 	hist, _ := history.New(base)
 	defer hist.Close()
-	m := NewSessionManager(t.TempDir(), logger, 1, cfg, hist)
+	m := NewSessionManager(logger, 1, cfg, hist)
 	defer m.Close()
 
 	if _, err := m.AddSession("sh", "", []string{"-c", "echo test"}); err != nil {
@@ -84,7 +84,7 @@ func TestSessionStreaming(t *testing.T) {
 	os.MkdirAll(filepath.Join(base, "state"), 0o755)
 	hist, _ := history.New(base)
 	defer hist.Close()
-	m := NewSessionManager(t.TempDir(), logger, 1, cfg, hist)
+	m := NewSessionManager(logger, 1, cfg, hist)
 	defer m.Close()
 
 	script := filepath.Join(t.TempDir(), "script.sh")
