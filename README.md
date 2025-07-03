@@ -67,6 +67,13 @@ Run the generated binary on your platform:
 
 During development you can start a hot reload server with `wails dev`.
 
+### One-step build and launch
+
+Run `scripts/launch.sh` to automatically install prerequisites, build for your
+platform, and start the compiled application. All output is appended to
+`sentinel.log` in `/var/log` on Unix or `C:\Temp` on Windows. Set
+`SENTINEL_LOG_PATH` to override the log location.
+
 ## Session Manager
 
 The `internal/app` package now provides a `SessionManager` which limits concurrent
