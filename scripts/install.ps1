@@ -22,7 +22,7 @@ function Rotate-Log {
     if (Test-Path $LogPath) {
         $info = Get-Item $LogPath
         if ($info.Length -ge $maxSize) {
-            $ts = (Get-Date -Format 'yyyyMMddTHHmmssZ' -AsUTC)
+            $ts = (Get-Date -Format 'yyyyMMddTHHmmssZ' -Date (Get-Date).ToUniversalTime())
             $backup = "$LogPath-$ts"
             Move-Item $LogPath $backup
             $cutoff = (Get-Date).ToUniversalTime().Add(-$maxAge)
@@ -38,7 +38,8 @@ function Rotate-Log {
 function Log {
     param([string]$Message, [string]$Level = 'INFO')
     Rotate-Log
-    $entry = @{timestamp=(Get-Date -Format o -AsUTC); level=$Level; message=$Message} | ConvertTo-Json -Compress
+    $ts = (Get-Date -Date (Get-Date).ToUniversalTime() -Format o)
+    $entry = @{timestamp=$ts; level=$Level; message=$Message} | ConvertTo-Json -Compress
     Add-Content -Path $LogPath -Value $entry
 }
 
