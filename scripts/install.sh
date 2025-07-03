@@ -17,6 +17,23 @@ else
 fi
 ARCH=$(uname -m)
 
+# Extract a zip archive to the given destination using whatever tool is
+# available. This supports environments as old as Windows Server 2008 where
+# `unzip` may not be installed by default.
+extract_zip() {
+    local archive=$1 dest=$2
+    if command -v unzip >/dev/null 2>&1; then
+        unzip -q "$archive" -d "$dest"
+    elif command -v 7z >/dev/null 2>&1; then
+        7z x -y "$archive" -o"$dest" >/dev/null
+    elif command -v powershell.exe >/dev/null 2>&1; then
+        powershell.exe -NoProfile -Command "Expand-Archive -Path '$archive' -DestinationPath '$dest' -Force" >/dev/null
+    else
+        echo "No unzip utility found. Please install unzip or 7zip." >&2
+        return 1
+    fi
+}
+
 version_ge() {
     # returns 0 if $1 >= $2
     [ "$(printf '%s\n' "$2" "$1" | sort -V | head -n1)" = "$2" ]
@@ -32,24 +49,33 @@ install_go() {
         fi
     fi
 
-    local pkg url tmp
+    local pkg url tmp archive
     pkg="go${REQUIRED_GO}.1"
     case "$OS" in
-        linux)   pkg+=".linux-amd64.tar.gz" ;;
-        darwin)  pkg+=".darwin-amd64.tar.gz" ;;
-        windows) pkg+=".windows-amd64.zip" ;;
+        linux)
+            pkg+=".linux-amd64.tar.gz"
+            archive="go.tgz"
+            ;;
+        darwin)
+            pkg+=".darwin-amd64.tar.gz"
+            archive="go.tgz"
+            ;;
+        windows)
+            pkg+=".windows-amd64.zip"
+            archive="go.zip"
+            ;;
     esac
     url="https://go.dev/dl/${pkg}"
     tmp=$(mktemp -d)
     trap 'rm -rf "$tmp"' RETURN
     echo "Installing Go from $url"
-    curl -fsSL "$url" -o "$tmp/go.tgz"
+    curl -fsSL "$url" -o "$tmp/$archive"
     case "$OS" in
         windows)
-            unzip -q "$tmp/go.tgz" -d /usr/local
+            extract_zip "$tmp/$archive" /usr/local
             ;;
         *)
-            sudo tar -C /usr/local -xzf "$tmp/go.tgz"
+            sudo tar -C /usr/local -xzf "$tmp/$archive"
             ;;
     esac
     export PATH="/usr/local/go/bin:$PATH"
