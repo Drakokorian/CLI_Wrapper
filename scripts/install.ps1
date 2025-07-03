@@ -1,11 +1,6 @@
 $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version Latest
 
-if ($PSVersionTable.PSVersion.Major -lt 5) {
-    Write-Error 'PowerShell 5.1 or newer is required'
-    exit 1
-}
-
 $LogPath = $env:SENTINEL_LOG_PATH
 if (-not $LogPath) {
     if ($IsWindows) {
@@ -45,6 +40,11 @@ function Log {
 
 trap {
     Log $_.Exception.Message 'ERROR'
+    exit 1
+}
+
+if ($PSVersionTable.PSVersion.Major -lt 5) {
+    Log 'PowerShell 5.1 or newer is required' 'ERROR'
     exit 1
 }
 
