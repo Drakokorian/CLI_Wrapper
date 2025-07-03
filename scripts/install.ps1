@@ -49,6 +49,7 @@ trap {
 
 $REQUIRED_GO = '1.24'
 $REQUIRED_NODE = '18'
+$NODE_PATCH = '18.20.8'
 
 function Version-GE {
     param([string]$Current, [string]$Required)
@@ -100,7 +101,7 @@ function Install-Node {
         Log 'Installing Node via Chocolatey'
         choco install -y nodejs-lts | Out-Null
     } else {
-        $url = 'https://nodejs.org/dist/latest-v18.x/node-v18.20.3-x64.msi'
+        $url = "https://nodejs.org/dist/v$NODE_PATCH/node-v$NODE_PATCH-x64.msi"
         $msi = Join-Path ([IO.Path]::GetTempPath()) 'node.msi'
         Log "Downloading Node from $url"
         Invoke-WebRequest -Uri $url -OutFile $msi -UseBasicParsing
@@ -110,6 +111,18 @@ function Install-Node {
 }
 
 function Install-Wails {
+    $wailsCmd = Get-Command wails -ErrorAction SilentlyContinue
+    if ($wailsCmd) {
+        try {
+            $out = (& wails version) -join ' '
+            if ($out -match 'v([0-9.]+)') {
+                Log "Wails $($Matches[1]) already installed"
+                return
+            }
+        } catch {
+            # continue install if version check fails
+        }
+    }
     Log 'Installing Wails CLI'
     & go install github.com/wailsapp/wails/v2/cmd/wails@latest | Out-Null
 }
