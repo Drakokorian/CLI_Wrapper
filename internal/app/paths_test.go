@@ -7,7 +7,9 @@ import (
 )
 
 func TestAppDirForOS(t *testing.T) {
+	oldAppData := os.Getenv("APPDATA")
 	os.Setenv("APPDATA", `C:\\Data`)
+	defer os.Setenv("APPDATA", oldAppData)
 	path, err := appDirForOS("windows")
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
@@ -17,7 +19,9 @@ func TestAppDirForOS(t *testing.T) {
 	}
 
 	home := t.TempDir()
+	oldHome := os.Getenv("HOME")
 	os.Setenv("HOME", home)
+	defer os.Setenv("HOME", oldHome)
 	path, err = appDirForOS("darwin")
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
