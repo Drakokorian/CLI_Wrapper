@@ -63,6 +63,17 @@ function Version-GE {
     }
 }
 
+function Test-Link {
+    param([string]$Url)
+    try {
+        $resp = Invoke-WebRequest -Uri $Url -Method Head -UseBasicParsing -ErrorAction Stop
+        return $resp.StatusCode -eq 200
+    } catch {
+        Log "Failed to reach ${Url}: $($_.Exception.Message)" 'ERROR'
+        return $false
+    }
+}
+
 function Install-Go {
     if (Get-Command go -ErrorAction SilentlyContinue) {
         $ver = (& go version) -replace '.*go([0-9.]+).*', '$1'
@@ -80,6 +91,7 @@ function Install-Go {
         $url = "https://go.dev/dl/$pkg"
         $tmp = New-Item -ItemType Directory -Path ([IO.Path]::GetTempPath()) -Name ([guid]::NewGuid())
         $zip = Join-Path $tmp $pkg
+        if (-not (Test-Link $url)) { throw 'Invalid Go download link' }
         Log "Downloading Go from $url"
         Invoke-WebRequest -Uri $url -OutFile $zip -UseBasicParsing
         Expand-Archive $zip -DestinationPath $tmp -Force
@@ -104,6 +116,7 @@ function Install-Node {
     } else {
         $url = "https://nodejs.org/dist/v$NODE_PATCH/node-v$NODE_PATCH-x64.msi"
         $msi = Join-Path ([IO.Path]::GetTempPath()) 'node.msi'
+        if (-not (Test-Link $url)) { throw 'Invalid Node download link' }
         Log "Downloading Node from $url"
         Invoke-WebRequest -Uri $url -OutFile $msi -UseBasicParsing
         Start-Process msiexec.exe -Wait -ArgumentList "/i `"$msi`" /qn"
