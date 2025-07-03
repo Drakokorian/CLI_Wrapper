@@ -7,7 +7,7 @@ export default function ResourceMeter() {
   useEffect(() => {
     const fetchUsage = async () => {
       try {
-        const res = await fetch("http://localhost:8080/resource");
+        const res = await fetch("/resource");
         if (res.ok) {
           const data = await res.json();
           setCpu(data.cpu);

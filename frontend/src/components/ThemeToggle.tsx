@@ -6,7 +6,7 @@ export default function ThemeToggle() {
   useEffect(() => {
     const load = async () => {
       try {
-        const res = await fetch("http://localhost:8080/theme");
+        const res = await fetch("/theme");
         if (res.ok) {
           const data = await res.json();
           if (data.theme === "light" || data.theme === "dark") {
@@ -28,7 +28,7 @@ export default function ThemeToggle() {
     const next = theme === "light" ? "dark" : "light";
     setTheme(next);
     try {
-      await fetch("http://localhost:8080/theme", {
+      await fetch("/theme", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ theme: next }),
