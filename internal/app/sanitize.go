@@ -6,7 +6,9 @@ import (
 	"strings"
 )
 
-var modelPattern = regexp.MustCompile(`^[a-zA-Z0-9_-]+$`)
+// modelPattern defines allowable characters for model identifiers.
+// Models may contain letters, numbers, dashes, underscores and periods.
+var modelPattern = regexp.MustCompile(`^[a-zA-Z0-9._-]+$`)
 
 // SanitizeModel validates allowed characters in model names.
 func SanitizeModel(model string) (string, error) {
