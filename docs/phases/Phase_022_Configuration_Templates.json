@@ -1,0 +1,466 @@
+{
+  "metadata": {
+    "Phase": "022",
+    "Title": "Configuration Templates",
+    "Created": "2025-07-06",
+    "CompatibleWith": [
+      "Windows 10+ (PowerShell 5.1+)",
+      "Ubuntu 18.04+ (Bash 3.2+)",
+      "macOS 10.15+ (zsh/bash)"
+    ],
+    "SprintWindow": "Sprint 1 (Day 1\u201310)",
+    "Author": "AutoDocSystem"
+  },
+  "tasks": [
+    {
+      "TaskID": "PH022-T01",
+      "TaskTitle": "Inventory existing configuration options",
+      "TaskDetails": "Review all available settings in the current application and list them in a spreadsheet.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 1",
+      "Documentation Block": "```bash\necho \"inventory_existing_configuration_options\"\n```"
+    },
+    {
+      "TaskID": "PH022-T02",
+      "TaskTitle": "Create templates directory",
+      "TaskDetails": "Establish `configs/templates/` to house reusable configuration files.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 1",
+      "Documentation Block": "```bash\necho \"create_templates_directory\"\n```"
+    },
+    {
+      "TaskID": "PH022-T03",
+      "TaskTitle": "List available templates command",
+      "TaskDetails": "Add `cliapp template list` to display all templates with descriptions.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 1",
+      "Documentation Block": "```bash\necho \"list_available_templates_command\"\n```"
+    },
+    {
+      "TaskID": "PH022-T04",
+      "TaskTitle": "Add Windows template",
+      "TaskDetails": "Provide `windows.yaml` tuned for typical PowerShell environments.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 1",
+      "Documentation Block": "```bash\necho \"add_windows_template\"\n```"
+    },
+    {
+      "TaskID": "PH022-T05",
+      "TaskTitle": "Add Linux template",
+      "TaskDetails": "Provide `linux.yaml` with paths and package options suited for Ubuntu.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 1",
+      "Documentation Block": "```bash\necho \"add_linux_template\"\n```"
+    },
+    {
+      "TaskID": "PH022-T06",
+      "TaskTitle": "Add macOS template",
+      "TaskDetails": "Provide `macos.yaml` referencing brew packages and launchd service names.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 2",
+      "Documentation Block": "```bash\necho \"add_macos_template\"\n```"
+    },
+    {
+      "TaskID": "PH022-T07",
+      "TaskTitle": "Document template file format",
+      "TaskDetails": "Explain YAML structure, supported variables, and allowed comments.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 2",
+      "Documentation Block": "```bash\necho \"document_template_file_format\"\n```"
+    },
+    {
+      "TaskID": "PH022-T08",
+      "TaskTitle": "Implement template validation",
+      "TaskDetails": "Write a parser that checks for required keys and value types before applying.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 2",
+      "Documentation Block": "```bash\necho \"implement_template_validation\"\n```"
+    },
+    {
+      "TaskID": "PH022-T09",
+      "TaskTitle": "Test suite for loader",
+      "TaskDetails": "Create unit tests covering happy path and error conditions of the template loader.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 2",
+      "Documentation Block": "```bash\necho \"test_suite_for_loader\"\n```"
+    },
+    {
+      "TaskID": "PH022-T10",
+      "TaskTitle": "Apply template command",
+      "TaskDetails": "Introduce `cliapp template apply <name>` that merges the selected template with the user's config.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 2",
+      "Documentation Block": "```bash\necho \"apply_template_command\"\n```"
+    },
+    {
+      "TaskID": "PH022-T11",
+      "TaskTitle": "Backup current configuration",
+      "TaskDetails": "Before applying a template, copy the existing config file to `config.bak` with timestamp.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 3",
+      "Documentation Block": "```bash\necho \"backup_current_configuration\"\n```"
+    },
+    {
+      "TaskID": "PH022-T12",
+      "TaskTitle": "Fetch templates from URL",
+      "TaskDetails": "Support `cliapp template fetch https://...` to download and store a remote template.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 3",
+      "Documentation Block": "```bash\necho \"fetch_templates_from_url\"\n```"
+    },
+    {
+      "TaskID": "PH022-T13",
+      "TaskTitle": "Guide to create custom templates",
+      "TaskDetails": "Write documentation on how users can define their own templates and share them.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 3",
+      "Documentation Block": "```bash\necho \"guide_to_create_custom_templates\"\n```"
+    },
+    {
+      "TaskID": "PH022-T14",
+      "TaskTitle": "Variable substitution",
+      "TaskDetails": "Allow placeholders like `{{DataDir}}` inside templates that get replaced when applied.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 3",
+      "Documentation Block": "```bash\necho \"variable_substitution\"\n```"
+    },
+    {
+      "TaskID": "PH022-T15",
+      "TaskTitle": "Search templates script",
+      "TaskDetails": "Provide a script that searches template names and descriptions for keywords.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 3",
+      "Documentation Block": "```bash\necho \"search_templates_script\"\n```"
+    },
+    {
+      "TaskID": "PH022-T16",
+      "TaskTitle": "Plugin system for new sources",
+      "TaskDetails": "Enable developers to write plugins that supply templates from other services.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 4",
+      "Documentation Block": "```bash\necho \"plugin_system_for_new_sources\"\n```"
+    },
+    {
+      "TaskID": "PH022-T17",
+      "TaskTitle": "Security of remote templates",
+      "TaskDetails": "Verify checksums before applying downloaded templates to prevent tampering.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 4",
+      "Documentation Block": "```bash\necho \"security_of_remote_templates\"\n```"
+    },
+    {
+      "TaskID": "PH022-T18",
+      "TaskTitle": "Preview changes flag",
+      "TaskDetails": "Use `cliapp template apply --dry-run` to show differences without modifying files.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 4",
+      "Documentation Block": "```bash\necho \"preview_changes_flag\"\n```"
+    },
+    {
+      "TaskID": "PH022-T19",
+      "TaskTitle": "Override template path env",
+      "TaskDetails": "Respect `CLIAPP_TEMPLATE_PATH` environment variable when locating templates.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 4",
+      "Documentation Block": "```bash\necho \"override_template_path_env\"\n```"
+    },
+    {
+      "TaskID": "PH022-T20",
+      "TaskTitle": "Document default path",
+      "TaskDetails": "State that templates default to `configs/templates` within the application directory.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 4",
+      "Documentation Block": "```bash\necho \"document_default_path\"\n```"
+    },
+    {
+      "TaskID": "PH022-T21",
+      "TaskTitle": "Version templates",
+      "TaskDetails": "Include a `version:` field and maintain changelog entries for updates.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 5",
+      "Documentation Block": "```bash\necho \"version_templates\"\n```"
+    },
+    {
+      "TaskID": "PH022-T22",
+      "TaskTitle": "Compare templates command",
+      "TaskDetails": "Add `cliapp template diff <a> <b>` showing side-by-side differences.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 5",
+      "Documentation Block": "```bash\necho \"compare_templates_command\"\n```"
+    },
+    {
+      "TaskID": "PH022-T23",
+      "TaskTitle": "Merge multiple templates",
+      "TaskDetails": "Support `cliapp template apply base.yaml extra.yaml` to combine settings.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 5",
+      "Documentation Block": "```bash\necho \"merge_multiple_templates\"\n```"
+    },
+    {
+      "TaskID": "PH022-T24",
+      "TaskTitle": "Best practices doc",
+      "TaskDetails": "Create `docs/template_best_practices.md` covering naming and sharing conventions.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 5",
+      "Documentation Block": "```bash\necho \"best_practices_doc\"\n```"
+    },
+    {
+      "TaskID": "PH022-T25",
+      "TaskTitle": "UI wizard for template selection",
+      "TaskDetails": "Provide a graphical wizard guiding users through picking and customizing templates.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 5",
+      "Documentation Block": "```bash\necho \"ui_wizard_for_template_selection\"\n```"
+    },
+    {
+      "TaskID": "PH022-T26",
+      "TaskTitle": "Diff view for preview",
+      "TaskDetails": "Present a unified diff of config changes before user confirmation.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 6",
+      "Documentation Block": "```bash\necho \"diff_view_for_preview\"\n```"
+    },
+    {
+      "TaskID": "PH022-T27",
+      "TaskTitle": "Template naming guidelines",
+      "TaskDetails": "Enforce lowercase names with hyphens and numeric versions.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 6",
+      "Documentation Block": "```bash\necho \"template_naming_guidelines\"\n```"
+    },
+    {
+      "TaskID": "PH022-T28",
+      "TaskTitle": "Telemetry when template applied",
+      "TaskDetails": "Record an event every time a user applies a template successfully.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 6",
+      "Documentation Block": "```bash\necho \"telemetry_when_template_applied\"\n```"
+    },
+    {
+      "TaskID": "PH022-T29",
+      "TaskTitle": "Rollback instructions",
+      "TaskDetails": "Explain how to restore from backup if the template causes issues.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 6",
+      "Documentation Block": "```bash\necho \"rollback_instructions\"\n```"
+    },
+    {
+      "TaskID": "PH022-T30",
+      "TaskTitle": "Validate with JSON schema",
+      "TaskDetails": "Use a schema file to enforce allowed keys and types in templates.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 6",
+      "Documentation Block": "```bash\necho \"validate_with_json_schema\"\n```"
+    },
+    {
+      "TaskID": "PH022-T31",
+      "TaskTitle": "Convert old configs",
+      "TaskDetails": "Provide a script that reads an existing config and outputs a template.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 7",
+      "Documentation Block": "```bash\necho \"convert_old_configs\"\n```"
+    },
+    {
+      "TaskID": "PH022-T32",
+      "TaskTitle": "Recommended permissions",
+      "TaskDetails": "Suggest 600 on Unix and ReadOnly on Windows for template files.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 7",
+      "Documentation Block": "```bash\necho \"recommended_permissions\"\n```"
+    },
+    {
+      "TaskID": "PH022-T33",
+      "TaskTitle": "Filter templates by OS",
+      "TaskDetails": "Support `--os windows` to list only relevant templates.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 7",
+      "Documentation Block": "```bash\necho \"filter_templates_by_os\"\n```"
+    },
+    {
+      "TaskID": "PH022-T34",
+      "TaskTitle": "Custom template directory example",
+      "TaskDetails": "Show how to store templates under `~/.cliapp/templates` using env vars.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 7",
+      "Documentation Block": "```bash\necho \"custom_template_directory_example\"\n```"
+    },
+    {
+      "TaskID": "PH022-T35",
+      "TaskTitle": "Caching frequently used templates",
+      "TaskDetails": "Cache templates locally to avoid repeated downloads from remote sources.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 7",
+      "Documentation Block": "```bash\necho \"caching_frequently_used_templates\"\n```"
+    },
+    {
+      "TaskID": "PH022-T36",
+      "TaskTitle": "Hosting templates internally",
+      "TaskDetails": "Document steps to serve templates from an internal web server with HTTPS.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 8",
+      "Documentation Block": "```bash\necho \"hosting_templates_internally\"\n```"
+    },
+    {
+      "TaskID": "PH022-T37",
+      "TaskTitle": "Archive unused templates",
+      "TaskDetails": "Introduce `cliapp template archive <name>` to move older templates to an archive folder.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 8",
+      "Documentation Block": "```bash\necho \"archive_unused_templates\"\n```"
+    },
+    {
+      "TaskID": "PH022-T38",
+      "TaskTitle": "Metrics for template success",
+      "TaskDetails": "Track how often template application succeeds versus fails.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 8",
+      "Documentation Block": "```bash\necho \"metrics_for_template_success\"\n```"
+    },
+    {
+      "TaskID": "PH022-T39",
+      "TaskTitle": "UI hints for variables",
+      "TaskDetails": "Show tooltips describing each variable when editing a template in the UI.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 8",
+      "Documentation Block": "```bash\necho \"ui_hints_for_variables\"\n```"
+    },
+    {
+      "TaskID": "PH022-T40",
+      "TaskTitle": "Scan template repositories",
+      "TaskDetails": "Run security scanning tools on remote template repositories before use.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 8",
+      "Documentation Block": "```bash\necho \"scan_template_repositories\"\n```"
+    },
+    {
+      "TaskID": "PH022-T41",
+      "TaskTitle": "Custom error messages",
+      "TaskDetails": "Provide clear messages when validation fails, pointing to the line number.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 9",
+      "Documentation Block": "```bash\necho \"custom_error_messages\"\n```"
+    },
+    {
+      "TaskID": "PH022-T42",
+      "TaskTitle": "Auto-select template by OS",
+      "TaskDetails": "If the user doesn't specify a template, pick one based on the running OS.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 9",
+      "Documentation Block": "```bash\necho \"auto-select_template_by_os\"\n```"
+    },
+    {
+      "TaskID": "PH022-T43",
+      "TaskTitle": "Contribution guide",
+      "TaskDetails": "Describe how team members can contribute new templates via pull requests.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 9",
+      "Documentation Block": "```bash\necho \"contribution_guide\"\n```"
+    },
+    {
+      "TaskID": "PH022-T44",
+      "TaskTitle": "Automated tests for variables",
+      "TaskDetails": "Test that required variables are substituted and optional ones use defaults.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 9",
+      "Documentation Block": "```bash\necho \"automated_tests_for_variables\"\n```"
+    },
+    {
+      "TaskID": "PH022-T45",
+      "TaskTitle": "Remove template command",
+      "TaskDetails": "Allow `cliapp template remove <name>` to delete an unwanted template.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 9",
+      "Documentation Block": "```bash\necho \"remove_template_command\"\n```"
+    },
+    {
+      "TaskID": "PH022-T46",
+      "TaskTitle": "Manage versions with Git",
+      "TaskDetails": "Store templates in a Git repository and tag releases for traceability.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 10",
+      "Documentation Block": "```bash\necho \"manage_versions_with_git\"\n```"
+    },
+    {
+      "TaskID": "PH022-T47",
+      "TaskTitle": "Download from Git",
+      "TaskDetails": "Provide plugin that fetches templates from a specified Git repo.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 10",
+      "Documentation Block": "```bash\necho \"download_from_git\"\n```"
+    },
+    {
+      "TaskID": "PH022-T48",
+      "TaskTitle": "Compare local vs remote",
+      "TaskDetails": "Offer `cliapp template diff --remote <name>` to highlight differences.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 10",
+      "Documentation Block": "```bash\necho \"compare_local_vs_remote\"\n```"
+    },
+    {
+      "TaskID": "PH022-T49",
+      "TaskTitle": "Offline template usage",
+      "TaskDetails": "Explain how to copy templates to offline machines and apply them.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 10",
+      "Documentation Block": "```bash\necho \"offline_template_usage\"\n```"
+    },
+    {
+      "TaskID": "PH022-T50",
+      "TaskTitle": "Publish template guide",
+      "TaskDetails": "Consolidate all instructions into a single document for end users.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 10",
+      "Documentation Block": "```bash\necho \"publish_template_guide\"\n```"
+    }
+  ]
+}
