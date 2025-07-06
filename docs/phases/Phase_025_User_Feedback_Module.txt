@@ -1,0 +1,53 @@
+Phase 025: User Feedback Module
+Created: 2025-07-06
+Tasks:
+PH025-T01: Gather feedback requirements - Day 1
+PH025-T02: CLI command for feedback - Day 1
+PH025-T03: UI dialog for feedback - Day 1
+PH025-T04: Feedback storage format - Day 1
+PH025-T05: Disable feedback prompt env - Day 1
+PH025-T06: Batch export script - Day 2
+PH025-T07: Anonymize user data - Day 2
+PH025-T08: Submission API tests - Day 2
+PH025-T09: Cross-platform submission notice - Day 2
+PH025-T10: Retention policy documentation - Day 2
+PH025-T11: Generate summary reports - Day 3
+PH025-T12: Include screenshots flag - Day 3
+PH025-T13: Attachment upload endpoint - Day 3
+PH025-T14: Input sanitization script - Day 3
+PH025-T15: Spam filtering logic - Day 3
+PH025-T16: UI for open feedback items - Day 4
+PH025-T17: CLI query feedback - Day 4
+PH025-T18: Submission rate limiting - Day 4
+PH025-T19: Tag feedback categories - Day 4
+PH025-T20: Feedback triage automation - Day 4
+PH025-T21: Security around storage - Day 5
+PH025-T22: Daily feedback metrics - Day 5
+PH025-T23: Archive resolved feedback - Day 5
+PH025-T24: Localize feedback prompts - Day 5
+PH025-T25: Opt-in toggle - Day 5
+PH025-T26: Email notifications - Day 6
+PH025-T27: Disable notifications per user - Day 6
+PH025-T28: Search feedback by keyword - Day 6
+PH025-T29: Feedback server URL env - Day 6
+PH025-T30: Guide for useful feedback - Day 6
+PH025-T31: Migrate old feedback - Day 7
+PH025-T32: API authentication tests - Day 7
+PH025-T33: Handling sensitive info - Day 7
+PH025-T34: Moderator role support - Day 7
+PH025-T35: Export feedback to CSV - Day 7
+PH025-T36: UI status filter - Day 8
+PH025-T37: Issue tracker integration - Day 8
+PH025-T38: Convert feedback to GitHub issue - Day 8
+PH025-T39: Telemetry for ratings - Day 8
+PH025-T40: Custom fields in form - Day 8
+PH025-T41: Backup attachments script - Day 9
+PH025-T42: Purge local feedback cache - Day 9
+PH025-T43: Gather logs for troubleshooting - Day 9
+PH025-T44: Mark feedback as duplicate - Day 9
+PH025-T45: Feedback module license - Day 9
+PH025-T46: Nightly spam removal - Day 10
+PH025-T47: Show top categories command - Day 10
+PH025-T48: Screenshot capture approach - Day 10
+PH025-T49: Max feedback size env - Day 10
+PH025-T50: Publish user feedback guide - Day 10
