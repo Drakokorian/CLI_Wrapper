@@ -12,7 +12,7 @@ This dashboard summarizes sprint completion across all phases.
 | 06 | 6 | History persistence and search | ✅ Done |
 | 07 | 7 | Billing links and session summary | ✅ Done |
 | 08 | 8 | Security hardening and release signing | 🚧 In Progress |
-| 09 | 9 | Cloud sync and storage | 📝 Planned |
+| 09 | 9 | Cloud sync and storage | ✅ Done |
 | 10 | 10 | OAuth provider integration | 📝 Planned |
 | 11 | 11 | Service health metrics | 📝 Planned |
 | 12 | 12 | Advanced plugin support | 📝 Planned |
