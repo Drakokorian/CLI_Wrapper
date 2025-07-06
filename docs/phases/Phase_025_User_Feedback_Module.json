@@ -1,0 +1,466 @@
+{
+  "metadata": {
+    "Phase": "025",
+    "Title": "User Feedback Module",
+    "Created": "2025-07-06",
+    "CompatibleWith": [
+      "Windows 10+ (PowerShell 5.1+)",
+      "Ubuntu 18.04+ (Bash 3.2+)",
+      "macOS 10.15+ (zsh/bash)"
+    ],
+    "SprintWindow": "Sprint 1 (Day 1\u201310)",
+    "Author": "AutoDocSystem"
+  },
+  "tasks": [
+    {
+      "TaskID": "PH025-T01",
+      "TaskTitle": "Gather feedback requirements",
+      "TaskDetails": "Meet with stakeholders to decide what data to collect and how it will be used.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 1",
+      "Documentation Block": "```bash\necho \"gather_feedback_requirements\"\n```"
+    },
+    {
+      "TaskID": "PH025-T02",
+      "TaskTitle": "CLI command for feedback",
+      "TaskDetails": "Add `cliapp feedback submit` allowing users to send comments directly from the terminal.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 1",
+      "Documentation Block": "```bash\necho \"cli_command_for_feedback\"\n```"
+    },
+    {
+      "TaskID": "PH025-T03",
+      "TaskTitle": "UI dialog for feedback",
+      "TaskDetails": "Integrate a modal dialog in the desktop UI that accepts text and attachments.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 1",
+      "Documentation Block": "```bash\necho \"ui_dialog_for_feedback\"\n```"
+    },
+    {
+      "TaskID": "PH025-T04",
+      "TaskTitle": "Feedback storage format",
+      "TaskDetails": "Store submissions in JSON with fields for user ID, timestamp, rating, and text.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 1",
+      "Documentation Block": "```bash\necho \"feedback_storage_format\"\n```"
+    },
+    {
+      "TaskID": "PH025-T05",
+      "TaskTitle": "Disable feedback prompt env",
+      "TaskDetails": "Respect `CLIAPP_DISABLE_FEEDBACK` to skip any automatic prompts.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 1",
+      "Documentation Block": "```bash\necho \"disable_feedback_prompt_env\"\n```"
+    },
+    {
+      "TaskID": "PH025-T06",
+      "TaskTitle": "Batch export script",
+      "TaskDetails": "Create `scripts/export_feedback.sh` to bundle and compress feedback records.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 2",
+      "Documentation Block": "```bash\necho \"batch_export_script\"\n```"
+    },
+    {
+      "TaskID": "PH025-T07",
+      "TaskTitle": "Anonymize user data",
+      "TaskDetails": "Strip personally identifiable information before storing or transmitting feedback.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 2",
+      "Documentation Block": "```bash\necho \"anonymize_user_data\"\n```"
+    },
+    {
+      "TaskID": "PH025-T08",
+      "TaskTitle": "Submission API tests",
+      "TaskDetails": "Write tests ensuring the feedback API validates input and stores records.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 2",
+      "Documentation Block": "```bash\necho \"submission_api_tests\"\n```"
+    },
+    {
+      "TaskID": "PH025-T09",
+      "TaskTitle": "Cross-platform submission notice",
+      "TaskDetails": "Show a toast notification on each OS when feedback is successfully sent.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 2",
+      "Documentation Block": "```bash\necho \"cross-platform_submission_notice\"\n```"
+    },
+    {
+      "TaskID": "PH025-T10",
+      "TaskTitle": "Retention policy documentation",
+      "TaskDetails": "Describe how long feedback is stored and when it is purged.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 2",
+      "Documentation Block": "```bash\necho \"retention_policy_documentation\"\n```"
+    },
+    {
+      "TaskID": "PH025-T11",
+      "TaskTitle": "Generate summary reports",
+      "TaskDetails": "Provide a script that aggregates feedback by rating and category.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 3",
+      "Documentation Block": "```bash\necho \"generate_summary_reports\"\n```"
+    },
+    {
+      "TaskID": "PH025-T12",
+      "TaskTitle": "Include screenshots flag",
+      "TaskDetails": "Allow `cliapp feedback submit --screenshot <path>` to attach an image.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 3",
+      "Documentation Block": "```bash\necho \"include_screenshots_flag\"\n```"
+    },
+    {
+      "TaskID": "PH025-T13",
+      "TaskTitle": "Attachment upload endpoint",
+      "TaskDetails": "Document the HTTP endpoint for uploading binary attachments securely.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 3",
+      "Documentation Block": "```bash\necho \"attachment_upload_endpoint\"\n```"
+    },
+    {
+      "TaskID": "PH025-T14",
+      "TaskTitle": "Input sanitization script",
+      "TaskDetails": "Escape special characters and remove control sequences from feedback text.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 3",
+      "Documentation Block": "```bash\necho \"input_sanitization_script\"\n```"
+    },
+    {
+      "TaskID": "PH025-T15",
+      "TaskTitle": "Spam filtering logic",
+      "TaskDetails": "Use simple heuristics and rate limits to block obvious spam submissions.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 3",
+      "Documentation Block": "```bash\necho \"spam_filtering_logic\"\n```"
+    },
+    {
+      "TaskID": "PH025-T16",
+      "TaskTitle": "UI for open feedback items",
+      "TaskDetails": "Create an admin page listing unreviewed feedback with filters.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 4",
+      "Documentation Block": "```bash\necho \"ui_for_open_feedback_items\"\n```"
+    },
+    {
+      "TaskID": "PH025-T17",
+      "TaskTitle": "CLI query feedback",
+      "TaskDetails": "`cliapp feedback query --status open` lists items matching criteria.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 4",
+      "Documentation Block": "```bash\necho \"cli_query_feedback\"\n```"
+    },
+    {
+      "TaskID": "PH025-T18",
+      "TaskTitle": "Submission rate limiting",
+      "TaskDetails": "Limit each user to 5 feedback submissions per day to avoid abuse.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 4",
+      "Documentation Block": "```bash\necho \"submission_rate_limiting\"\n```"
+    },
+    {
+      "TaskID": "PH025-T19",
+      "TaskTitle": "Tag feedback categories",
+      "TaskDetails": "Allow categorization like 'bug', 'feature', or 'praise' for each entry.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 4",
+      "Documentation Block": "```bash\necho \"tag_feedback_categories\"\n```"
+    },
+    {
+      "TaskID": "PH025-T20",
+      "TaskTitle": "Feedback triage automation",
+      "TaskDetails": "Create a workflow that assigns tags and notifies owners based on keywords.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 4",
+      "Documentation Block": "```bash\necho \"feedback_triage_automation\"\n```"
+    },
+    {
+      "TaskID": "PH025-T21",
+      "TaskTitle": "Security around storage",
+      "TaskDetails": "Encrypt feedback at rest and restrict database access to admins.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 5",
+      "Documentation Block": "```bash\necho \"security_around_storage\"\n```"
+    },
+    {
+      "TaskID": "PH025-T22",
+      "TaskTitle": "Daily feedback metrics",
+      "TaskDetails": "Collect counts of new submissions per day and expose them via API.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 5",
+      "Documentation Block": "```bash\necho \"daily_feedback_metrics\"\n```"
+    },
+    {
+      "TaskID": "PH025-T23",
+      "TaskTitle": "Archive resolved feedback",
+      "TaskDetails": "Move addressed feedback to an archive table to keep the primary view clean.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 5",
+      "Documentation Block": "```bash\necho \"archive_resolved_feedback\"\n```"
+    },
+    {
+      "TaskID": "PH025-T24",
+      "TaskTitle": "Localize feedback prompts",
+      "TaskDetails": "Translate prompts into supported languages using the i18n framework.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 5",
+      "Documentation Block": "```bash\necho \"localize_feedback_prompts\"\n```"
+    },
+    {
+      "TaskID": "PH025-T25",
+      "TaskTitle": "Opt-in toggle",
+      "TaskDetails": "Provide a settings checkbox that lets users opt in or out of feedback collection.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 5",
+      "Documentation Block": "```bash\necho \"opt-in_toggle\"\n```"
+    },
+    {
+      "TaskID": "PH025-T26",
+      "TaskTitle": "Email notifications",
+      "TaskDetails": "Send an email when new feedback arrives, based on subscription settings.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 6",
+      "Documentation Block": "```bash\necho \"email_notifications\"\n```"
+    },
+    {
+      "TaskID": "PH025-T27",
+      "TaskTitle": "Disable notifications per user",
+      "TaskDetails": "Allow users to turn off email alerts via a profile option.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 6",
+      "Documentation Block": "```bash\necho \"disable_notifications_per_user\"\n```"
+    },
+    {
+      "TaskID": "PH025-T28",
+      "TaskTitle": "Search feedback by keyword",
+      "TaskDetails": "Implement search API that performs case-insensitive text queries.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 6",
+      "Documentation Block": "```bash\necho \"search_feedback_by_keyword\"\n```"
+    },
+    {
+      "TaskID": "PH025-T29",
+      "TaskTitle": "Feedback server URL env",
+      "TaskDetails": "Use `CLIAPP_FEEDBACK_URL` to specify the submission endpoint.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 6",
+      "Documentation Block": "```bash\necho \"feedback_server_url_env\"\n```"
+    },
+    {
+      "TaskID": "PH025-T30",
+      "TaskTitle": "Guide for useful feedback",
+      "TaskDetails": "Publish tips that teach users how to describe issues effectively.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 6",
+      "Documentation Block": "```bash\necho \"guide_for_useful_feedback\"\n```"
+    },
+    {
+      "TaskID": "PH025-T31",
+      "TaskTitle": "Migrate old feedback",
+      "TaskDetails": "Write script converting the old feedback database to the new schema.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 7",
+      "Documentation Block": "```bash\necho \"migrate_old_feedback\"\n```"
+    },
+    {
+      "TaskID": "PH025-T32",
+      "TaskTitle": "API authentication tests",
+      "TaskDetails": "Ensure only authenticated requests can submit or retrieve feedback.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 7",
+      "Documentation Block": "```bash\necho \"api_authentication_tests\"\n```"
+    },
+    {
+      "TaskID": "PH025-T33",
+      "TaskTitle": "Handling sensitive info",
+      "TaskDetails": "Redact tokens or passwords that might appear in user submissions.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 7",
+      "Documentation Block": "```bash\necho \"handling_sensitive_info\"\n```"
+    },
+    {
+      "TaskID": "PH025-T34",
+      "TaskTitle": "Moderator role support",
+      "TaskDetails": "Define permissions for moderators to edit or delete feedback.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 7",
+      "Documentation Block": "```bash\necho \"moderator_role_support\"\n```"
+    },
+    {
+      "TaskID": "PH025-T35",
+      "TaskTitle": "Export feedback to CSV",
+      "TaskDetails": "`cliapp feedback export --format csv` produces a spreadsheet.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 7",
+      "Documentation Block": "```bash\necho \"export_feedback_to_csv\"\n```"
+    },
+    {
+      "TaskID": "PH025-T36",
+      "TaskTitle": "UI status filter",
+      "TaskDetails": "Add filter dropdown for open, resolved, or archived feedback.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 8",
+      "Documentation Block": "```bash\necho \"ui_status_filter\"\n```"
+    },
+    {
+      "TaskID": "PH025-T37",
+      "TaskTitle": "Issue tracker integration",
+      "TaskDetails": "Link feedback items to issues in GitHub or Jira for follow-up.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 8",
+      "Documentation Block": "```bash\necho \"issue_tracker_integration\"\n```"
+    },
+    {
+      "TaskID": "PH025-T38",
+      "TaskTitle": "Convert feedback to GitHub issue",
+      "TaskDetails": "Provide script that creates an issue using the GitHub API with feedback text.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 8",
+      "Documentation Block": "```bash\necho \"convert_feedback_to_github_issue\"\n```"
+    },
+    {
+      "TaskID": "PH025-T39",
+      "TaskTitle": "Telemetry for ratings",
+      "TaskDetails": "Track star ratings separately from textual feedback.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 8",
+      "Documentation Block": "```bash\necho \"telemetry_for_ratings\"\n```"
+    },
+    {
+      "TaskID": "PH025-T40",
+      "TaskTitle": "Custom fields in form",
+      "TaskDetails": "Allow admin-defined additional fields like product version.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 8",
+      "Documentation Block": "```bash\necho \"custom_fields_in_form\"\n```"
+    },
+    {
+      "TaskID": "PH025-T41",
+      "TaskTitle": "Backup attachments script",
+      "TaskDetails": "Periodically copy attachments to secure storage with retention policy.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 9",
+      "Documentation Block": "```bash\necho \"backup_attachments_script\"\n```"
+    },
+    {
+      "TaskID": "PH025-T42",
+      "TaskTitle": "Purge local feedback cache",
+      "TaskDetails": "`cliapp feedback purge` removes any unsent feedback stored locally.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 9",
+      "Documentation Block": "```bash\necho \"purge_local_feedback_cache\"\n```"
+    },
+    {
+      "TaskID": "PH025-T43",
+      "TaskTitle": "Gather logs for troubleshooting",
+      "TaskDetails": "Collect CLI logs and attach them when users report issues.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 9",
+      "Documentation Block": "```bash\necho \"gather_logs_for_troubleshooting\"\n```"
+    },
+    {
+      "TaskID": "PH025-T44",
+      "TaskTitle": "Mark feedback as duplicate",
+      "TaskDetails": "Add action to label and hide duplicate submissions.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 9",
+      "Documentation Block": "```bash\necho \"mark_feedback_as_duplicate\"\n```"
+    },
+    {
+      "TaskID": "PH025-T45",
+      "TaskTitle": "Feedback module license",
+      "TaskDetails": "Document the open-source license governing the feedback module code.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 9",
+      "Documentation Block": "```bash\necho \"feedback_module_license\"\n```"
+    },
+    {
+      "TaskID": "PH025-T46",
+      "TaskTitle": "Nightly spam removal",
+      "TaskDetails": "Automate a cleanup job that deletes feedback flagged as spam.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 10",
+      "Documentation Block": "```bash\necho \"nightly_spam_removal\"\n```"
+    },
+    {
+      "TaskID": "PH025-T47",
+      "TaskTitle": "Show top categories command",
+      "TaskDetails": "`cliapp feedback stats --top` lists the most frequent categories.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 10",
+      "Documentation Block": "```bash\necho \"show_top_categories_command\"\n```"
+    },
+    {
+      "TaskID": "PH025-T48",
+      "TaskTitle": "Screenshot capture approach",
+      "TaskDetails": "Explain how screenshot attachments are captured on each OS.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 10",
+      "Documentation Block": "```bash\necho \"screenshot_capture_approach\"\n```"
+    },
+    {
+      "TaskID": "PH025-T49",
+      "TaskTitle": "Max feedback size env",
+      "TaskDetails": "Use `CLIAPP_FEEDBACK_MAX_BYTES` to limit upload size.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 10",
+      "Documentation Block": "```bash\necho \"max_feedback_size_env\"\n```"
+    },
+    {
+      "TaskID": "PH025-T50",
+      "TaskTitle": "Publish user feedback guide",
+      "TaskDetails": "Compile instructions and policies into `docs/feedback_guide.md`.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 10",
+      "Documentation Block": "```bash\necho \"publish_user_feedback_guide\"\n```"
+    }
+  ]
+}
