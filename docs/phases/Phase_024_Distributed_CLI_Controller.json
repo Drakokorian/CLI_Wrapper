@@ -1,0 +1,466 @@
+{
+  "metadata": {
+    "Phase": "024",
+    "Title": "Distributed CLI Controller",
+    "Created": "2025-07-06",
+    "CompatibleWith": [
+      "Windows 10+ (PowerShell 5.1+)",
+      "Ubuntu 18.04+ (Bash 3.2+)",
+      "macOS 10.15+ (zsh/bash)"
+    ],
+    "SprintWindow": "Sprint 1 (Day 1\u201310)",
+    "Author": "AutoDocSystem"
+  },
+  "tasks": [
+    {
+      "TaskID": "PH024-T01",
+      "TaskTitle": "Design distributed controller architecture",
+      "TaskDetails": "Create diagrams outlining controller, agents, and communication channels.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 1",
+      "Documentation Block": "```bash\necho \"design_distributed_controller_architecture\"\n```"
+    },
+    {
+      "TaskID": "PH024-T02",
+      "TaskTitle": "Generate RSA keys script",
+      "TaskDetails": "Write `scripts/gen_keys.sh` to create 4096-bit keys for TLS.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 1",
+      "Documentation Block": "```bash\necho \"generate_rsa_keys_script\"\n```"
+    },
+    {
+      "TaskID": "PH024-T03",
+      "TaskTitle": "Implement central controller",
+      "TaskDetails": "Develop a Go service that queues and dispatches CLI commands to agents.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 1",
+      "Documentation Block": "```bash\necho \"implement_central_controller\"\n```"
+    },
+    {
+      "TaskID": "PH024-T04",
+      "TaskTitle": "Document controller API",
+      "TaskDetails": "Describe REST endpoints for registering agents and submitting jobs.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 1",
+      "Documentation Block": "```bash\necho \"document_controller_api\"\n```"
+    },
+    {
+      "TaskID": "PH024-T05",
+      "TaskTitle": "Agent registration subcommand",
+      "TaskDetails": "Add `cliapp agent register --controller <url>` to enroll a machine.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 1",
+      "Documentation Block": "```bash\necho \"agent_registration_subcommand\"\n```"
+    },
+    {
+      "TaskID": "PH024-T06",
+      "TaskTitle": "Windows agent service script",
+      "TaskDetails": "Provide PowerShell instructions to run the agent as a Windows service.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 2",
+      "Documentation Block": "```bash\necho \"windows_agent_service_script\"\n```"
+    },
+    {
+      "TaskID": "PH024-T07",
+      "TaskTitle": "Linux agent service script",
+      "TaskDetails": "Include systemd unit example for auto-start on boot.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 2",
+      "Documentation Block": "```bash\necho \"linux_agent_service_script\"\n```"
+    },
+    {
+      "TaskID": "PH024-T08",
+      "TaskTitle": "macOS agent launchd script",
+      "TaskDetails": "Offer a plist example so the agent can run in the background.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 2",
+      "Documentation Block": "```bash\necho \"macos_agent_launchd_script\"\n```"
+    },
+    {
+      "TaskID": "PH024-T09",
+      "TaskTitle": "Heartbeat protocol",
+      "TaskDetails": "Agents send a heartbeat every 30 seconds to indicate they are alive.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 2",
+      "Documentation Block": "```bash\necho \"heartbeat_protocol\"\n```"
+    },
+    {
+      "TaskID": "PH024-T10",
+      "TaskTitle": "List registered agents",
+      "TaskDetails": "Command `cliapp agent list` returns all agents with status.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 2",
+      "Documentation Block": "```bash\necho \"list_registered_agents\"\n```"
+    },
+    {
+      "TaskID": "PH024-T11",
+      "TaskTitle": "Remote job queue",
+      "TaskDetails": "Implement a persistent queue in the controller for submitted commands.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 3",
+      "Documentation Block": "```bash\necho \"remote_job_queue\"\n```"
+    },
+    {
+      "TaskID": "PH024-T12",
+      "TaskTitle": "Agent authentication model",
+      "TaskDetails": "Use mutual TLS and signed certificates to verify each agent.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 3",
+      "Documentation Block": "```bash\necho \"agent_authentication_model\"\n```"
+    },
+    {
+      "TaskID": "PH024-T13",
+      "TaskTitle": "Controller URL environment variable",
+      "TaskDetails": "Allow `CLIAPP_CONTROLLER_URL` to set the target controller.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 3",
+      "Documentation Block": "```bash\necho \"controller_url_environment_variable\"\n```"
+    },
+    {
+      "TaskID": "PH024-T14",
+      "TaskTitle": "Systemd unit example",
+      "TaskDetails": "Provide `examples/agent.service` with recommended settings.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 3",
+      "Documentation Block": "```bash\necho \"systemd_unit_example\"\n```"
+    },
+    {
+      "TaskID": "PH024-T15",
+      "TaskTitle": "Launchd plist example",
+      "TaskDetails": "Provide `examples/agent.plist` for macOS installations.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 3",
+      "Documentation Block": "```bash\necho \"launchd_plist_example\"\n```"
+    },
+    {
+      "TaskID": "PH024-T16",
+      "TaskTitle": "PowerShell service config",
+      "TaskDetails": "Explain how to create a Windows service using `New-Service`.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 4",
+      "Documentation Block": "```bash\necho \"powershell_service_config\"\n```"
+    },
+    {
+      "TaskID": "PH024-T17",
+      "TaskTitle": "Fetch agent logs command",
+      "TaskDetails": "Enable `cliapp agent logs <id>` to pull recent logs from an agent.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 4",
+      "Documentation Block": "```bash\necho \"fetch_agent_logs_command\"\n```"
+    },
+    {
+      "TaskID": "PH024-T18",
+      "TaskTitle": "Retry logic for dispatch",
+      "TaskDetails": "Controller retries failed commands with exponential backoff.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 4",
+      "Documentation Block": "```bash\necho \"retry_logic_for_dispatch\"\n```"
+    },
+    {
+      "TaskID": "PH024-T19",
+      "TaskTitle": "Dashboard showing activity",
+      "TaskDetails": "Offer a web UI summarizing active agents and queued jobs.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 4",
+      "Documentation Block": "```bash\necho \"dashboard_showing_activity\"\n```"
+    },
+    {
+      "TaskID": "PH024-T20",
+      "TaskTitle": "Remove agent script",
+      "TaskDetails": "`cliapp agent remove <id>` deregisters an agent and cleans its credentials.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 4",
+      "Documentation Block": "```bash\necho \"remove_agent_script\"\n```"
+    },
+    {
+      "TaskID": "PH024-T21",
+      "TaskTitle": "Encrypt network traffic",
+      "TaskDetails": "Enforce TLS 1.2+ on all connections and store certificates securely.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 5",
+      "Documentation Block": "```bash\necho \"encrypt_network_traffic\"\n```"
+    },
+    {
+      "TaskID": "PH024-T22",
+      "TaskTitle": "Query agent capabilities",
+      "TaskDetails": "Expose an API to list features or available resources of each agent.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 5",
+      "Documentation Block": "```bash\necho \"query_agent_capabilities\"\n```"
+    },
+    {
+      "TaskID": "PH024-T23",
+      "TaskTitle": "Health check script",
+      "TaskDetails": "Provide cross-platform script that verifies connectivity and required ports.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 5",
+      "Documentation Block": "```bash\necho \"health_check_script\"\n```"
+    },
+    {
+      "TaskID": "PH024-T24",
+      "TaskTitle": "Interactive session flag",
+      "TaskDetails": "Support `cliapp run --controller <url> --interactive` for remote shells.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 5",
+      "Documentation Block": "```bash\necho \"interactive_session_flag\"\n```"
+    },
+    {
+      "TaskID": "PH024-T25",
+      "TaskTitle": "Local execution fallback",
+      "TaskDetails": "If the controller is unreachable, commands fall back to local execution.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 5",
+      "Documentation Block": "```bash\necho \"local_execution_fallback\"\n```"
+    },
+    {
+      "TaskID": "PH024-T26",
+      "TaskTitle": "Agent registration tests",
+      "TaskDetails": "Write tests covering registration flow including error cases.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 6",
+      "Documentation Block": "```bash\necho \"agent_registration_tests\"\n```"
+    },
+    {
+      "TaskID": "PH024-T27",
+      "TaskTitle": "Sample agent config file",
+      "TaskDetails": "Add `configs/agent.yaml` with defaults for polling interval and log path.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 6",
+      "Documentation Block": "```bash\necho \"sample_agent_config_file\"\n```"
+    },
+    {
+      "TaskID": "PH024-T28",
+      "TaskTitle": "Custom agent plugins guide",
+      "TaskDetails": "Document how to extend agents with additional command handlers.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 6",
+      "Documentation Block": "```bash\necho \"custom_agent_plugins_guide\"\n```"
+    },
+    {
+      "TaskID": "PH024-T29",
+      "TaskTitle": "Telemetry for distributed commands",
+      "TaskDetails": "Record execution time and status for each dispatched job.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 6",
+      "Documentation Block": "```bash\necho \"telemetry_for_distributed_commands\"\n```"
+    },
+    {
+      "TaskID": "PH024-T30",
+      "TaskTitle": "Batch job execution example",
+      "TaskDetails": "Illustrate how to run a batch script on multiple agents simultaneously.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 6",
+      "Documentation Block": "```bash\necho \"batch_job_execution_example\"\n```"
+    },
+    {
+      "TaskID": "PH024-T31",
+      "TaskTitle": "Role-based access control",
+      "TaskDetails": "Only authorized users can dispatch or cancel remote jobs.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 7",
+      "Documentation Block": "```bash\necho \"role-based_access_control\"\n```"
+    },
+    {
+      "TaskID": "PH024-T32",
+      "TaskTitle": "Scale controllers horizontally",
+      "TaskDetails": "Describe how to run multiple controllers behind a load balancer.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 7",
+      "Documentation Block": "```bash\necho \"scale_controllers_horizontally\"\n```"
+    },
+    {
+      "TaskID": "PH024-T33",
+      "TaskTitle": "Backup controller database",
+      "TaskDetails": "Provide script to export the controller's state to a backup file.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 7",
+      "Documentation Block": "```bash\necho \"backup_controller_database\"\n```"
+    },
+    {
+      "TaskID": "PH024-T34",
+      "TaskTitle": "Cancel remote job command",
+      "TaskDetails": "`cliapp job cancel <id>` stops a job in progress.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 7",
+      "Documentation Block": "```bash\necho \"cancel_remote_job_command\"\n```"
+    },
+    {
+      "TaskID": "PH024-T35",
+      "TaskTitle": "Offline agent queue behavior",
+      "TaskDetails": "Agents store jobs locally until connectivity is restored.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 7",
+      "Documentation Block": "```bash\necho \"offline_agent_queue_behavior\"\n```"
+    },
+    {
+      "TaskID": "PH024-T36",
+      "TaskTitle": "Execution latency metrics",
+      "TaskDetails": "Measure how long each command takes from dispatch to completion.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 8",
+      "Documentation Block": "```bash\necho \"execution_latency_metrics\"\n```"
+    },
+    {
+      "TaskID": "PH024-T37",
+      "TaskTitle": "Agent upgrade script",
+      "TaskDetails": "Provide cross-platform instructions to update agents to the latest version.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 8",
+      "Documentation Block": "```bash\necho \"agent_upgrade_script\"\n```"
+    },
+    {
+      "TaskID": "PH024-T38",
+      "TaskTitle": "Audit remote command history",
+      "TaskDetails": "Store details of who ran what command and when.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 8",
+      "Documentation Block": "```bash\necho \"audit_remote_command_history\"\n```"
+    },
+    {
+      "TaskID": "PH024-T39",
+      "TaskTitle": "Agent update channel variable",
+      "TaskDetails": "Use `CLIAPP_AGENT_CHANNEL` to switch between stable and beta releases.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 8",
+      "Documentation Block": "```bash\necho \"agent_update_channel_variable\"\n```"
+    },
+    {
+      "TaskID": "PH024-T40",
+      "TaskTitle": "Integration tests for operations",
+      "TaskDetails": "Automate tests that spin up controller and agents in containers.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 8",
+      "Documentation Block": "```bash\necho \"integration_tests_for_operations\"\n```"
+    },
+    {
+      "TaskID": "PH024-T41",
+      "TaskTitle": "Secure controller behind proxy",
+      "TaskDetails": "Recommend placing the controller behind an authenticating reverse proxy.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 9",
+      "Documentation Block": "```bash\necho \"secure_controller_behind_proxy\"\n```"
+    },
+    {
+      "TaskID": "PH024-T42",
+      "TaskTitle": "Stream agent logs API",
+      "TaskDetails": "Allow clients to stream logs in real time using WebSockets.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 9",
+      "Documentation Block": "```bash\necho \"stream_agent_logs_api\"\n```"
+    },
+    {
+      "TaskID": "PH024-T43",
+      "TaskTitle": "Filter jobs by tag",
+      "TaskDetails": "Support labeling jobs and retrieving them by tag via API.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 9",
+      "Documentation Block": "```bash\necho \"filter_jobs_by_tag\"\n```"
+    },
+    {
+      "TaskID": "PH024-T44",
+      "TaskTitle": "Version mismatch handling",
+      "TaskDetails": "Warn when agent version differs from controller version.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 9",
+      "Documentation Block": "```bash\necho \"version_mismatch_handling\"\n```"
+    },
+    {
+      "TaskID": "PH024-T45",
+      "TaskTitle": "Pause agent activity",
+      "TaskDetails": "`cliapp agent pause <id>` temporarily stops new job execution.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 9",
+      "Documentation Block": "```bash\necho \"pause_agent_activity\"\n```"
+    },
+    {
+      "TaskID": "PH024-T46",
+      "TaskTitle": "Auto-restart failed agents",
+      "TaskDetails": "Provide a watchdog script that restarts the agent if it crashes.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 10",
+      "Documentation Block": "```bash\necho \"auto-restart_failed_agents\"\n```"
+    },
+    {
+      "TaskID": "PH024-T47",
+      "TaskTitle": "Recommended timeouts",
+      "TaskDetails": "Document default and maximum timeouts for remote commands.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 10",
+      "Documentation Block": "```bash\necho \"recommended_timeouts\"\n```"
+    },
+    {
+      "TaskID": "PH024-T48",
+      "TaskTitle": "Cleanup stale artifacts",
+      "TaskDetails": "Remove old job logs and temp files after completion.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 10",
+      "Documentation Block": "```bash\necho \"cleanup_stale_artifacts\"\n```"
+    },
+    {
+      "TaskID": "PH024-T49",
+      "TaskTitle": "Tail job logs example",
+      "TaskDetails": "`cliapp job logs --follow <id>` streams output like `tail -f`.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 10",
+      "Documentation Block": "```bash\necho \"tail_job_logs_example\"\n```"
+    },
+    {
+      "TaskID": "PH024-T50",
+      "TaskTitle": "Deployment guide",
+      "TaskDetails": "Publish step-by-step instructions for deploying the controller in production.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 10",
+      "Documentation Block": "```bash\necho \"deployment_guide\"\n```"
+    }
+  ]
+}

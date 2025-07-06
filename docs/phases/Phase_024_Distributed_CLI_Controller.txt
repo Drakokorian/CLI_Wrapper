@@ -1,0 +1,53 @@
+Phase 024: Distributed CLI Controller
+Created: 2025-07-06
+Tasks:
+PH024-T01: Design distributed controller architecture - Day 1
+PH024-T02: Generate RSA keys script - Day 1
+PH024-T03: Implement central controller - Day 1
+PH024-T04: Document controller API - Day 1
+PH024-T05: Agent registration subcommand - Day 1
+PH024-T06: Windows agent service script - Day 2
+PH024-T07: Linux agent service script - Day 2
+PH024-T08: macOS agent launchd script - Day 2
+PH024-T09: Heartbeat protocol - Day 2
+PH024-T10: List registered agents - Day 2
+PH024-T11: Remote job queue - Day 3
+PH024-T12: Agent authentication model - Day 3
+PH024-T13: Controller URL environment variable - Day 3
+PH024-T14: Systemd unit example - Day 3
+PH024-T15: Launchd plist example - Day 3
+PH024-T16: PowerShell service config - Day 4
+PH024-T17: Fetch agent logs command - Day 4
+PH024-T18: Retry logic for dispatch - Day 4
+PH024-T19: Dashboard showing activity - Day 4
+PH024-T20: Remove agent script - Day 4
+PH024-T21: Encrypt network traffic - Day 5
+PH024-T22: Query agent capabilities - Day 5
+PH024-T23: Health check script - Day 5
+PH024-T24: Interactive session flag - Day 5
+PH024-T25: Local execution fallback - Day 5
+PH024-T26: Agent registration tests - Day 6
+PH024-T27: Sample agent config file - Day 6
+PH024-T28: Custom agent plugins guide - Day 6
+PH024-T29: Telemetry for distributed commands - Day 6
+PH024-T30: Batch job execution example - Day 6
+PH024-T31: Role-based access control - Day 7
+PH024-T32: Scale controllers horizontally - Day 7
+PH024-T33: Backup controller database - Day 7
+PH024-T34: Cancel remote job command - Day 7
+PH024-T35: Offline agent queue behavior - Day 7
+PH024-T36: Execution latency metrics - Day 8
+PH024-T37: Agent upgrade script - Day 8
+PH024-T38: Audit remote command history - Day 8
+PH024-T39: Agent update channel variable - Day 8
+PH024-T40: Integration tests for operations - Day 8
+PH024-T41: Secure controller behind proxy - Day 9
+PH024-T42: Stream agent logs API - Day 9
+PH024-T43: Filter jobs by tag - Day 9
+PH024-T44: Version mismatch handling - Day 9
+PH024-T45: Pause agent activity - Day 9
+PH024-T46: Auto-restart failed agents - Day 10
+PH024-T47: Recommended timeouts - Day 10
+PH024-T48: Cleanup stale artifacts - Day 10
+PH024-T49: Tail job logs example - Day 10
+PH024-T50: Deployment guide - Day 10

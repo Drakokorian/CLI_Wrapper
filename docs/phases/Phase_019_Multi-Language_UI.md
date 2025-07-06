@@ -1,0 +1,522 @@
+---
+Phase: 019
+Title: Multi-Language UI
+Created: 2025-07-06
+CompatibleWith:
+  - Windows 10+ (PowerShell 5.1+)
+  - Ubuntu 18.04+ (Bash 3.2+)
+  - macOS 10.15+ (zsh/bash)
+SprintWindow: Sprint 1 (Day 1–10)
+Author: AutoDocSystem
+---
+
+# Phase 019: Multi-Language UI
+
+## Objective
+Implement a user interface that supports multiple languages and locales. The goal is to allow users to switch languages on any platform without reinstalling the application.
+
+## Tasks
+- **PH019-T01**: Set up translation infrastructure
+  - TaskDetails: Create an `i18n` folder with subdirectories for each locale and update build scripts to package these files. Ensure cross-platform path handling.
+  - Platform Compatibility Notes: PowerShell 5.1+, Bash 3.2+, and zsh are supported. Use `mkdir` accordingly on each platform.
+  - Security Considerations: Sanitize locale names to avoid path traversal and set read-only permissions on translation files.
+  - Estimated Sprint Day: Day 1
+  - Documentation Block:
+    ```bash
+    mkdir -p i18n/en && mkdir -p i18n/es
+    ```
+
+- **PH019-T02**: Build base English translation file
+  - TaskDetails: Populate `i18n/en/app.json` with all existing UI strings. Include placeholders for dynamic text.
+  - Platform Compatibility Notes: Works on PowerShell 5.1+ and Bash 3.2+. Use UTF-8 encoding when editing files on Windows.
+  - Security Considerations: Ensure special characters are properly escaped to avoid injection vulnerabilities.
+  - Estimated Sprint Day: Day 1
+  - Documentation Block:
+    ```bash
+    echo '{"hello":"Hello"}' > i18n/en/app.json
+    ```
+
+- **PH019-T03**: Add Spanish translation file
+  - TaskDetails: Copy the English file to `i18n/es/app.json` and translate the values to Spanish. Verify that the JSON syntax remains valid.
+  - Platform Compatibility Notes: Compatible with PowerShell 5.1+ and Bash 3.2+. Use editors that preserve UTF-8.
+  - Security Considerations: Validate translation data to prevent malformed JSON during runtime.
+  - Estimated Sprint Day: Day 1
+  - Documentation Block:
+    ```bash
+    cp i18n/en/app.json i18n/es/app.json
+    ```
+
+- **PH019-T04**: Add French translation file
+  - TaskDetails: Create `i18n/fr/app.json` and provide accurate French translations. Leverage community translators if available.
+  - Platform Compatibility Notes: Works with Windows, macOS, and Linux using standard command-line tools.
+  - Security Considerations: Only accept translations from trusted contributors to avoid malicious content.
+  - Estimated Sprint Day: Day 1
+  - Documentation Block:
+    ```bash
+    cp i18n/en/app.json i18n/fr/app.json
+    ```
+
+- **PH019-T05**: Implement language fallbacks
+  - TaskDetails: Configure the UI framework to use English strings whenever a translation key is missing. Document the fallback behavior in the README.
+  - Platform Compatibility Notes: Works across all platforms with no special requirements.
+  - Security Considerations: Log missing translations to detect incomplete language packs.
+  - Estimated Sprint Day: Day 2
+  - Documentation Block:
+    ```bash
+    # pseudocode example
+    if !exists(key) { use en[key] }
+    ```
+
+- **PH019-T06**: Add language switcher to settings page
+  - TaskDetails: Provide a dropdown allowing users to select a language at runtime. Persist this preference in the config file.
+  - Platform Compatibility Notes: Works on PowerShell 5.1+, Bash 3.2+, and zsh using the existing settings UI.
+  - Security Considerations: Validate user input to ensure only supported languages are saved.
+  - Estimated Sprint Day: Day 2
+  - Documentation Block:
+    ```bash
+    # React component snippet
+    <select id="language-picker">...</select>
+    ```
+
+- **PH019-T07**: Implement keyboard shortcut for language cycling
+  - TaskDetails: Allow users to quickly cycle between languages using a key combination. Document the shortcut in help files.
+  - Platform Compatibility Notes: Ensure shortcut handling works in Windows, macOS, and Linux desktop environments.
+  - Security Considerations: Avoid conflicts with OS-level shortcuts to prevent unexpected behavior.
+  - Estimated Sprint Day: Day 2
+  - Documentation Block:
+    ```bash
+    # Example binding
+    ctrl+alt+L
+    ```
+
+- **PH019-T08**: Integrate translation library into React components
+  - TaskDetails: Replace hard-coded strings with translation function calls. Use hooks or context to load the selected language.
+  - Platform Compatibility Notes: No special requirements beyond Node 16+. Works with PowerShell and Bash build scripts.
+  - Security Considerations: Escape translated strings before rendering to avoid XSS.
+  - Estimated Sprint Day: Day 2
+  - Documentation Block:
+    ```bash
+    t('hello')
+    ```
+
+- **PH019-T09**: Refactor static strings in backend
+  - TaskDetails: Update Go server responses to read from language files so CLI messages honor the selected locale.
+  - Platform Compatibility Notes: Use Go 1.20+ on all platforms. Build tags remain unchanged.
+  - Security Considerations: Ensure dynamic strings are sanitized before logging.
+  - Estimated Sprint Day: Day 3
+  - Documentation Block:
+    ```go
+    messages.Load("es")["server_ready"]
+    ```
+
+- **PH019-T10**: Validate translation placeholders via automated tests
+  - TaskDetails: Write unit tests that scan each translation file and confirm required keys exist. Fail the build if any are missing.
+  - Platform Compatibility Notes: Works on PowerShell using `go test` and on Linux/macOS using Bash scripts.
+  - Security Considerations: Store test logs in `./sentinel_cli.log` for audit purposes.
+  - Estimated Sprint Day: Day 3
+  - Documentation Block:
+    ```bash
+    go test ./... -run TestTranslations
+    ```
+
+- **PH019-T11**: Add script to detect missing translations
+  - TaskDetails: Create a cross-platform script that compares keys in each language file and reports differences. Output results in JSON.
+  - Platform Compatibility Notes: Provide a `.ps1` and `.sh` version for Windows and Unix-like systems.
+  - Security Considerations: Sanitize file paths and avoid executing untrusted input.
+  - Estimated Sprint Day: Day 3
+  - Documentation Block:
+    ```bash
+    ./scripts/check_translations.sh
+    ```
+
+- **PH019-T12**: Generate multilingual documentation
+  - TaskDetails: Produce localized versions of user guides using the same translation files. Place generated docs under `docs/i18n`.
+  - Platform Compatibility Notes: Works with Pandoc on all supported platforms.
+  - Security Considerations: Review translated docs to ensure no malicious scripts are embedded.
+  - Estimated Sprint Day: Day 4
+  - Documentation Block:
+    ```bash
+    pandoc README.md -o docs/i18n/README_es.pdf
+    ```
+
+- **PH019-T13**: Localize logging messages
+  - TaskDetails: Update logging library to use translation keys for warnings and errors so logs match the selected language.
+  - Platform Compatibility Notes: Compatible with Go 1.20+ and cross-platform file paths.
+  - Security Considerations: Keep log files in UTF-8 and rotate per policy.
+  - Estimated Sprint Day: Day 4
+  - Documentation Block:
+    ```go
+    logger.Info(t("start_message"))
+    ```
+
+- **PH019-T14**: Create cross-platform translation build script
+  - TaskDetails: Add a script that packages all language files during the build process. Provide both PowerShell and Bash implementations.
+  - Platform Compatibility Notes: Tested on PowerShell 5.1+ and Bash 3.2+.
+  - Security Considerations: Ensure script respects `--dry-run` mode to avoid accidental file changes.
+  - Estimated Sprint Day: Day 4
+  - Documentation Block:
+    ```bash
+    ./scripts/package_translations.sh --dry-run
+    ```
+
+- **PH019-T15**: Package language packs with PowerShell
+  - TaskDetails: Implement a PowerShell script that compresses each `i18n` subdirectory into a distributable archive.
+  - Platform Compatibility Notes: Requires PowerShell 5.1 or newer on Windows and cross-platform PowerShell 7 on Unix-like systems.
+  - Security Considerations: Verify output paths to avoid overwriting system files.
+  - Estimated Sprint Day: Day 4
+  - Documentation Block:
+    ```powershell
+    Compress-Archive i18n\es es.zip
+    ```
+
+- **PH019-T16**: Package language packs with Bash
+  - TaskDetails: Provide a Bash script performing the same packaging for Linux and macOS users.
+  - Platform Compatibility Notes: Works on Bash 3.2+ and zsh using standard tar and gzip utilities.
+  - Security Considerations: Quote variables to prevent glob expansion issues.
+  - Estimated Sprint Day: Day 5
+  - Documentation Block:
+    ```bash
+    tar -czf es.tar.gz i18n/es
+    ```
+
+- **PH019-T17**: Document community translation process
+  - TaskDetails: Outline steps contributors should follow to submit new language files, including lint checks and pull request templates.
+  - Platform Compatibility Notes: Documentation applies to all systems; no code changes required.
+  - Security Considerations: Require code review for external contributions to prevent malicious payloads.
+  - Estimated Sprint Day: Day 5
+  - Documentation Block:
+    ```markdown
+    ## Contributing Translations
+    1. Fork repository
+    2. Add new language under i18n
+    ```
+
+- **PH019-T18**: Integrate translation files into CI pipeline
+  - TaskDetails: Ensure the CI workflow validates translation syntax and packages language assets on every commit.
+  - Platform Compatibility Notes: Works with existing `run_ci.sh` script on all platforms.
+  - Security Considerations: Store build artifacts in a secure temporary directory and delete after use.
+  - Estimated Sprint Day: Day 5
+  - Documentation Block:
+    ```bash
+    ./scripts/run_ci.sh
+    ```
+
+- **PH019-T19**: Configure missing key fallback logic
+  - TaskDetails: Add runtime checks so if a key is missing in the selected language, the English value is used and a warning is logged.
+  - Platform Compatibility Notes: Works on Go backend and React frontend across platforms.
+  - Security Considerations: Log file should redact sensitive data while reporting missing keys.
+  - Estimated Sprint Day: Day 6
+  - Documentation Block:
+    ```go
+    if val, ok := lang[key]; !ok { log.Warn("missing key", key) }
+    ```
+
+- **PH019-T20**: Translate CLI prompts
+  - TaskDetails: Update CLI messages printed by the application so they honor the user's language preference.
+  - Platform Compatibility Notes: Works with PowerShell and Bash. Ensure environment variables propagate to sub-processes.
+  - Security Considerations: Escape command-line output to avoid injection when displaying localized text.
+  - Estimated Sprint Day: Day 6
+  - Documentation Block:
+    ```bash
+    echo $(t "prompt_ready")
+    ```
+
+- **PH019-T21**: Evaluate right-to-left language support
+  - TaskDetails: Test the UI with a sample Arabic translation to ensure layout reverses correctly and fonts display properly.
+  - Platform Compatibility Notes: Works across all supported OSes with modern browsers.
+  - Security Considerations: Review fonts for license compliance before distribution.
+  - Estimated Sprint Day: Day 6
+  - Documentation Block:
+    ```bash
+    npm run rtl-test
+    ```
+
+- **PH019-T22**: Add Chinese translation
+  - TaskDetails: Create `i18n/zh/app.json` with simplified Chinese strings and verify Unicode rendering across platforms.
+  - Platform Compatibility Notes: Ensure fonts are available on Windows, macOS, and Linux to display Chinese characters.
+  - Security Considerations: Use UTF-8 throughout to avoid encoding issues.
+  - Estimated Sprint Day: Day 6
+  - Documentation Block:
+    ```bash
+    cp i18n/en/app.json i18n/zh/app.json
+    ```
+
+- **PH019-T23**: Implement dynamic font loading
+  - TaskDetails: Load additional fonts at runtime when the selected language requires them, such as CJK fonts.
+  - Platform Compatibility Notes: Provide font bundles for each OS and check licensing before packaging.
+  - Security Considerations: Validate font file paths to prevent unauthorized access to the filesystem.
+  - Estimated Sprint Day: Day 7
+  - Documentation Block:
+    ```bash
+    fonts/install_font.sh NotoSansCJK
+    ```
+
+- **PH019-T24**: Optimize layout for long strings
+  - TaskDetails: Review UI components and adjust styles so languages with lengthy text (e.g., German) do not break the layout.
+  - Platform Compatibility Notes: CSS changes work across all platforms.
+  - Security Considerations: None beyond standard code review.
+  - Estimated Sprint Day: Day 7
+  - Documentation Block:
+    ```css
+    .dialog { word-wrap: break-word; }
+    ```
+
+- **PH019-T25**: Add unit tests for language switching
+  - TaskDetails: Write automated tests ensuring the selected language persists across sessions and is applied to all components.
+  - Platform Compatibility Notes: Use the existing testing framework on any OS.
+  - Security Considerations: Mock user settings to avoid altering real profiles during tests.
+  - Estimated Sprint Day: Day 7
+  - Documentation Block:
+    ```bash
+    npm test language-switch
+    ```
+
+- **PH019-T26**: Verify translation JSON schema
+  - TaskDetails: Define a JSON schema for translation files and validate each language pack against it during CI.
+  - Platform Compatibility Notes: Use `ajv` for Node-based validation or equivalent in PowerShell.
+  - Security Considerations: Reject files that contain unexpected fields or executable code.
+  - Estimated Sprint Day: Day 7
+  - Documentation Block:
+    ```bash
+    node scripts/validate-schema.js
+    ```
+
+- **PH019-T27**: Add analytics to track language selection
+  - TaskDetails: Record anonymized language preference metrics to help prioritize translations. Respect privacy by not storing user identifiers.
+  - Platform Compatibility Notes: Works across all platforms using the existing telemetry system.
+  - Security Considerations: Ensure analytics data is anonymized and sent over TLS.
+  - Estimated Sprint Day: Day 8
+  - Documentation Block:
+    ```bash
+    echo "lang=$(t current)" >> analytics.log
+    ```
+
+- **PH019-T28**: Secure translation update mechanism
+  - TaskDetails: Allow downloading updated language packs from a trusted source with signature verification.
+  - Platform Compatibility Notes: Provide scripts for PowerShell and Bash to fetch and install new packs.
+  - Security Considerations: Verify digital signatures and enforce HTTPS to prevent tampering.
+  - Estimated Sprint Day: Day 8
+  - Documentation Block:
+    ```bash
+    ./scripts/update_translations.sh https://example.com/es.zip
+    ```
+
+- **PH019-T29**: Persist per-user language preference
+  - TaskDetails: Store the chosen language in the user's configuration file so the setting is reloaded on next launch.
+  - Platform Compatibility Notes: Works on Windows, macOS, and Linux using existing config helpers.
+  - Security Considerations: Validate config writes and back up previous versions to prevent corruption.
+  - Estimated Sprint Day: Day 8
+  - Documentation Block:
+    ```bash
+    echo "language=es" >> ~/.ai-cli-ui/config
+    ```
+
+- **PH019-T30**: Validate configuration inputs
+  - TaskDetails: Ensure the language property in the config file only accepts known locales, rejecting invalid values at startup.
+  - Platform Compatibility Notes: Works across all OSes by reading the config in Go.
+  - Security Considerations: Prevent injection via malicious config values.
+  - Estimated Sprint Day: Day 8
+  - Documentation Block:
+    ```go
+    if !isValidLocale(cfg.Language) { return err }
+    ```
+
+- **PH019-T31**: Document resetting language to system default
+  - TaskDetails: Add a section to the manual explaining how to revert to the operating system's language.
+  - Platform Compatibility Notes: Applies equally to Windows, macOS, and Linux users.
+  - Security Considerations: Provide safe example commands that do not remove other settings.
+  - Estimated Sprint Day: Day 9
+  - Documentation Block:
+    ```bash
+    cliapp --reset-language
+    ```
+
+- **PH019-T32**: Implement tooltip translation support
+  - TaskDetails: Ensure hover tooltips and accessibility text are also translated, not just labels and menus.
+  - Platform Compatibility Notes: Works in web-based UI across all desktop platforms.
+  - Security Considerations: Escape translated HTML to avoid cross-site scripting.
+  - Estimated Sprint Day: Day 9
+  - Documentation Block:
+    ```javascript
+    <span title={t('tooltip_help')}>?</span>
+    ```
+
+- **PH019-T33**: Provide command to list available languages
+  - TaskDetails: Add a CLI flag `--list-languages` that prints supported locales and exits.
+  - Platform Compatibility Notes: Works with PowerShell 5.1+ and Bash 3.2+ CLI.
+  - Security Considerations: Output should be sanitized and not rely on external data sources.
+  - Estimated Sprint Day: Day 9
+  - Documentation Block:
+    ```bash
+    cliapp --list-languages
+    ```
+
+- **PH019-T34**: Document environment variable override
+  - TaskDetails: Allow the environment variable `APP_LANGUAGE` to set the language at startup. Document usage in the README.
+  - Platform Compatibility Notes: Works across platforms by reading the variable in the main entry point.
+  - Security Considerations: Sanitize the value before loading translation files.
+  - Estimated Sprint Day: Day 9
+  - Documentation Block:
+    ```bash
+    APP_LANGUAGE=fr cliapp
+    ```
+
+- **PH019-T35**: Sanitize translation cache paths
+  - TaskDetails: Ensure temporary translation caches are stored in a safe directory and cleaned on uninstall.
+  - Platform Compatibility Notes: Use `$TEMP` on Windows and `/tmp` on Unix-like systems.
+  - Security Considerations: Prevent path traversal and symlink attacks when creating cache directories.
+  - Estimated Sprint Day: Day 9
+  - Documentation Block:
+    ```bash
+    rm -rf "$TMPDIR/cliapp_i18n"
+    ```
+
+- **PH019-T36**: Log language file load failures
+  - TaskDetails: When the application cannot load a language file, record an error in `sentinel_cli.log` with the locale and file path.
+  - Platform Compatibility Notes: Logging works across all platforms using the existing logging library.
+  - Security Considerations: Do not include user data in error messages.
+  - Estimated Sprint Day: Day 10
+  - Documentation Block:
+    ```bash
+    tail -f sentinel_cli.log
+    ```
+
+- **PH019-T37**: Add offline language pack bundling
+  - TaskDetails: Provide a build option that bundles all translations into the binary for offline environments.
+  - Platform Compatibility Notes: Works with Go build flags on any OS.
+  - Security Considerations: Be mindful of binary size and sign the final artifact.
+  - Estimated Sprint Day: Day 10
+  - Documentation Block:
+    ```bash
+    go build -tags embed_i18n
+    ```
+
+- **PH019-T38**: Provide fallback message for unsupported language
+  - TaskDetails: If a user selects a language for which no pack exists, display a friendly message and default to English.
+  - Platform Compatibility Notes: Works uniformly on Windows, macOS, and Linux.
+  - Security Considerations: Ensure the message is localizable so it can be understood by the user.
+  - Estimated Sprint Day: Day 10
+  - Documentation Block:
+    ```bash
+    echo "Language not available" >&2
+    ```
+
+- **PH019-T39**: Capture screenshots for localization testing
+  - TaskDetails: Automate screenshot capture for each language to verify layout consistency. Store images under `tests/screenshots`.
+  - Platform Compatibility Notes: Use a headless browser that runs on all platforms.
+  - Security Considerations: Remove sensitive data before storing screenshots.
+  - Estimated Sprint Day: Day 10
+  - Documentation Block:
+    ```bash
+    npm run capture-screenshots
+    ```
+
+- **PH019-T40**: Document translation contribution guide
+  - TaskDetails: Expand the `CONTRIBUTING.md` to include style guidelines for translators and instructions for submitting language packs.
+  - Platform Compatibility Notes: Applies across all OSes.
+  - Security Considerations: Include code review steps to prevent malicious translations.
+  - Estimated Sprint Day: Day 10
+  - Documentation Block:
+    ```markdown
+    ### Translation Guidelines
+    ```
+
+- **PH019-T41**: Provide CLI plugin to switch languages
+  - TaskDetails: Create a small plugin example that changes the UI language from the command line. Document usage and install steps.
+  - Platform Compatibility Notes: Works with PowerShell modules and Bash scripts.
+  - Security Considerations: Validate plugin input and log usage for auditing.
+  - Estimated Sprint Day: Day 10
+  - Documentation Block:
+    ```bash
+    cliapp plugin set-language es
+    ```
+
+- **PH019-T42**: Validate translation files with JSON schema
+  - TaskDetails: Apply the defined schema to each language pack in CI and fail the build if any file violates the schema.
+  - Platform Compatibility Notes: Works on Node-based validation across all OSes.
+  - Security Considerations: Prevent runtime crashes from malformed translations.
+  - Estimated Sprint Day: Day 10
+  - Documentation Block:
+    ```bash
+    node scripts/validate-schema.js
+    ```
+
+- **PH019-T43**: Implement language negotiation for APIs
+  - TaskDetails: When calling remote services, include an `Accept-Language` header based on user preference.
+  - Platform Compatibility Notes: Works with `curl` on Bash and `Invoke-WebRequest` on PowerShell.
+  - Security Considerations: Avoid exposing personal data in headers.
+  - Estimated Sprint Day: Day 10
+  - Documentation Block:
+    ```bash
+    curl -H "Accept-Language: es" https://api.example.com
+    ```
+
+- **PH019-T44**: Automate publishing translation updates
+  - TaskDetails: Create a deployment step that uploads new language packs to the distribution server after passing tests.
+  - Platform Compatibility Notes: Works with existing CI/CD pipeline on all platforms.
+  - Security Considerations: Use authenticated channels for uploads and log all actions.
+  - Estimated Sprint Day: Day 10
+  - Documentation Block:
+    ```bash
+    ./scripts/deploy_translations.sh
+    ```
+
+- **PH019-T45**: Enable dynamic download of language packs
+  - TaskDetails: Allow the application to fetch additional languages at runtime from a trusted endpoint.
+  - Platform Compatibility Notes: Works with Go's standard HTTP client across OSes.
+  - Security Considerations: Validate HTTPS certificates and verify file signatures.
+  - Estimated Sprint Day: Day 10
+  - Documentation Block:
+    ```go
+    downloadPack("https://example.com/pack.zip")
+    ```
+
+- **PH019-T46**: Document translation debug mode
+  - TaskDetails: Provide a debug flag that highlights untranslated strings during development so they can be fixed quickly.
+  - Platform Compatibility Notes: Works when running the dev server on any system.
+  - Security Considerations: Do not enable debug output in production builds.
+  - Estimated Sprint Day: Day 10
+  - Documentation Block:
+    ```bash
+    cliapp --debug-i18n
+    ```
+
+- **PH019-T47**: Purge old translation caches
+  - TaskDetails: Create a maintenance script to remove obsolete cache files from prior versions, freeing disk space.
+  - Platform Compatibility Notes: Provide both PowerShell and Bash versions for cross-platform usage.
+  - Security Considerations: Verify directories before deletion to avoid removing user data.
+  - Estimated Sprint Day: Day 10
+  - Documentation Block:
+    ```bash
+    ./scripts/clean_i18n_cache.sh
+    ```
+
+- **PH019-T48**: Provide localization checklist for QA
+  - TaskDetails: Document a checklist that QA engineers can follow to verify each language pack. Include UI, CLI, and documentation items.
+  - Platform Compatibility Notes: Applicable on all test environments.
+  - Security Considerations: Keep sample data sanitized during tests.
+  - Estimated Sprint Day: Day 10
+  - Documentation Block:
+    ```markdown
+    - [ ] Verify menus
+    ```
+
+- **PH019-T49**: Implement user-friendly language error messages
+  - TaskDetails: When the app fails to load a language pack, show a clear notification to the user with recovery steps.
+  - Platform Compatibility Notes: Display method should work across Windows, macOS, and Linux desktops.
+  - Security Considerations: Do not expose internal paths or stack traces to end users.
+  - Estimated Sprint Day: Day 10
+  - Documentation Block:
+    ```bash
+    notify "Could not load language"
+    ```
+
+- **PH019-T50**: Provide script to rebuild and test all languages
+  - TaskDetails: Combine compilation, packaging, and test steps into a single script that developers can run locally.
+  - Platform Compatibility Notes: Provide cross-platform support using a `.ps1` and `.sh` wrapper.
+  - Security Considerations: Log each step and exit immediately on any error.
+  - Estimated Sprint Day: Day 10
+  - Documentation Block:
+    ```bash
+    ./scripts/rebuild_all_languages.sh
+    ```
