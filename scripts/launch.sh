@@ -9,7 +9,7 @@ cd "$REPO_ROOT"
 LOG_FILE="${SENTINEL_LOG_PATH:-}"
 if [ -z "$LOG_FILE" ]; then
   case "$(uname -s)" in
-    CYGWIN*|MINGW*|MSYS*) LOG_FILE="$SystemDrive\\Temp\\sentinel.log" ;;
+    CYGWIN*|MINGW*|MSYS*) LOG_FILE="${SystemDrive:-C:}\\Temp\\sentinel.log" ;;
     *) LOG_FILE="/var/log/sentinel.log" ;;
   esac
 fi
@@ -41,6 +41,12 @@ esac
 log "building for $PLATFORM"
 if ! wails build -platform "$PLATFORM" >> "$LOG_FILE" 2>&1; then
   log "wails build failed"
+  exit 1
+fi
+
+log "signing $BIN"
+if ! "$SCRIPT_DIR/sign.sh" "$BIN" >> "$LOG_FILE" 2>&1; then
+  log "signing failed"
   exit 1
 fi
 

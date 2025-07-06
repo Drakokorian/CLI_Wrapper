@@ -57,6 +57,33 @@ wails build -platform linux/amd64
 
 Binaries are written to `build/bin`.
 
+### Signing binaries
+
+1. Run `scripts/install.sh` to install Go, Node.js and the Wails CLI.
+2. Export your GPG key ID in the `SIGN_KEY` environment variable.
+3. Build for your platform with `wails build -platform <target>` or run
+   `scripts/launch.sh`.
+4. Execute `scripts/sign.sh` with the path to each generated binary.
+
+Example commands:
+
+```bash
+export SIGN_KEY=<key-id>               # Linux and macOS
+$Env:SIGN_KEY='<key-id>'               # Windows PowerShell
+scripts/sign.sh build/bin/ai-cli-ui.exe    # Windows
+scripts/sign.sh build/bin/ai-cli-ui.app    # macOS
+scripts/sign.sh build/bin/ai-cli-ui        # Linux
+```
+
+The script creates an ASCII-armored `.asc` file next to each binary.
+Verify a signature with:
+
+```bash
+gpg --verify build/bin/ai-cli-ui.exe.asc build/bin/ai-cli-ui.exe
+```
+
+All signature files remain in `build/bin` alongside the original binaries.
+
 ### Launching
 
 Run the generated binary on your platform:
