@@ -1,0 +1,5 @@
+2025-07-03T12:41:03Z run_cli_wrapper: launch started – skip_install=false dry_run=false
+2025-07-03T12:41:03Z run_cli_wrapper: running scripts/install.sh
+Installing Go from https://go.dev/dl/go1.24.1.windows-amd64.zip
+./scripts/install.sh: line 49: unzip: command not found
+2025-07-03T12:41:12Z run_cli_wrapper: FATAL: install.sh failed

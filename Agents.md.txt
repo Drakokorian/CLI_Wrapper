@@ -1,53 +1,169 @@
-# Contribution Guidelines
+General Prompt for High-Quality, Cross-Platform, Production-Ready Output
+Use this prompt to ensure everything produced — whether it's code, commands, APIs, CLI tools, documentation, scripts, tests, or infrastructure — adheres to enterprise-grade, cross-platform, secure, and fully finished standards.
 
-As you continue to build the project, ensure that every component you deliver is fully realized production-grade code—never a placeholder, stub, or unfinished module. Each piece must adhere to the highest industry best practices, reflecting the quality and robustness expected of an enterprise-class system.
+✅ Mandatory Standards (Non-Negotiable)
+You must ensure the following hard requirements are met without exception:
 
-Approach the solution as a master builder:
+No Stubs, No Placeholders, No Simulations
 
-- Every function, class, and module must be complete, secure, and documented.
-- All operational logic should be thoroughly tested and ready for deployment.
-- Avoid the use of 'TODO' comments or any indication of deferred implementation.
-- Every feature, from the smallest utility to the largest subsystem, must be production-ready, modular, and maintainable.
-- Code should include comprehensive error handling, logging, input validation, and adhere to the Single Responsibility Principle.
-- All logic should be optimized for performance, security, scalability, and maintainability.
-- Unit and integration tests must accompany every module, with clear documentation and usage examples.
-- Logging must be implemented for all critical operations and errors, saved securely to an external text file.
-- Deliver each milestone as if it will go live in a mission-critical environment today—no shortcuts, no deferred work, no stubs  no scaffolding. Each increment must be real, working code that stands on its own in a modern enterprise context.
-- All logs and timestamps for all code should be UTC time.
-- must work from 2008 versions to the latests
-All data should be stored in the database or the one the user selects between sql server postgress oracle or mysql
+All logic must be real, fully implemented, and executable as-is
 
-* +## Enterprise Coding Standard
-* +1. **Language Targets**
-* • Go ≥ 1.24 (tool-chain pinned via `go.mod` → `toolchain go1.24.x`).
-* • Node ≥ 18 for all UI builds/tests; prerequisite called-out in README.
-* +2. **Single Responsibility Principle** – Functions, methods, and modules get
-* exactly one reason to change. If you find yourself writing _and_ parsing a
-* file in the same package, split it.
-* +3. **Security-first development**
-* • Validate _every_ external input (JSON, CLI flags, HTTP params, env vars).
-* • Default to TLS-encrypted transports; never allow plain‐text sockets unless
-*     explicitly disabled for localhost dev.
-* • Eliminate default credentials and enforce least-privilege FS perms.
-* • Dependabot/CVE scans executed in CI.
-* +4. **Structured error handling** – No unchecked panics. Wrap risky calls and
-* return rich error chains (`fmt.Errorf("context: %w", err)`), or in UI code
-* use `try/catch` pairs emitting actionable log entries.
-* +5. **External logging** – Log operational events and errors in JSON to an
-* append-only file (`/var/log/sentinel.log` or `C:\Temp\sentinel.log`). The
-* log writer handles rotation (max 20 MB, 5 backups, 30 days).
-* +6. **Testing & CI**
-* • 100 % of new logic covered by unit tests; integration tests where
-*     side-effects occur.
-* • CI must run `go vet ./...`, `go test -race ./...`, `npm test`, and
-*     security scans.
-* • Builds may **not** perform network egress – all modules and npm packages
-*     are vendored.
-* +7. **Performance & Scalability** – Hot paths are profiled; database calls are
-* batched; services remain stateless to allow horizontal scaling.
-* +8. **Documentation** – Public identifiers carry GoDoc/JSDoc; complex
-* algorithms receive explanatory comments; every package includes an
-* `example_test.go` when helpful.
+Do not include scaffolding, fake output, or TODO comments
 
-## Documentation Roadmap
-For a step-by-step overview of the project phases see [docs/ROADMAP.md](docs/ROADMAP.md).
+Cross-Platform Compatibility
+
+Must function on:
+
+Windows (legacy included, e.g., PowerShell 5.1)
+
+Linux (Bash ≥ 3.2)
+
+macOS (bash or zsh)
+
+Use platform-native techniques (e.g., apt, brew, choco, launchctl)
+
+Backwards Compatibility
+
+Must work with runtimes that are at least 3 versions behind the latest
+
+Examples:
+
+PowerShell 5.1
+
+Bash 3.2
+
+Go 1.20
+
+Node 16+
+
+No Runtime Prompts
+
+Outputs must be fully non-interactive by default
+
+Accept interactive mode only with explicit flags like --interactive
+
+Deterministic Behavior
+
+Given the same inputs, outputs must always be the same
+
+No randomness unless explicitly seeded
+
+All Settings Overridable via Flags or Config
+
+CLI flags or config files must take precedence
+
+Must include: --config, --db, --log-path, --mode
+
+Must Include Dry-Run Mode
+
+Any output with side effects must support --dry-run and explain what would happen
+
+No Privilege Escalation Unless Required
+
+Avoid requiring sudo or admin rights
+
+If needed, explain why and document the exact command
+
+All Logs Must Go to Current Working Directory
+
+Path: ./sentinel_cli.log (or clearly defined project-local location)
+
+Logs must be structured, append-only, and UTC-timestamped
+
+All Persistent Data Must Go to a RDBMS
+
+Support SQL Server, PostgreSQL, Oracle, MySQL
+
+No temporary file-based storage unless explicitly allowed
+
+🛠️ Technical & Coding Requirements
+Applies to any language, tool, or output format:
+
+Structure & Modularity
+Code, scripts, or logic must follow Single Responsibility Principle
+
+Max function length: 80 lines
+
+Logic must be reusable and composable
+
+Error Handling
+Use structured, informative error messages
+
+Include error context, recovery guidance, and trace ID if applicable
+
+Logging
+Use structured JSON or plaintext
+
+Include UTC timestamp (ISO 8601), operation, result, parameters
+
+Rotation policy: 20 MB max size, 5 backups, 30-day retention
+
+Exit Codes
+Must follow standard conventions:
+
+0 = success
+
+1 = general failure
+
+127 = command not found
+
+130 = user interruption
+
+Secure Path Handling
+Must sanitize and validate input/output paths
+
+Prevent traversal (../) or symlink redirection
+
+Encoding
+All data must use UTF-8
+
+Avoid system-dependent encoding defaults
+
+Rate Limiting & Retries
+For any network or system call:
+
+Include retry logic
+
+Default to exponential backoff (e.g., 3 attempts, capped timeout)
+
+Linting & Static Analysis
+Output must be linted and clean
+
+Bash: shellcheck
+
+PowerShell: PSScriptAnalyzer
+
+Python: pylint
+
+Go: gosec, go vet
+
+Node: eslint
+
+Version Output
+All tools, scripts, and APIs must expose a --version or /version endpoint:
+
+text
+Copy
+Edit
+ToolName v1.3.4
+Build: 2025-07-06T12:00:00Z
+Commit: a1b2c3d
+Audit Trail
+All impactful operations must be logged in an append-only audit file
+
+Must record:
+
+Who, what, when, where, why
+
+UTC timestamp
+
+Parameters and result
+
+📦 Expected CLI/API/UI Behavior
+Must accept flags, config files, or environment variables
+
+All output must be usable in automation pipelines
+
+All interfaces must be non-interactive by default
+
+Must support offline, headless, and silent execution
