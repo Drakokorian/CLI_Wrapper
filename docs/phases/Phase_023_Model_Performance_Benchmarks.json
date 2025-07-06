@@ -1,0 +1,466 @@
+{
+  "metadata": {
+    "Phase": "023",
+    "Title": "Model Performance Benchmarks",
+    "Created": "2025-07-06",
+    "CompatibleWith": [
+      "Windows 10+ (PowerShell 5.1+)",
+      "Ubuntu 18.04+ (Bash 3.2+)",
+      "macOS 10.15+ (zsh/bash)"
+    ],
+    "SprintWindow": "Sprint 1 (Day 1\u201310)",
+    "Author": "AutoDocSystem"
+  },
+  "tasks": [
+    {
+      "TaskID": "PH023-T01",
+      "TaskTitle": "Define baseline dataset",
+      "TaskDetails": "Select representative input data and store a copy under `datasets/baseline`.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 1",
+      "Documentation Block": "```bash\necho \"define_baseline_dataset\"\n```"
+    },
+    {
+      "TaskID": "PH023-T02",
+      "TaskTitle": "Download dataset script",
+      "TaskDetails": "Write `scripts/get_dataset.sh` that downloads the dataset with retry logic and checksum verification.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 1",
+      "Documentation Block": "```bash\necho \"download_dataset_script\"\n```"
+    },
+    {
+      "TaskID": "PH023-T03",
+      "TaskTitle": "Start benchmark command",
+      "TaskDetails": "Add `cliapp bench start` which runs the model against the dataset and records metrics.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 1",
+      "Documentation Block": "```bash\necho \"start_benchmark_command\"\n```"
+    },
+    {
+      "TaskID": "PH023-T04",
+      "TaskTitle": "Output format for results",
+      "TaskDetails": "Produce JSON and CSV outputs summarizing latency, memory, and accuracy.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 1",
+      "Documentation Block": "```bash\necho \"output_format_for_results\"\n```"
+    },
+    {
+      "TaskID": "PH023-T05",
+      "TaskTitle": "Document captured metrics",
+      "TaskDetails": "Explain what each metric means and how it is calculated.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 1",
+      "Documentation Block": "```bash\necho \"document_captured_metrics\"\n```"
+    },
+    {
+      "TaskID": "PH023-T06",
+      "TaskTitle": "Multi-run benchmark script",
+      "TaskDetails": "Allow users to execute multiple iterations via `bench/run_many.sh` with parameter overrides.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 2",
+      "Documentation Block": "```bash\necho \"multi-run_benchmark_script\"\n```"
+    },
+    {
+      "TaskID": "PH023-T07",
+      "TaskTitle": "Customize parameters",
+      "TaskDetails": "Support flags for batch size and concurrency in the benchmark command.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 2",
+      "Documentation Block": "```bash\necho \"customize_parameters\"\n```"
+    },
+    {
+      "TaskID": "PH023-T08",
+      "TaskTitle": "GPU availability check",
+      "TaskDetails": "Detect NVIDIA GPUs via `nvidia-smi` or fallback to CPU.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 2",
+      "Documentation Block": "```bash\necho \"gpu_availability_check\"\n```"
+    },
+    {
+      "TaskID": "PH023-T09",
+      "TaskTitle": "CPU fallback instructions",
+      "TaskDetails": "Document expected performance differences when no GPU is present.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 2",
+      "Documentation Block": "```bash\necho \"cpu_fallback_instructions\"\n```"
+    },
+    {
+      "TaskID": "PH023-T10",
+      "TaskTitle": "Dataset path variable",
+      "TaskDetails": "Use `BENCH_DATASET_PATH` env var to override dataset location.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 2",
+      "Documentation Block": "```bash\necho \"dataset_path_variable\"\n```"
+    },
+    {
+      "TaskID": "PH023-T11",
+      "TaskTitle": "Benchmark settings config",
+      "TaskDetails": "Store repeated benchmark parameters in `bench.yaml` for easy reuse.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 3",
+      "Documentation Block": "```bash\necho \"benchmark_settings_config\"\n```"
+    },
+    {
+      "TaskID": "PH023-T12",
+      "TaskTitle": "Export results command",
+      "TaskDetails": "Enable `cliapp bench export --format=csv` to produce shareable files.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 3",
+      "Documentation Block": "```bash\necho \"export_results_command\"\n```"
+    },
+    {
+      "TaskID": "PH023-T13",
+      "TaskTitle": "Log rotation policy",
+      "TaskDetails": "Rotate benchmark logs at 20 MB with up to 5 backups.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 3",
+      "Documentation Block": "```bash\necho \"log_rotation_policy\"\n```"
+    },
+    {
+      "TaskID": "PH023-T14",
+      "TaskTitle": "Recommended hardware doc",
+      "TaskDetails": "Provide guidelines on CPU, GPU, and RAM for accurate benchmarking.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 3",
+      "Documentation Block": "```bash\necho \"recommended_hardware_doc\"\n```"
+    },
+    {
+      "TaskID": "PH023-T15",
+      "TaskTitle": "PowerShell scheduled run",
+      "TaskDetails": "Example script using Task Scheduler to run benchmarks nightly.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 3",
+      "Documentation Block": "```bash\necho \"powershell_scheduled_run\"\n```"
+    },
+    {
+      "TaskID": "PH023-T16",
+      "TaskTitle": "Bash scheduled run",
+      "TaskDetails": "Crontab example for Linux/macOS that runs the benchmark weekly.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 4",
+      "Documentation Block": "```bash\necho \"bash_scheduled_run\"\n```"
+    },
+    {
+      "TaskID": "PH023-T17",
+      "TaskTitle": "Validate results across OS",
+      "TaskDetails": "Compare outputs from each platform to ensure consistency.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 4",
+      "Documentation Block": "```bash\necho \"validate_results_across_os\"\n```"
+    },
+    {
+      "TaskID": "PH023-T18",
+      "TaskTitle": "Progress bar implementation",
+      "TaskDetails": "Display progress using a simple textual bar updated each second.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 4",
+      "Documentation Block": "```bash\necho \"progress_bar_implementation\"\n```"
+    },
+    {
+      "TaskID": "PH023-T19",
+      "TaskTitle": "Skip warm-up cycles flag",
+      "TaskDetails": "Allow `--skip-warmup` to reduce runtime during quick checks.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 4",
+      "Documentation Block": "```bash\necho \"skip_warm-up_cycles_flag\"\n```"
+    },
+    {
+      "TaskID": "PH023-T20",
+      "TaskTitle": "Security for dataset",
+      "TaskDetails": "Ensure dataset files are read-only and verified via SHA-256 checksum.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 4",
+      "Documentation Block": "```bash\necho \"security_for_dataset\"\n```"
+    },
+    {
+      "TaskID": "PH023-T21",
+      "TaskTitle": "Compare results command",
+      "TaskDetails": "Add `cliapp bench compare run1.json run2.json` to highlight metric deltas.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 5",
+      "Documentation Block": "```bash\necho \"compare_results_command\"\n```"
+    },
+    {
+      "TaskID": "PH023-T22",
+      "TaskTitle": "Graph generation script",
+      "TaskDetails": "Provide `scripts/bench_graph.py` to create charts from CSV results.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 5",
+      "Documentation Block": "```bash\necho \"graph_generation_script\"\n```"
+    },
+    {
+      "TaskID": "PH023-T23",
+      "TaskTitle": "Example JSON output",
+      "TaskDetails": "Show sample benchmark result JSON in the documentation.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 5",
+      "Documentation Block": "```bash\necho \"example_json_output\"\n```"
+    },
+    {
+      "TaskID": "PH023-T24",
+      "TaskTitle": "Test suite for benchmark lib",
+      "TaskDetails": "Write unit tests covering metric calculations and error handling.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 5",
+      "Documentation Block": "```bash\necho \"test_suite_for_benchmark_lib\"\n```"
+    },
+    {
+      "TaskID": "PH023-T25",
+      "TaskTitle": "Out-of-memory handling",
+      "TaskDetails": "Detect OOM errors and abort gracefully with a logged message.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 5",
+      "Documentation Block": "```bash\necho \"out-of-memory_handling\"\n```"
+    },
+    {
+      "TaskID": "PH023-T26",
+      "TaskTitle": "Batch size tuning guide",
+      "TaskDetails": "Document how to adjust batch size for best throughput.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 6",
+      "Documentation Block": "```bash\necho \"batch_size_tuning_guide\"\n```"
+    },
+    {
+      "TaskID": "PH023-T27",
+      "TaskTitle": "Headless mode option",
+      "TaskDetails": "Support `--no-ui` to disable progress display for scripts.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 6",
+      "Documentation Block": "```bash\necho \"headless_mode_option\"\n```"
+    },
+    {
+      "TaskID": "PH023-T28",
+      "TaskTitle": "Telemetry integration",
+      "TaskDetails": "Report benchmark durations to the central telemetry service.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 6",
+      "Documentation Block": "```bash\necho \"telemetry_integration\"\n```"
+    },
+    {
+      "TaskID": "PH023-T29",
+      "TaskTitle": "Dataset versioning policy",
+      "TaskDetails": "Maintain numbered dataset versions and document upgrade procedure.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 6",
+      "Documentation Block": "```bash\necho \"dataset_versioning_policy\"\n```"
+    },
+    {
+      "TaskID": "PH023-T30",
+      "TaskTitle": "Custom metrics plugin",
+      "TaskDetails": "Allow developers to add plugins that compute extra metrics.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 6",
+      "Documentation Block": "```bash\necho \"custom_metrics_plugin\"\n```"
+    },
+    {
+      "TaskID": "PH023-T31",
+      "TaskTitle": "Clean up large temp files",
+      "TaskDetails": "Remove intermediate results older than 30 days from `bench/tmp`.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 7",
+      "Documentation Block": "```bash\necho \"clean_up_large_temp_files\"\n```"
+    },
+    {
+      "TaskID": "PH023-T32",
+      "TaskTitle": "CI server guide",
+      "TaskDetails": "Explain how to run benchmarks within CI, including required GPU drivers.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 7",
+      "Documentation Block": "```bash\necho \"ci_server_guide\"\n```"
+    },
+    {
+      "TaskID": "PH023-T33",
+      "TaskTitle": "Completion notifications",
+      "TaskDetails": "Send desktop or email notifications when a benchmark run finishes.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 7",
+      "Documentation Block": "```bash\necho \"completion_notifications\"\n```"
+    },
+    {
+      "TaskID": "PH023-T34",
+      "TaskTitle": "Cache intermediate results",
+      "TaskDetails": "Reuse partial outputs to speed up repeated benchmarks.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 7",
+      "Documentation Block": "```bash\necho \"cache_intermediate_results\"\n```"
+    },
+    {
+      "TaskID": "PH023-T35",
+      "TaskTitle": "HPC environment variables",
+      "TaskDetails": "List variables like `SLURM_NODELIST` that affect distributed runs.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 7",
+      "Documentation Block": "```bash\necho \"hpc_environment_variables\"\n```"
+    },
+    {
+      "TaskID": "PH023-T36",
+      "TaskTitle": "Dataset integrity command",
+      "TaskDetails": "Add `cliapp bench verify --dataset` to check checksums.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 8",
+      "Documentation Block": "```bash\necho \"dataset_integrity_command\"\n```"
+    },
+    {
+      "TaskID": "PH023-T37",
+      "TaskTitle": "GPU vs CPU comparison",
+      "TaskDetails": "Script `bench/compare_gpu_cpu.sh` to generate side-by-side results.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 8",
+      "Documentation Block": "```bash\necho \"gpu_vs_cpu_comparison\"\n```"
+    },
+    {
+      "TaskID": "PH023-T38",
+      "TaskTitle": "Distributed benchmark example",
+      "TaskDetails": "Document how to run benchmarks across multiple machines using SSH.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 8",
+      "Documentation Block": "```bash\necho \"distributed_benchmark_example\"\n```"
+    },
+    {
+      "TaskID": "PH023-T39",
+      "TaskTitle": "Pause and resume command",
+      "TaskDetails": "Allow `cliapp bench pause` and `cliapp bench resume` for long-running jobs.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 8",
+      "Documentation Block": "```bash\necho \"pause_and_resume_command\"\n```"
+    },
+    {
+      "TaskID": "PH023-T40",
+      "TaskTitle": "Multi-tenant security tips",
+      "TaskDetails": "Describe how to isolate datasets and results for different teams.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 8",
+      "Documentation Block": "```bash\necho \"multi-tenant_security_tips\"\n```"
+    },
+    {
+      "TaskID": "PH023-T41",
+      "TaskTitle": "Result archive policy",
+      "TaskDetails": "Keep archives for one year then move to cold storage.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 9",
+      "Documentation Block": "```bash\necho \"result_archive_policy\"\n```"
+    },
+    {
+      "TaskID": "PH023-T42",
+      "TaskTitle": "Summary view support",
+      "TaskDetails": "Implement `cliapp bench summary` that aggregates metrics from multiple runs.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 9",
+      "Documentation Block": "```bash\necho \"summary_view_support\"\n```"
+    },
+    {
+      "TaskID": "PH023-T43",
+      "TaskTitle": "HTML results conversion",
+      "TaskDetails": "Use `bench/convert_to_html.py` to create shareable reports.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 9",
+      "Documentation Block": "```bash\necho \"html_results_conversion\"\n```"
+    },
+    {
+      "TaskID": "PH023-T44",
+      "TaskTitle": "Example benchmark run",
+      "TaskDetails": "Provide step-by-step instructions demonstrating a full benchmark cycle.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 9",
+      "Documentation Block": "```bash\necho \"example_benchmark_run\"\n```"
+    },
+    {
+      "TaskID": "PH023-T45",
+      "TaskTitle": "Dataset download test",
+      "TaskDetails": "Write tests that mock the download process and verify retries.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 9",
+      "Documentation Block": "```bash\necho \"dataset_download_test\"\n```"
+    },
+    {
+      "TaskID": "PH023-T46",
+      "TaskTitle": "Resource monitoring guide",
+      "TaskDetails": "Document how to watch CPU, GPU, and memory usage while benchmarking.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 10",
+      "Documentation Block": "```bash\necho \"resource_monitoring_guide\"\n```"
+    },
+    {
+      "TaskID": "PH023-T47",
+      "TaskTitle": "Upload results script",
+      "TaskDetails": "Script `scripts/upload_results.sh` for sending data to a central server.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 10",
+      "Documentation Block": "```bash\necho \"upload_results_script\"\n```"
+    },
+    {
+      "TaskID": "PH023-T48",
+      "TaskTitle": "Custom result directory flag",
+      "TaskDetails": "Allow `--output-dir` to specify where result files are written.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 10",
+      "Documentation Block": "```bash\necho \"custom_result_directory_flag\"\n```"
+    },
+    {
+      "TaskID": "PH023-T49",
+      "TaskTitle": "Troubleshooting section",
+      "TaskDetails": "List common errors like missing drivers and how to resolve them.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 10",
+      "Documentation Block": "```bash\necho \"troubleshooting_section\"\n```"
+    },
+    {
+      "TaskID": "PH023-T50",
+      "TaskTitle": "Publish benchmark toolkit docs",
+      "TaskDetails": "Compile instructions and examples into `docs/benchmark_toolkit.md`.",
+      "Platform Compatibility Notes": "PowerShell 5.1+, Bash 3.2+, and zsh compatible.",
+      "Security Considerations": "Validate inputs, sanitize paths, and restrict permissions.",
+      "Estimated Sprint Day": "Day 10",
+      "Documentation Block": "```bash\necho \"publish_benchmark_toolkit_docs\"\n```"
+    }
+  ]
+}

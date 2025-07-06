@@ -1,0 +1,53 @@
+Phase 021: Offline Mode with Sync
+Created: 2025-07-06
+Tasks:
+PH021-T01: Create local offline cache directory - Day 1
+PH021-T02: Add configuration flag for offline mode - Day 1
+PH021-T03: Determine network connectivity method - Day 1
+PH021-T04: Build CLI command to enter offline mode - Day 1
+PH021-T05: Implement offline queue for commands - Day 1
+PH021-T06: Add sync service to flush queue - Day 2
+PH021-T07: Encrypt cached data - Day 2
+PH021-T08: Write unit tests for offline queue - Day 2
+PH021-T09: Provide manual sync command - Day 2
+PH021-T10: Add UI notification for offline state - Day 2
+PH021-T11: Handle conflict resolution - Day 3
+PH021-T12: Document environment variables - Day 3
+PH021-T13: Provide cache purge script - Day 3
+PH021-T14: Add exponential backoff to sync retries - Day 3
+PH021-T15: Document troubleshooting steps - Day 3
+PH021-T16: Log offline events - Day 4
+PH021-T17: Secure offline storage - Day 4
+PH021-T18: Implement incremental sync - Day 4
+PH021-T19: Add CLI switch to disable offline mode - Day 4
+PH021-T20: Integration test for offline workflow - Day 4
+PH021-T21: Check data size before caching - Day 5
+PH021-T22: Show sync status command - Day 5
+PH021-T23: Add progress indicator during sync - Day 5
+PH021-T24: Schedule background sync - Day 5
+PH021-T25: API endpoint for offline status - Day 5
+PH021-T26: Sample config file - Day 6
+PH021-T27: Export offline queue command - Day 6
+PH021-T28: Compress cache for backup - Day 6
+PH021-T29: Telemetry for offline transitions - Day 6
+PH021-T30: Warning for large cache - Day 6
+PH021-T31: Migrate offline data - Day 7
+PH021-T32: Override sync server URL - Day 7
+PH021-T33: CI testing guidance - Day 7
+PH021-T34: Prevent queue overflow - Day 7
+PH021-T35: UI toggle for settings page - Day 7
+PH021-T36: Example PowerShell network check - Day 8
+PH021-T37: Pre-flight offline check - Day 8
+PH021-T38: File locking for database - Day 8
+PH021-T39: Timestamped sync logs - Day 8
+PH021-T40: Metrics for sync duration - Day 8
+PH021-T41: Reset offline mode steps - Day 9
+PH021-T42: Cleanup orphaned files - Day 9
+PH021-T43: Admin audit script - Day 9
+PH021-T44: Handle partial sync errors - Day 9
+PH021-T45: Dry-run queue flush - Day 9
+PH021-T46: Offline mode user guide - Day 10
+PH021-T47: Offline mode metrics dashboard - Day 10
+PH021-T48: Notifier when sync completes - Day 10
+PH021-T49: Limit offline retention days - Day 10
+PH021-T50: Deployment checklist - Day 10
